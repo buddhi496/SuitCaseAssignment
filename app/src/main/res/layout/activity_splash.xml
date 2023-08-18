@@ -7,23 +7,38 @@
     tools:context=".SplashActivity"
     android:background="@color/white">
 
-    <ImageView android:id="@+id/Suitcase"
-        android:layout_height="150dp"
+    <ImageView
+        android:id="@+id/Suitcase"
         android:layout_width="wrap_content"
-        android:src="@drawable/logo"
-        android:layout_centerInParent="true"/>
+        android:layout_height="300dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:src="@drawable/logo" />
 
     <TextView
         android:id="@+id/splashText"
         android:layout_below="@+id/Suitcase"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="Jam Ghymna"
+        android:text="Plan Your Trip"
         android:textColor="@color/black"
         android:layout_centerHorizontal="true"
         android:textSize="25dp"
-        android:layout_marginTop="10dp"
-        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/bomb"
         />
+
+<!--    <TextView-->
+<!--        android:visibility="visible"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        android:layout_width="350dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_marginTop="530dp"-->
+<!--        android:text="Use captivating travel-related images or illustrations in the background to visually engage users and set the tone for your app."-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="18dp"-->
+<!--        android:textStyle="bold"-->
+<!--        android:alpha="0.6" />-->
 
 </RelativeLayout>
