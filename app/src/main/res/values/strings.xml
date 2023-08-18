@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">SuitCase</string>
+    <string name="login_image_description">Travel destination</string>
+
+    <style name="RectangularEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/edittext_border_background</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:hint">Email</item>
+        <item name="android:inputType">textEmailAddress</item>
+    </style>
 </resources>
