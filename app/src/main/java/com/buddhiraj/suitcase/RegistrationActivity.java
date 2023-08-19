@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,6 +27,8 @@ public class RegistrationActivity extends AppCompatActivity {
     Button signUpButton;
     ProgressBar progressbar;
     FirebaseAuth mAuth;
+
+    CheckBox termsAndCondition;
 
 
     @Override
@@ -53,6 +57,7 @@ public class RegistrationActivity extends AppCompatActivity {
         userPasswordTextView = findViewById(R.id.userPassword);
         conformPasswordTextView = findViewById(R.id.conformPassword);
         signUpButton = findViewById(R.id.signUpButton);
+        termsAndCondition = findViewById(R.id.termsAndCondition);
         progressbar = findViewById(R.id.progressbar);
 
         // Set on Click Listener on Registration button
@@ -60,6 +65,13 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 registerNewUser();
+            }
+        });
+
+        termsAndCondition.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                signUpButton.setEnabled(isChecked);
             }
         });
     }
@@ -80,6 +92,12 @@ public class RegistrationActivity extends AppCompatActivity {
                             "Please enter email!!",
                             Toast.LENGTH_LONG)
                     .show();
+            return;
+        }
+        if (!termsAndCondition.isChecked()) {
+            Toast.makeText(getApplicationContext(),
+                    "Please accept the terms and services.",
+                    Toast.LENGTH_LONG).show();
             return;
         }
         if (TextUtils.isEmpty(password)) {

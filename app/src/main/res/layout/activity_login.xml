@@ -88,13 +88,16 @@
         android:gravity="end"
         android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/forgotPassword"
+        <TextView
+            android:id="@+id/forgetPassword"
             android:layout_width="wrap_content"
-            android:layout_height="48sp"
-            android:text="Forgot Password?"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15sp"
+            android:layout_marginRight="15sp"
+            android:paddingTop="14sp"
+            android:text="Forget Password"
             android:textColor="@color/black"
-            android:textSize="13sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <Button
@@ -104,6 +107,7 @@
         android:layout_below="@id/forgotPasswordText"
         android:layout_marginRight="15sp"
         android:layout_marginLeft="15sp"
+        android:layout_marginTop="14sp"
         android:padding="15dp"
         android:textSize="18sp"
         android:text="Sign In"

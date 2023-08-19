@@ -21,7 +21,9 @@ import com.google.android.gms.tasks.Task;
 public class LoginActivity extends AppCompatActivity {
 
 
-    EditText emailTextView, passwordTextView, forgotPasswordTextView;
+    EditText emailTextView, passwordTextView;
+
+    TextView forgotPasswordTextView;
     Button loginButton;
     ProgressBar divider;
     FirebaseAuth mAuth;
@@ -49,7 +51,6 @@ public class LoginActivity extends AppCompatActivity {
         // initialising all views through id defined above
         emailTextView = findViewById(R.id.email);
         passwordTextView = findViewById(R.id.password);
-        forgotPasswordTextView = findViewById(R.id.forgotPassword);
         loginButton = findViewById(R.id.loginButton);
         divider = findViewById(R.id.divider);
 
