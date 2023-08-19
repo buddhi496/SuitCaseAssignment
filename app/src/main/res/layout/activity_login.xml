@@ -79,7 +79,7 @@
         android:background="@drawable/edittext_border_background" />
 
     <LinearLayout
-        android:id="@+id/forgotPasswordText"
+        android:id="@+id/forgetPasswordPart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/password"
@@ -95,7 +95,7 @@
             android:layout_marginLeft="15sp"
             android:layout_marginRight="15sp"
             android:paddingTop="14sp"
-            android:text="Forget Password"
+            android:text="Forget Password?"
             android:textColor="@color/black"
             android:textSize="14sp" />
     </LinearLayout>
@@ -104,7 +104,7 @@
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/forgotPasswordText"
+        android:layout_below="@id/forgetPasswordPart"
         android:layout_marginRight="15sp"
         android:layout_marginLeft="15sp"
         android:layout_marginTop="14sp"

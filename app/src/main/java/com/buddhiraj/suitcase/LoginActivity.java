@@ -3,9 +3,11 @@ package com.buddhiraj.suitcase;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,27 +15,40 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
 
     EditText emailTextView, passwordTextView;
 
-    TextView forgotPasswordTextView;
+    TextView forgetPassword;
     Button loginButton;
     ProgressBar divider;
     FirebaseAuth mAuth;
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in or not
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            /*Redirect to mainActivity*/
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // Find the "Register Now" TextView
         TextView registerNowTextView = findViewById(R.id.registerNow);
 
         // Set a click listener for the "Register Now" TextView
@@ -53,12 +68,21 @@ public class LoginActivity extends AppCompatActivity {
         passwordTextView = findViewById(R.id.password);
         loginButton = findViewById(R.id.loginButton);
         divider = findViewById(R.id.divider);
+        forgetPassword = findViewById(R.id.forgetPassword);
+
 
         // Set on Click Listener on Registration button
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loginUserAccount();
+            }
+        });
+
+        forgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showForgotPasswordDialog();
             }
         });
 
@@ -120,4 +144,44 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             });
         }
+
+    private void showForgotPasswordDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Reset Password");
+
+        View view = LayoutInflater.from(this).inflate(R.layout.forget_password, null);
+        builder.setView(view);
+
+        TextInputEditText emailEditText = view.findViewById(R.id.forgotPasswordReset);
+        Button resetButton = view.findViewById(R.id.resetPassword);
+
+        AlertDialog dialog = builder.create();
+
+        resetButton.setOnClickListener(v -> {
+            String email = emailEditText.getText().toString().trim();
+
+            if (TextUtils.isEmpty(email)) {
+                emailEditText.setError("Enter your email");
+                return;
+            }
+
+            divider.setVisibility(View.VISIBLE);
+
+
+            mAuth.sendPasswordResetEmail(email)
+                    .addOnCompleteListener(task -> {
+                        divider.setVisibility(View.GONE);
+
+
+                        if (task.isSuccessful()) {
+                            Toast.makeText(this, "Password reset email sent", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        } else {
+                            Toast.makeText(this, "Failed to send reset email", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        });
+
+        dialog.show();
+    }
     }

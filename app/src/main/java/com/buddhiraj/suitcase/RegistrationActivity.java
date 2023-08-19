@@ -74,6 +74,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 signUpButton.setEnabled(isChecked);
             }
         });
+
     }
 
     private void registerNewUser() {
