@@ -7,21 +7,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-public class LoginActivity extends AppCompatActivity {
+
+public class RegistrationActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_registration);
         // Find the "Register Now" TextView
-        TextView registerNowTextView = findViewById(R.id.registerNow);
+        TextView signInNowTextView = findViewById(R.id.signInNow);
 
         // Set a click listener for the "Register Now" TextView
-        registerNowTextView.setOnClickListener(new View.OnClickListener() {
+        signInNowTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Start the RegistrationActivity when the TextView is clicked
-                Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
+                Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
