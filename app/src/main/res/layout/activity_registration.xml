@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
+    android:background="@color/white"
     tools:context=".LoginActivity">
 
     <ImageView
@@ -26,32 +27,23 @@
         android:text="Create a new account"
         android:layout_below="@id/signUpImage"
         android:textSize="30dp"
+        android:textColor="@color/black"
         android:layout_marginRight="15sp"
         android:layout_marginLeft="15sp"
         android:textStyle="bold"
         android:fontFamily="@font/playfair"/>
 
-    <TextView
-        android:id="@+id/signUpText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Signup to your account"
-        android:textSize="14sp"
-        android:layout_marginRight="15sp"
-        android:layout_marginLeft="15sp"
-        android:textStyle="bold"
-        android:layout_below="@id/createAccount"
-        android:fontFamily="@font/playfair"
-        android:alpha="0.6" />
-
     <EditText
         android:id="@+id/userName"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_below="@id/signUpText"
+        android:layout_below="@id/createAccount"
         android:layout_marginLeft="15sp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="14dp"
         android:layout_marginRight="15sp"
+        android:alpha="0.6"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black"
         android:background="@drawable/edittext_border_background"
         android:hint="Full Name"
         android:inputType="textEmailAddress"
@@ -64,10 +56,13 @@
         android:layout_height="48dp"
         android:layout_below="@id/userName"
         android:layout_marginLeft="15sp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="14dp"
         android:layout_marginRight="15sp"
         android:background="@drawable/edittext_border_background"
         android:hint="Your Email"
+        android:textColor="@android:color/black"
+        android:alpha="0.6"
+        android:textColorHint="@android:color/black"
         android:inputType="textEmailAddress"
         android:textSize="12sp"
         android:padding="10sp" />
@@ -77,12 +72,15 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_below="@id/userEmail"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="14dp"
         android:padding="10sp"
         android:layout_marginRight="15sp"
         android:layout_marginLeft="15sp"
         android:hint="Password"
+        android:textColor="@android:color/black"
         android:inputType="textPassword"
+        android:alpha="0.6"
+        android:textColorHint="@android:color/black"
         android:textSize="12sp"
         android:background="@drawable/edittext_border_background" />
 
@@ -91,11 +89,14 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_below="@id/userPassword"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="14dp"
         android:padding="10sp"
         android:layout_marginRight="15sp"
         android:layout_marginLeft="15sp"
         android:hint="Retype Password"
+        android:textColor="@android:color/black"
+        android:alpha="0.6"
+        android:textColorHint="@android:color/black"
         android:inputType="textPassword"
         android:textSize="12sp"
         android:background="@drawable/edittext_border_background" />
@@ -106,8 +107,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/conformPassword"
         android:text="I accept the terms and services."
+        android:alpha="0.6"
+        android:textColorHint="@android:color/black"
         android:gravity="center_vertical|center_horizontal"
         android:textSize="16dp"
+        android:textColor="@color/black"
         android:layout_marginRight="15dp"
         android:layout_marginLeft="15dp"
         android:checked="false"/>
@@ -123,6 +127,7 @@
         android:padding="15dp"
         android:textSize="18sp"
         android:text="Sign Up"
+        android:textColor="@color/white"
         android:backgroundTint="@color/buttonBackground"
         android:fontFamily="@font/playfair" />
 
@@ -146,6 +151,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Already have a account?"
+                android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
@@ -160,5 +166,11 @@
                 android:textStyle="bold" />
         </LinearLayout>
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
 </RelativeLayout>
