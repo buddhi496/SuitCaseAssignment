@@ -35,30 +35,33 @@
             android:id="@+id/profileImage"
             android:layout_width="100dp"
             android:layout_height="80dp"
-            android:src="@drawable/login"
+            android:src="@drawable/yourpic"
             android:foregroundGravity="center"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:padding="16dp"/>
+            android:padding="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="showPopupMenu"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
-<Button
-        android:id="@+id/logOutButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="15sp"
-        android:layout_marginLeft="15sp"
-        android:layout_below="@id/header"
-        android:layout_marginTop="1dp"
-        android:padding="15dp"
-        android:textSize="18sp"
-        android:text="Log Out"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/buttonBackground"
-        android:fontFamily="@font/playfair"
-        tools:ignore="MissingConstraints" />
+<!--<Button-->
+<!--        android:id="@+id/logOutButton"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginRight="15sp"-->
+<!--        android:layout_marginLeft="15sp"-->
+<!--        android:layout_below="@id/header"-->
+<!--        android:layout_marginTop="1dp"-->
+<!--        android:padding="15dp"-->
+<!--        android:textSize="18sp"-->
+<!--        android:text="Log Out"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:backgroundTint="@color/buttonBackground"-->
+<!--        android:fontFamily="@font/playfair"-->
+<!--        tools:ignore="MissingConstraints" />-->
 
 </RelativeLayout>

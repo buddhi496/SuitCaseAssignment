@@ -20,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -30,6 +32,8 @@ public class RegistrationActivity extends AppCompatActivity {
 
     CheckBox termsAndCondition;
 
+    private DatabaseReference databaseReference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,9 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
         // Find the "Register Now" TextView
         TextView signInNowTextView = findViewById(R.id.signInNow);
+
+        // Initialize the DatabaseReference
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
         // Set a click listener for the "Register Now" TextView
         signInNowTextView.setOnClickListener(new View.OnClickListener() {
@@ -50,6 +57,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         // taking FirebaseAuth instance
         mAuth = FirebaseAuth.getInstance();
+
 
         // initialising all views through id defined above
         userNameTextView = findViewById(R.id.userName);
@@ -109,13 +117,20 @@ public class RegistrationActivity extends AppCompatActivity {
             return;
         }
         // create new user or register new user
-        mAuth
-                .createUserWithEmailAndPassword(email, password)
+        mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            // Get the UID of the newly created user
+                            String userId = mAuth.getCurrentUser().getUid();
+
+                            // Save username and email to the database
+                            String username = userNameTextView.getText().toString();
+                            User user = new User(username, email); // Create User instance
+                            databaseReference.child("users").child(userId).setValue(user);
+
                             Toast.makeText(getApplicationContext(),
                                             "Registration successful!",
                                             Toast.LENGTH_LONG)
