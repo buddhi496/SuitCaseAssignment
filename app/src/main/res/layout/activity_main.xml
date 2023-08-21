@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,16 +10,15 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="70dp"
         android:id="@+id/header"
         android:foregroundGravity="center"
-        android:background="@color/buttonBackground"
         tools:context=".MainActivity">
 
         <TextView
             android:id="@+id/welcomeText"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="70dp"
             android:fontFamily="@font/playfair"
             android:padding="16dp"
             android:text="Welcome User!"
@@ -31,8 +31,8 @@
 
         <ImageView
             android:id="@+id/profileImage"
-            android:layout_width="100dp"
-            android:layout_height="80dp"
+            android:layout_width="90dp"
+            android:layout_height="70dp"
             android:src="@drawable/yourpic"
             android:foregroundGravity="center"
             app:layout_constraintTop_toTopOf="parent"
@@ -44,34 +44,96 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/header"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:paddingRight="15dp"
-        android:textColor="@color/black"
-        android:paddingLeft="15dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Your Items"/>
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/search_border"
+        android:queryHint="Search your product" />
 
+    <TextView
+        android:id="@+id/category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/playfair"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="Categogy:"
+        android:layout_below="@id/searchBar"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/documentBox"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_below="@id/category"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="8dp"
+        android:background="@color/white"
+        app:cardElevation="4dp">
 
-<!--<Button-->
-<!--        android:id="@+id/logOutButton"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginRight="15sp"-->
-<!--        android:layout_marginLeft="15sp"-->
-<!--        android:layout_below="@id/header"-->
-<!--        android:layout_marginTop="1dp"-->
-<!--        android:padding="15dp"-->
-<!--        android:textSize="18sp"-->
-<!--        android:text="Log Out"-->
-<!--        android:textColor="@color/white"-->
-<!--        android:backgroundTint="@color/buttonBackground"-->
-<!--        android:fontFamily="@font/playfair"-->
-<!--        tools:ignore="MissingConstraints" />-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/documentIcon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/document"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/categoryName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Documents"
+                android:textColor="@android:color/black"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textColorHint="@color/black"
+                android:layout_marginTop="1dp" />
+
+            <TextView
+                android:id="@+id/totalItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="6 Items"
+                android:textColor="@android:color/black"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textColorHint="@color/black"
+                android:alpha="0.6"
+                android:layout_marginTop="1dp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:backgroundTint="@color/buttonBackground"
+        app:srcCompat="@drawable/plus" />
 
 </RelativeLayout>

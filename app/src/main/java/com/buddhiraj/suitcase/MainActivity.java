@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,7 +59,14 @@ public class MainActivity extends AppCompatActivity {
                     String userName = dataSnapshot.child("username").getValue(String.class);
                     if (userName != null) {
                         String welcomeMessage = "Hi, " + userName;
-                        welcomeText.setText(welcomeMessage);
+                        // Apply different color to the username part
+                        SpannableString spannableString = new SpannableString(welcomeMessage);
+                        ForegroundColorSpan colorSpan = new ForegroundColorSpan(getResources().getColor(R.color.buttonBackground));
+                        int startIndex = welcomeMessage.indexOf(userName);
+                        int endIndex = startIndex + userName.length();
+                        spannableString.setSpan(colorSpan, startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                        welcomeText.setText(spannableString);
                     } else {
                         welcomeText.setText("Welcome, User");
                     }
@@ -68,6 +80,14 @@ public class MainActivity extends AppCompatActivity {
                 // Handle error if data retrieval is cancelled
                 welcomeText.setText("Welcome, User");
                 Log.e("Database", "Data retrieval cancelled: " + databaseError.getMessage());
+            }
+        });
+
+        FloatingActionButton addButton = findViewById(R.id.addButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu(view);
             }
         });
     }
@@ -109,6 +129,32 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
 
+        });
+
+        popupMenu.show();
+    }
+
+    private void PopupMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(this, view);
+        popupMenu.getMenuInflater().inflate(R.menu.menu_add_options, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                int itemId = menuItem.getItemId();
+
+                if (itemId == R.id.menu_add_category) {
+                    // Handle adding a category
+                    Toast.makeText(MainActivity.this, "Add Category clicked", Toast.LENGTH_SHORT).show();
+                    return true;
+                } else if (itemId == R.id.menu_add_item) {
+                    // Handle adding an item
+                    Toast.makeText(MainActivity.this, "Add Item clicked", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+
+                return false;
+            }
         });
 
         popupMenu.show();
