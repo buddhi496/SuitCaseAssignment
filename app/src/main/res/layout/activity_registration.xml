@@ -101,6 +101,7 @@
         android:textSize="12sp"
         android:background="@drawable/edittext_border_background" />
 
+
     <CheckBox
         android:id="@+id/termsAndCondition"
         android:layout_width="match_parent"
@@ -173,5 +174,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone" />
+
 
 </RelativeLayout>

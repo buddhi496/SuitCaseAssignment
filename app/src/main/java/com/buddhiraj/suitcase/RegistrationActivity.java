@@ -68,6 +68,8 @@ public class RegistrationActivity extends AppCompatActivity {
         termsAndCondition = findViewById(R.id.termsAndCondition);
         progressbar = findViewById(R.id.progressbar);
 
+
+
         // Set on Click Listener on Registration button
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,17 +85,52 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
+    private boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private boolean isPasswordValid(String password) {
+        return password.length() >= 6; // Password should be at least 6 characters
+    }
     private void registerNewUser() {
 
-        // show the visibility of progress bar to show loading
-        progressbar.setVisibility(View.VISIBLE);
+
+        progressbar.setVisibility(View.VISIBLE); // show the visibility of progress bar to show loading
 
         // Take the value of two edit texts in Strings
         String email, password;
         email = userEmailTextView.getText().toString();
         password = userPasswordTextView.getText().toString();
+
+        String confirmPassword = conformPasswordTextView.getText().toString();
+        String name = userNameTextView.getText().toString();
+
+        if (TextUtils.isEmpty(name)) { //take users name
+            Toast.makeText(getApplicationContext(),
+                            "Please enter your name.",
+                            Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+
+        if (!isEmailValid(email)) { //check for valid email
+            Toast.makeText(getApplicationContext(),
+                            "Invalid email format.",
+                            Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+
+        if (!isPasswordValid(password)) { // check is password consider 6 character
+            Toast.makeText(getApplicationContext(),
+                            "Password must be at least 6 characters.",
+                            Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
 
         // Validations for input email and password
         if (TextUtils.isEmpty(email)) {
@@ -116,6 +153,14 @@ public class RegistrationActivity extends AppCompatActivity {
                     .show();
             return;
         }
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(getApplicationContext(),
+                            "Passwords do not match.",
+                            Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+        progressbar.setVisibility(View.GONE);
         // create new user or register new user
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -127,15 +172,14 @@ public class RegistrationActivity extends AppCompatActivity {
                             String userId = mAuth.getCurrentUser().getUid();
 
                             // Save username and email to the database
-                            String username = userNameTextView.getText().toString();
-                            User user = new User(username, email); // Create User instance
+                            String name = userNameTextView.getText().toString();
+                            User user = new User(name, email); // Create User instance
                             databaseReference.child("users").child(userId).setValue(user);
 
                             Toast.makeText(getApplicationContext(),
                                             "Registration successful!",
                                             Toast.LENGTH_LONG)
                                     .show();
-
 
                             // if the user created intent to login activity
                             Intent intent
@@ -154,6 +198,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                         }
                     }
-                });
+                }
+                );
     }
 }
