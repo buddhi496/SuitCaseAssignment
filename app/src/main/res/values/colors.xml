@@ -5,4 +5,14 @@
     <color name="buttonBackground">#01D3D4</color>
     <color name="secondaryColor">#DB5252</color>
     <color name="grey">#DCE1E8</color>
+    <color name="popupBackground">#F5F5F5</color>
+
+    //form material.io
+    <color name="CustomColor1">#01D3D4</color>
+
+    <color name="CustomColor2">#008DA4</color>
+
+    <color name="CustomColor3">#81B8B3</color>
+
+    <color name="CustomColor4">#00756F</color>
 </resources>

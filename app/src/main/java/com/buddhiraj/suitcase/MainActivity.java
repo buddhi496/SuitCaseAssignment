@@ -8,9 +8,12 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
@@ -25,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 PopupMenu(view);
             }
         });
+
     }
 
 
@@ -145,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (itemId == R.id.menu_add_category) {
                     // Handle adding a category
-                    Toast.makeText(MainActivity.this, "Add Category clicked", Toast.LENGTH_SHORT).show();
+                    showAddCategoryPopup(view); // Show the Add Category popup
                     return true;
                 } else if (itemId == R.id.menu_add_item) {
                     // Handle adding an item
@@ -159,8 +164,35 @@ public class MainActivity extends AppCompatActivity {
 
         popupMenu.show();
     }
-}
 
+    private void showAddCategoryPopup(View view) { //for add category
+        View popupView = getLayoutInflater().inflate(R.layout.popup_add_category, null);
+
+        EditText editCategoryName = popupView.findViewById(R.id.editCategoryName);
+        // You can similarly find other views like ImageView and EditText for description
+
+        Button addCategoryButton = popupView.findViewById(R.id.addCategoryButton);
+        addCategoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String categoryName = editCategoryName.getText().toString();
+                // Get other input values from views like ImageView and EditText
+
+                // Perform the logic to add the category to your database or wherever needed
+                // You can also dismiss the popup after adding the category
+                // popupWindow.dismiss();
+
+                Toast.makeText(MainActivity.this, "Category added: " + categoryName, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setFocusable(true);
+
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+    }
+}
 
 
 

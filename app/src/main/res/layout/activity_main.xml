@@ -54,7 +54,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/search_border"
-        android:queryHint="Search your product" />
+        android:queryHint="Search your items" />
 
     <TextView
         android:id="@+id/category"
@@ -71,59 +71,176 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/documentBox"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_below="@id/category"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        app:cardCornerRadius="8dp"
-        android:background="@color/white"
-        app:cardElevation="4dp">
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/category">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/documentIcon"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/document"
-                android:layout_gravity="center_horizontal" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/payBox"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_toEndOf="@id/documentBox"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="15dp"
+                android:background="@color/white"
+                app:cardElevation="4dp">
 
-            <TextView
-                android:id="@+id/categoryName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Documents"
-                android:textColor="@android:color/black"
-                android:gravity="center"
-                android:textSize="14sp"
-                android:textColorHint="@color/black"
-                android:layout_marginTop="1dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-            <TextView
-                android:id="@+id/totalItem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="6 Items"
-                android:textColor="@android:color/black"
-                android:gravity="center"
-                android:textSize="14sp"
-                android:textColorHint="@color/black"
-                android:alpha="0.6"
-                android:layout_marginTop="1dp" />
+                    <ImageView
+                        android:id="@+id/paymentIcon"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/document"
+                        android:layout_gravity="center_horizontal" />
 
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/paymentName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Payment"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:textSize="14sp"
+                        android:textColorHint="@color/black"
+                        android:layout_marginTop="1dp" />
+
+                    <TextView
+                        android:id="@+id/totalPaymentMethods"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="6 Items"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:textSize="10sp"
+                        android:textColorHint="@color/black"
+                        android:alpha="0.6"
+                        android:layout_marginTop="1dp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/documentBox"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="15dp"
+                android:background="@color/white"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/documentIcon"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/document"
+                        android:layout_gravity="center_horizontal" />
+
+                    <TextView
+                        android:id="@+id/categoryName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Documents"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:textSize="14sp"
+                        android:textColorHint="@color/black"
+                        android:layout_marginTop="1dp" />
+
+                    <TextView
+                        android:id="@+id/totalItem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="6 Items"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:textSize="10sp"
+                        android:textColorHint="@color/black"
+                        android:alpha="0.6"
+                        android:layout_marginTop="1dp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/healthBox"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_toEndOf="@id/payBox"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="15dp"
+                android:background="@color/white"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/healthIcon"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/document"
+                        android:layout_gravity="center_horizontal" />
+
+                    <TextView
+                        android:id="@+id/healthItems"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Health"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:textSize="14sp"
+                        android:textColorHint="@color/black"
+                        android:layout_marginTop="1dp" />
+
+                    <TextView
+                        android:id="@+id/totalHealthItems"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="6 Items"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:textSize="10sp"
+                        android:textColorHint="@color/black"
+                        android:alpha="0.6"
+                        android:layout_marginTop="1dp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+    </HorizontalScrollView>
+
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addButton"
