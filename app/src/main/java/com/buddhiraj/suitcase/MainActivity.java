@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
         popupWindow.setOutsideTouchable(true);
 
         // Find views in the pop-up layout
-        ListView itemListView = popupView.findViewById(R.id.itemListView);
+        LinearLayout itemListView = popupView.findViewById(R.id.itemListView);
         Button addItemsButton = popupView.findViewById(R.id.addItemsButton);
 
         LinearLayout itemDetailsLayout = popupView.findViewById(R.id.itemDetailsLayout);
