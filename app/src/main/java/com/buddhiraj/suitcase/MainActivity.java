@@ -14,7 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -47,14 +50,12 @@ public class MainActivity extends AppCompatActivity {
         profileImage = findViewById(R.id.profileImage);
         welcomeText = findViewById(R.id.welcomeText);
 
-
-
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             retrieveUserNameFromDatabase(currentUser.getUid());
         }
     }
-    private void retrieveUserNameFromDatabase(String userId) {
+    private void retrieveUserNameFromDatabase(String userId) { //fetchUserName
         DatabaseReference userRef = databaseReference.child("users").child(userId);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     String userName = dataSnapshot.child("username").getValue(String.class);
                     if (userName != null) {
-                        String welcomeMessage = "Hi, " + userName;
+                        String welcomeMessage = "Hi,\n " + userName;
                         // Apply different color to the username part
                         SpannableString spannableString = new SpannableString(welcomeMessage);
                         ForegroundColorSpan colorSpan = new ForegroundColorSpan(getResources().getColor(R.color.buttonBackground));
@@ -192,6 +193,39 @@ public class MainActivity extends AppCompatActivity {
 
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
+
+
+    public void showPopupItems(View view) { //to add items in category
+        View popupView = getLayoutInflater().inflate(R.layout.popup_items, null);
+
+        // Create the pop-up window
+        PopupWindow popupWindow = new PopupWindow(
+                popupView,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+
+        // Find views in the pop-up layout
+        ListView itemListView = popupView.findViewById(R.id.itemListView);
+        Button addItemsButton = popupView.findViewById(R.id.addItemsButton);
+
+        LinearLayout itemDetailsLayout = popupView.findViewById(R.id.itemDetailsLayout);
+
+        addItemsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Show the hidden layout
+                itemDetailsLayout.setVisibility(View.VISIBLE);
+                addItemsButton.setVisibility(View.INVISIBLE);
+            }
+        });
+        // Show the pop-up
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+    }
+
 }
 
 
