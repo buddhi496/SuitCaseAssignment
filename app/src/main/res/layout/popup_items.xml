@@ -6,7 +6,6 @@
     android:padding="16dp">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/itemListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -57,41 +56,72 @@
         android:padding="16dp"
         android:visibility="gone">
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/item" />
+
         <TextView
-            android:id="@+id/chooseImageButton"
+            android:id="@+id/click"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Choose Image"
-            android:textColor="@android:color/black"
-            android:gravity="center"
-            android:padding="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:onClick="chooseImageClicked"/>
+            android:layout_marginBottom="16dp"
+            android:text="Click Image to Choose image"
+            android:textColor="@color/black"
+            android:alpha="0.6"/>
 
         <EditText
             android:id="@+id/editItemName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:background="@drawable/edittext_border_background"
+            android:alpha="0.6"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/black"
+            android:textSize="12sp"
+            android:padding="10sp"
             android:hint="Item Name"/>
-
-        <EditText
-            android:id="@+id/editItemDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Item Description"/>
 
         <EditText
             android:id="@+id/editItemPrice"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edittext_border_background"
+            android:alpha="0.6"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/black"
+            android:textSize="12sp"
+            android:padding="10sp"
             android:hint="Item Price"/>
 
         <EditText
             android:id="@+id/editStoreName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edittext_border_background"
+            android:alpha="0.6"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/black"
+            android:textSize="12sp"
+            android:padding="10sp"
             android:hint="Store Name"/>
+
+        <EditText
+            android:id="@+id/editItemDescription"
+            android:layout_width="match_parent"
+            android:layout_height="98dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edittext_border_background"
+            android:alpha="0.6"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/black"
+            android:textSize="12sp"
+            android:padding="10sp"
+            android:hint="Item Description"/>
 
         <Button
             android:id="@+id/confirmAddButton"

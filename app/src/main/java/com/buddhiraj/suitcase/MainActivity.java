@@ -40,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     ImageView profileImage;
     TextView welcomeText;
     private DatabaseReference databaseReference;
+    private ImageView imageView;
+    private EditText editItemName, editPrice, editItemDetails, editStore;
+    private Button addButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,6 +230,5 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
-
 
 
