@@ -101,8 +101,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
     private void logoutUser() {
         FirebaseAuth.getInstance().signOut();
 
@@ -151,14 +149,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 int itemId = menuItem.getItemId();
-
-                if (itemId == R.id.menu_add_category) {
-                    // Handle adding a category
-                    showAddCategoryPopup(view); // Show the Add Category popup
-                    return true;
-                } else if (itemId == R.id.menu_add_item) {
+                if (itemId == R.id.menu_add_item) {
                     // Handle adding an item
                     Toast.makeText(MainActivity.this, "Add Item clicked", Toast.LENGTH_SHORT).show();
+                    Intent addItemIntent = new Intent(MainActivity.this, AddItemActivity.class);
+
+                    // Start the AddItemCategory activity
+                    startActivity(addItemIntent);
+
                     return true;
                 }
 
@@ -196,39 +194,6 @@ public class MainActivity extends AppCompatActivity {
 
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
-
-
-    public void showPopupItems(View view) { //to add items in category
-        View popupView = getLayoutInflater().inflate(R.layout.popup_items, null);
-
-        // Create the pop-up window
-        PopupWindow popupWindow = new PopupWindow(
-                popupView,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-
-        popupWindow.setFocusable(true);
-        popupWindow.setOutsideTouchable(true);
-
-        // Find views in the pop-up layout
-        LinearLayout itemListView = popupView.findViewById(R.id.itemListView);
-        Button addItemsButton = popupView.findViewById(R.id.addItemsButton);
-
-        LinearLayout itemDetailsLayout = popupView.findViewById(R.id.itemDetailsLayout);
-
-        addItemsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Show the hidden layout
-                itemDetailsLayout.setVisibility(View.VISIBLE);
-                addItemsButton.setVisibility(View.INVISIBLE);
-            }
-        });
-        // Show the pop-up
-        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-    }
-
 }
 
 

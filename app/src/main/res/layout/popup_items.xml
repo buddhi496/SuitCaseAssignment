@@ -6,48 +6,6 @@
     android:padding="16dp">
 
     <LinearLayout
-        android:id="@+id/itemListView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/itemImage"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/card"/>
-
-        <TextView
-            android:id="@+id/itemName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Card"
-            android:textStyle="bold"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:id="@+id/itemPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rs. 2500"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:id="@+id/itemDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="To get money from atm"
-            android:textColor="@color/black"
-            android:alpha="0.6"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="5dp"
-            android:background="@android:color/darker_gray"/>
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/itemDetailsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -139,7 +97,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Items"
-        android:layout_below="@id/itemListView"
         android:backgroundTint="@color/buttonBackground"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>

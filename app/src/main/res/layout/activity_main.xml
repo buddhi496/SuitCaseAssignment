@@ -107,7 +107,7 @@
                 app:cardCornerRadius="15dp"
                 android:background="@color/white"
                 app:cardElevation="4dp"
-                android:onClick="showPopupItems">
+                android:onClick="showPayment">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -161,7 +161,7 @@
                 app:cardCornerRadius="15dp"
                 android:background="@color/white"
                 app:cardElevation="4dp"
-                android:onClick="showPopupItems">
+                android:onClick="showDocuments">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -215,7 +215,7 @@
                 app:cardCornerRadius="15dp"
                 android:background="@color/white"
                 app:cardElevation="4dp"
-                android:onClick="showPopupItems">
+                android:onClick="showHealth">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -269,7 +269,7 @@
                 app:cardCornerRadius="15dp"
                 android:background="@color/white"
                 app:cardElevation="4dp"
-                android:onClick="showPopupItems">
+                android:onClick="showCloth">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -323,7 +323,7 @@
                 app:cardCornerRadius="15dp"
                 android:background="@color/white"
                 app:cardElevation="4dp"
-                android:onClick="showPopupItems">
+                android:onClick="showElectronic">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -377,7 +377,7 @@
                 app:cardCornerRadius="15dp"
                 android:background="@color/white"
                 app:cardElevation="4dp"
-                android:onClick="showPopupItems">
+                android:onClick="showOthers">
 
                 <LinearLayout
                     android:layout_width="match_parent"

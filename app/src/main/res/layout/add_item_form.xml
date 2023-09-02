@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Choose Image Button or TextView -->
+    <Button
+        android:id="@+id/chooseImageButton"
+        style="@style/MyButtonStyle"
+        android:backgroundTint="@color/buttonBackground"
+        />
+
+    <!-- Item Name Field -->
+    <EditText
+        android:id="@+id/itemNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Item Name"
+        android:layout_below="@+id/chooseImageButton"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp" />
+
+    <!-- Item Detail Field -->
+    <EditText
+        android:id="@+id/itemDetailEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Item Detail"
+        android:layout_below="@+id/itemNameEditText"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp" />
+
+    <!-- Item Price Field -->
+    <EditText
+        android:id="@+id/itemPriceEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Item Price"
+        android:inputType="numberDecimal"
+        android:layout_below="@+id/itemDetailEditText"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp" />
+
+    <!-- Store Name Field -->
+    <EditText
+        android:id="@+id/storeNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Store Name"
+        android:layout_below="@+id/itemPriceEditText"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp" />
+
+    <!-- Choose Category Field -->
+    <Spinner
+        android:id="@+id/categorySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/storeNameEditText"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp" />
+
+    <!-- Add Item Button -->
+    <Button
+        android:id="@+id/addItemButton"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Add Item"
+        android:layout_below="@+id/categorySpinner"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/buttonBackground"
+        android:gravity="center"
+        android:layout_marginHorizontal="16dp" />
+</RelativeLayout>
