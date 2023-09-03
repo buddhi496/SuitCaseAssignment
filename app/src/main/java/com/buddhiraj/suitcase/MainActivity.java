@@ -1,7 +1,10 @@
 package com.buddhiraj.suitcase;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -12,6 +15,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -32,8 +36,14 @@ import com.google.firebase.database.ValueEventListener;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Document;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -130,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
 
-
             private void openProfileActivity() {
                 Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                 startActivity(intent);
@@ -151,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
                 int itemId = menuItem.getItemId();
                 if (itemId == R.id.menu_add_item) {
                     // Handle adding an item
-                    Toast.makeText(MainActivity.this, "Add Item clicked", Toast.LENGTH_SHORT).show();
                     Intent addItemIntent = new Intent(MainActivity.this, AddItemActivity.class);
 
                     // Start the AddItemCategory activity
@@ -159,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
 
                     return true;
                 }
-
                 return false;
             }
         });
@@ -167,32 +174,59 @@ public class MainActivity extends AppCompatActivity {
         popupMenu.show();
     }
 
-    private void showAddCategoryPopup(View view) { //for add category
-        View popupView = getLayoutInflater().inflate(R.layout.popup_add_category, null);
 
-        EditText editCategoryName = popupView.findViewById(R.id.editCategoryName);
-        // You can similarly find other views like ImageView and EditText for description
+    public void showDocuments(View view) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("Documents");
 
-        Button addCategoryButton = popupView.findViewById(R.id.addCategoryButton);
-        addCategoryButton.setOnClickListener(new View.OnClickListener() {
+        // Listen for changes in the "Documents" node
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                String categoryName = editCategoryName.getText().toString();
-                // Get other input values from views like ImageView and EditText
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    List<DocumentItem> documentItems = new ArrayList<>();
 
-                // Perform the logic to add the category to your database or wherever needed
-                // You can also dismiss the popup after adding the category
-                // popupWindow.dismiss();
+                    for (DataSnapshot documentSnapshot : dataSnapshot.getChildren()) {
+                        // Retrieve data from each document in the "Documents" node
+                        int image = documentSnapshot.child("image").getValue(Integer.class);
+                        String name = documentSnapshot.child("name").getValue(String.class);
+                        String price = documentSnapshot.child("price").getValue(String.class);
+                        String description = documentSnapshot.child("description").getValue(String.class);
+                        String storeName = documentSnapshot.child("storeName").getValue(String.class);
 
-                Toast.makeText(MainActivity.this, "Category added: " + categoryName, Toast.LENGTH_SHORT).show();
+                        // Create a DocumentItem object and add it to the list
+                        DocumentItem documentItem = new DocumentItem(image, name, price, description, storeName);
+                        documentItems.add(documentItem);
+                    }
+
+                    // Create a custom adapter
+                    DocumentAdapter adapter = new DocumentAdapter(MainActivity.this, documentItems);
+
+                    // Create a dialog builder
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Documents")
+                            .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Handle item click here (e.g., open document details, etc.)
+                                    DocumentItem selectedDocument = documentItems.get(which);
+                                    // Access selectedDocument.getImage(), selectedDocument.getName(), etc.
+                                }
+                            });
+
+                    // Create and show the dialog
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                } else {
+                    // Handle the case when there are no documents in the database
+                    Toast.makeText(MainActivity.this, "No documents found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle error if data retrieval is canceled
+                Toast.makeText(MainActivity.this, "Data retrieval canceled: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.setFocusable(true);
-
-        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 }
 
