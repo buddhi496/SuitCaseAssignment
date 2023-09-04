@@ -4,13 +4,13 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:text">Choose Image</item>
-        <item name="android:textColor">@android:color/white</item> <!-- Text color -->
-        <item name="android:textSize">16sp</item> <!-- Text size -->
-        <item name="android:background">@drawable/button_background</item> <!-- Button background -->
-        <item name="android:paddingStart">16dp</item> <!-- Left padding -->
-        <item name="android:paddingEnd">16dp</item> <!-- Right padding -->
-        <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
     </style>
 
 </resources>
