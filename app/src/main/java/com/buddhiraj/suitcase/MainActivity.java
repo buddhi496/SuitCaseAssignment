@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
             retrieveUserNameFromDatabase(currentUser.getUid());
         }
     }
+
     private void retrieveUserNameFromDatabase(String userId) { //fetchUserName
         DatabaseReference userRef = databaseReference.child("users").child(userId);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -173,61 +174,12 @@ public class MainActivity extends AppCompatActivity {
 
         popupMenu.show();
     }
-
-
     public void showDocuments(View view) {
-        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("Documents");
 
-        // Listen for changes in the "Documents" node
-        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    List<DocumentItem> documentItems = new ArrayList<>();
+        Intent intent = new Intent(MainActivity.this, DocumentItemsActivity.class);
 
-                    for (DataSnapshot documentSnapshot : dataSnapshot.getChildren()) {
-                        // Retrieve data from each document in the "Documents" node
-                        int image = documentSnapshot.child("image").getValue(Integer.class);
-                        String name = documentSnapshot.child("name").getValue(String.class);
-                        String price = documentSnapshot.child("price").getValue(String.class);
-                        String description = documentSnapshot.child("description").getValue(String.class);
-                        String storeName = documentSnapshot.child("storeName").getValue(String.class);
-
-                        // Create a DocumentItem object and add it to the list
-                        DocumentItem documentItem = new DocumentItem(image, name, price, description, storeName);
-                        documentItems.add(documentItem);
-                    }
-
-                    // Create a custom adapter
-                    DocumentAdapter adapter = new DocumentAdapter(MainActivity.this, documentItems);
-
-                    // Create a dialog builder
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle("Documents")
-                            .setAdapter(adapter, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // Handle item click here (e.g., open document details, etc.)
-                                    DocumentItem selectedDocument = documentItems.get(which);
-                                    // Access selectedDocument.getImage(), selectedDocument.getName(), etc.
-                                }
-                            });
-
-                    // Create and show the dialog
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                } else {
-                    // Handle the case when there are no documents in the database
-                    Toast.makeText(MainActivity.this, "No documents found", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle error if data retrieval is canceled
-                Toast.makeText(MainActivity.this, "Data retrieval canceled: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        startActivity(intent);
     }
-}
 
+}
 
