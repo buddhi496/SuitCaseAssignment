@@ -1,7 +1,10 @@
 package com.buddhiraj.suitcase;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.CheckBox;
@@ -12,7 +15,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class DocumentItemsActivity extends AppCompatActivity {
-
     private LinearLayout containerLayout; // LinearLayout to hold your items
 
     @Override
@@ -26,10 +28,11 @@ public class DocumentItemsActivity extends AppCompatActivity {
         // Find the container layout by its ID
         containerLayout = findViewById(R.id.containerLayout);
 
-        // Add a ValueEventListener to fetch and display all "name" fields
+        // Add a ValueEventListener to fetch and display all documents
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 containerLayout.removeAllViews(); // Clear any previous views
 
                 int itemNumber = 1; // To track the item number
@@ -66,5 +69,13 @@ public class DocumentItemsActivity extends AppCompatActivity {
                 // You can log or display an error message
             }
         });
+    }
+
+    public void itemDetail(View view) {
+        TextView nameTextView = (TextView) view.findViewById(R.id.textViewName);
+        String documentName = nameTextView.getText().toString();
+        Intent intent = new Intent(this, ItemDetailActivity.class);
+        intent.putExtra("documentName", documentName);
+        startActivity(intent);
     }
 }

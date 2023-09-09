@@ -5,7 +5,10 @@
     android:layout_height="wrap_content"
     android:id="@+id/containerLayout"
     android:orientation="vertical"
-    android:layout_marginTop="10dp">
+    android:layout_marginTop="10dp"
+    android:clickable="true"
+    android:focusable="true"
+    >
 
     <!-- Content Layout (Number, Name, Checkbox) -->
     <LinearLayout
@@ -13,7 +16,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:paddingRight="20dp"
+       >
 
         <!-- Number TextView -->
         <TextView
@@ -34,7 +38,7 @@
             android:textSize="16sp"
             android:textColor="@android:color/black"
             android:layout_gravity="center_vertical"
-            android:clickable="true" />
+            android:onClick="itemDetail"/>
 
         <!-- CheckBox -->
         <CheckBox
