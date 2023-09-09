@@ -1,6 +1,5 @@
 package com.buddhiraj.suitcase;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -21,6 +20,9 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -30,6 +32,7 @@ public class AddItemActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri imageUri;
     private ImageView imageView;
+    private DatabaseReference databaseRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +57,7 @@ public class AddItemActivity extends AppCompatActivity {
         EditText storeNameEditText = findViewById(R.id.storeNameEditText);
         Button addItemButton = findViewById(R.id.addItemButton);
         imageView = findViewById(R.id.imageView);
-
-        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference itemsRef = databaseRef.child("items");
+        databaseRef = FirebaseDatabase.getInstance().getReference();
 
         // Find the Spinner in the add_item_form layout
         Spinner categorySpinner = findViewById(R.id.categorySpinner);
@@ -75,47 +76,21 @@ public class AddItemActivity extends AppCompatActivity {
 
         // Choose Image Button click listener
         Button chooseImageButton = findViewById(R.id.chooseImageButton);
-        chooseImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openImageChooser();
-            }
-        });
+        chooseImageButton.setOnClickListener(v -> openImageChooser());
 
         // Add Item Button click listener
-        addItemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Check if an image has been selected
-                if (imageUri == null) {
-                    Toast.makeText(AddItemActivity.this, "Please choose an image", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                // Retrieve values from form fields
-                String itemName = itemNameEditText.getText().toString();
-                String itemDetail = itemDetailEditText.getText().toString();
-                double itemPrice = Double.parseDouble(itemPriceEditText.getText().toString());
-                String storeName = storeNameEditText.getText().toString();
-                String selectedCategory = categorySpinner.getSelectedItem().toString();
-
-                // Generate a unique key for the item
-                String itemKey = itemsRef.push().getKey();
-
-                // Upload the image to Firebase Storage
-                uploadImageToFirebaseStorage(itemKey);
-
-                // Create an Item object with the item's information (excluding the image URL)
-                DocumentItem newItem = new DocumentItem(null, itemName, String.valueOf(itemPrice), itemDetail, storeName);
-
-                // Push the item to the appropriate category node
-                DatabaseReference categoryNodeRef = databaseRef.child(selectedCategory);
-                categoryNodeRef.child(itemKey).setValue(newItem);
-
-                // Optionally, show a success message or navigate back to the main activity
-                Toast.makeText(AddItemActivity.this, "Item added successfully!", Toast.LENGTH_SHORT).show();
-                finish(); // Finish the AddItemActivity and return to the main activity
+        addItemButton.setOnClickListener(view -> {
+            // Check if an image has been selected
+            if (imageUri == null) {
+                Toast.makeText(AddItemActivity.this, "Please choose an image", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            // Generate a unique key for the item
+            String itemKey = UUID.randomUUID().toString();
+
+            // Upload the image to Firebase Storage and save the item to the database
+            uploadImageToFirebaseStorage(itemKey);
         });
     }
 
@@ -156,29 +131,53 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     private void uploadImageToFirebaseStorage(String itemKey) {
-        // Upload the image to Firebase Storage and get the download URL
-        // You need to implement this part based on your Firebase Storage setup
-        // Here's a basic example of how it might be done:
+        // Check if an image has been selected
+        if (imageUri != null) {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference().child("item_images").child(itemKey);
 
-        // FirebaseStorage storage = FirebaseStorage.getInstance();
-        // StorageReference storageRef = storage.getReference().child("items/" + itemKey);
-        // StorageMetadata metadata = new StorageMetadata.Builder().setContentType("image/jpeg").build();
-        // UploadTask uploadTask = storageRef.putFile(imageUri, metadata);
+            storageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Image uploaded successfully, now get the download URL
+                        storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            String imageURL = uri.toString();
+                            // Save the image URL in the database along with other item details
+                            saveItemToDatabase(itemKey, imageURL);
+                        }).addOnFailureListener(e -> {
+                            // Handle the error when getting the download URL
+                            Toast.makeText(AddItemActivity.this, "Failed to get image URL.", Toast.LENGTH_SHORT).show();
+                        });
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle the error when uploading the image
+                        Toast.makeText(AddItemActivity.this, "Failed to upload image.", Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
 
-        // uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-        //     @Override
-        //     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-        //         // Get the download URL for the uploaded image
-        //         storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-        //             @Override
-        //             public void onSuccess(Uri uri) {
-        //                 // Save the image URL in the database or use it as needed
-        //                 String imageURL = uri.toString();
-        //                 // Update the item in the database with the imageURL
-        //                 // Example: itemsRef.child(itemKey).child("imageURL").setValue(imageURL);
-        //             }
-        //         });
-        //     }
-        // });
+    private void saveItemToDatabase(String itemKey, String imageURL) {
+        EditText itemNameEditText = findViewById(R.id.itemNameEditText);
+        EditText itemDetailEditText = findViewById(R.id.itemDetailEditText);
+        EditText itemPriceEditText = findViewById(R.id.itemPriceEditText);
+        EditText storeNameEditText = findViewById(R.id.storeNameEditText);
+        Spinner categorySpinner = findViewById(R.id.categorySpinner);
+
+        // Retrieve values from form fields
+        String itemName = itemNameEditText.getText().toString();
+        String itemDetail = itemDetailEditText.getText().toString();
+        double itemPrice = Double.parseDouble(itemPriceEditText.getText().toString());
+        String storeName = storeNameEditText.getText().toString();
+        String selectedCategory = categorySpinner.getSelectedItem().toString();
+
+        // Create a DocumentItem object with the item's information
+        DocumentItem newItem = new DocumentItem(imageURL, itemName, String.valueOf(itemPrice), itemDetail, storeName);
+
+        // Push the item to the appropriate category node
+        DatabaseReference categoryNodeRef = databaseRef.child(selectedCategory);
+        categoryNodeRef.child(itemKey).setValue(newItem);
+
+        // Optionally, show a success message or navigate back to the main activity
+        Toast.makeText(AddItemActivity.this, "Item added successfully!", Toast.LENGTH_SHORT).show();
+        finish(); // Finish the AddItemActivity and return to the main activity
     }
 }
