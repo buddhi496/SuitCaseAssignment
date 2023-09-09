@@ -1,6 +1,8 @@
 package com.buddhiraj.suitcase;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +36,13 @@ public class DocumentAdapter extends ArrayAdapter<DocumentItem> {
         TextView documentDescription = rowView.findViewById(R.id.documentDescription);
 
         DocumentItem item = items.get(position);
-        documentImage.setImageResource(item.getImage());
+
+        // Convert the byte array to a Bitmap and set it in the ImageView
+        if (item.getImage() != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(item.getImage(), 0, item.getImage().length);
+            documentImage.setImageBitmap(bitmap);
+        }
+
         documentName.setText(item.getName());
         documentPrice.setText(item.getPrice());
         documentDescription.setText(item.getDescription());

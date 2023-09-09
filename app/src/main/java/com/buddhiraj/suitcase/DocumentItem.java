@@ -1,13 +1,13 @@
 package com.buddhiraj.suitcase;
 
 public class DocumentItem {
-    private final int image;
+    private final byte[] image;
     private final String name;
     private final String price;
     private final String description;
     private final String storeName;
 
-    public DocumentItem(int image, String name, String price, String description, String storeName) {
+    public DocumentItem(byte[] image, String name, String price, String description, String storeName) {
         this.image = image;
         this.name = name;
         this.price = price;
@@ -15,7 +15,7 @@ public class DocumentItem {
         this.storeName = storeName;
     }
 
-    public int getImage() {
+    public byte[] getImage() {
         return image;
     }
 
