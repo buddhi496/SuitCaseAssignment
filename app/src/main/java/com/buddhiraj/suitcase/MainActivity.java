@@ -4,8 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -44,6 +49,7 @@ import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,10 +60,21 @@ public class MainActivity extends AppCompatActivity {
     private EditText editItemName, editPrice, editItemDetails, editStore;
     private Button addButton;
 
+    private SensorManager sensorManager;
+    private float mAccel;
+    private float mAccelCurrent;
+    private float mAccelLast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        Objects.requireNonNull(sensorManager).registerListener(mSensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        mAccel = 10f;
+        mAccelCurrent = SensorManager.GRAVITY_EARTH;
+        mAccelLast = SensorManager.GRAVITY_EARTH;
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         profileImage = findViewById(R.id.profileImage);
@@ -67,6 +84,44 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser != null) {
             retrieveUserNameFromDatabase(currentUser.getUid());
         }
+    }
+
+    private final SensorEventListener mSensorListener = new SensorEventListener() {
+        public void onSensorChanged(SensorEvent se) {
+            float x = se.values[0];
+            float y = se.values[1];
+            float z = se.values[2];
+            mAccelLast = mAccelCurrent;
+            mAccelCurrent = (float) Math.sqrt((double) (x * x + y * y + z * z));
+            float delta = mAccelCurrent - mAccelLast;
+            mAccel = mAccel * 0.9f + delta;
+            if (mAccel > 12) {
+                refreshActivity();
+            }
+        }
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+    };
+
+    private void refreshActivity() {
+        // Finish the current activity
+        finish();
+
+        // Start the same activity to refresh it
+        Intent refreshIntent = new Intent(this, MainActivity.class);
+        startActivity(refreshIntent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(mSensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+    }
+    @Override
+    protected void onPause() {
+        sensorManager.unregisterListener(mSensorListener);
+        super.onPause();
+
     }
 
     private void retrieveUserNameFromDatabase(String userId) { //fetchUserName
