@@ -12,6 +12,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -65,6 +66,10 @@ public class MainActivity extends AppCompatActivity {
     private float mAccelCurrent;
     private float mAccelLast;
     private View refreshProgressBar;
+    private View dimBackground;
+    private boolean doubleBackToExitPressedOnce = false;
+    private Handler backButtonHandler = new Handler();
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +85,10 @@ public class MainActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         profileImage = findViewById(R.id.profileImage);
         welcomeText = findViewById(R.id.welcomeText);
+
         refreshProgressBar = findViewById(R.id.refreshProgressBar);
+        dimBackground = findViewById(R.id.dimBackground);
+
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -106,12 +114,27 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void refreshActivity() {
+        // Show the dim background overlay
+        dimBackground.setVisibility(View.VISIBLE);
+
+        // Show the ProgressBar
         refreshProgressBar.setVisibility(View.VISIBLE);
+
+        // Finish the current activity
         finish();
 
-        // Start the same activity to refresh it
+        // Start the same activity to refresh it (you can add a delay if needed)
         Intent refreshIntent = new Intent(this, MainActivity.class);
         startActivity(refreshIntent);
+
+        // Hide the ProgressBar and dim background overlay after 5 seconds
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshProgressBar.setVisibility(View.GONE);
+                dimBackground.setVisibility(View.GONE);
+            }
+        }, 5000); // 5000 milliseconds (5 seconds)
     }
 
     @Override
@@ -126,9 +149,31 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            // If the flag is true (user pressed back button twice), exit the app
+            finishAffinity();
+        } else {
+            // If the flag is false (first back button press), show a message
+            doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+
+            // Set a delay to reset the flag after a certain time (e.g., 2 seconds)
+            backButtonHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000); // 2000 milliseconds (2 seconds)
+        }
+    }
+
+
     private void retrieveUserNameFromDatabase(String userId) { //fetchUserName
         DatabaseReference userRef = databaseReference.child("users").child(userId);
         refreshProgressBar.setVisibility(View.GONE);
+        dimBackground.setVisibility(View.GONE);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

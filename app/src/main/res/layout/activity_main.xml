@@ -454,4 +454,12 @@
         android:visibility="gone"
         android:indeterminate="true" />
 
+    <View
+        android:id="@+id/dimBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:alpha="0.5"
+        android:visibility="gone" />
+
 </RelativeLayout>

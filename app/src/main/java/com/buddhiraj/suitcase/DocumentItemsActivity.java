@@ -9,6 +9,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,6 +29,8 @@ public class DocumentItemsActivity extends AppCompatActivity {
     private float mAccelCurrent;
     private float mAccelLast;
     private View refreshProgressBar;
+    private View dimBackground;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,8 @@ public class DocumentItemsActivity extends AppCompatActivity {
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
         refreshProgressBar = findViewById(R.id.refreshProgressBar);
+        dimBackground = findViewById(R.id.dimBackground);
+
         // Initialize Firebase Database reference
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Documents");
 
@@ -107,13 +112,27 @@ public class DocumentItemsActivity extends AppCompatActivity {
     };
 
     private void refreshActivity() {
+        // Show the dim background overlay
+        dimBackground.setVisibility(View.VISIBLE);
+
+        // Show the ProgressBar
         refreshProgressBar.setVisibility(View.VISIBLE);
+
         // Finish the current activity
         finish();
 
-        // Start the same activity to refresh it
-        Intent refreshIntent = new Intent(this, DocumentItemsActivity   .class);
+        // Start the same activity to refresh it (you can add a delay if needed)
+        Intent refreshIntent = new Intent(this, DocumentItemsActivity.class);
         startActivity(refreshIntent);
+
+        // Hide the ProgressBar and dim background overlay after 5 seconds
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshProgressBar.setVisibility(View.GONE);
+                dimBackground.setVisibility(View.GONE);
+            }
+        }, 5000); // 5000 milliseconds (5 seconds)
     }
 
     @Override
@@ -127,9 +146,21 @@ public class DocumentItemsActivity extends AppCompatActivity {
         super.onPause();
 
     }
+    @Override
+    public void onBackPressed() {
+        // Check if the current activity is the main activity
+        if (isTaskRoot()) {
+            // If it's the main activity, exit the app
+            finishAffinity();
+        } else {
+            // If it's not the main activity, allow the default back button behavior
+            super.onBackPressed();
+        }
+    }
 
     public void itemDetail(View view) {
         refreshProgressBar.setVisibility(View.GONE);
+        dimBackground.setVisibility(View.GONE);
         TextView nameTextView = (TextView) view.findViewById(R.id.textViewName);
         String documentName = nameTextView.getText().toString();
         Intent intent = new Intent(this, ItemDetailActivity.class);
