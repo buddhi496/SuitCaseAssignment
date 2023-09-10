@@ -27,6 +27,7 @@ public class DocumentItemsActivity extends AppCompatActivity {
     private float mAccel;
     private float mAccelCurrent;
     private float mAccelLast;
+    private View refreshProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,7 @@ public class DocumentItemsActivity extends AppCompatActivity {
         mAccel = 10f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
-
+        refreshProgressBar = findViewById(R.id.refreshProgressBar);
         // Initialize Firebase Database reference
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Documents");
 
@@ -106,6 +107,7 @@ public class DocumentItemsActivity extends AppCompatActivity {
     };
 
     private void refreshActivity() {
+        refreshProgressBar.setVisibility(View.VISIBLE);
         // Finish the current activity
         finish();
 
@@ -127,6 +129,7 @@ public class DocumentItemsActivity extends AppCompatActivity {
     }
 
     public void itemDetail(View view) {
+        refreshProgressBar.setVisibility(View.GONE);
         TextView nameTextView = (TextView) view.findViewById(R.id.textViewName);
         String documentName = nameTextView.getText().toString();
         Intent intent = new Intent(this, ItemDetailActivity.class);

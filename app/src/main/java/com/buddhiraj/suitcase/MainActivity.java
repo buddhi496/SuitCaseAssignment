@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private float mAccel;
     private float mAccelCurrent;
     private float mAccelLast;
+    private View refreshProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         profileImage = findViewById(R.id.profileImage);
         welcomeText = findViewById(R.id.welcomeText);
+        refreshProgressBar = findViewById(R.id.refreshProgressBar);
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -104,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void refreshActivity() {
-        // Finish the current activity
+        refreshProgressBar.setVisibility(View.VISIBLE);
         finish();
 
         // Start the same activity to refresh it
@@ -126,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void retrieveUserNameFromDatabase(String userId) { //fetchUserName
         DatabaseReference userRef = databaseReference.child("users").child(userId);
+        refreshProgressBar.setVisibility(View.GONE);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
