@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -51,10 +52,6 @@ public class AddItemActivity extends AppCompatActivity {
             }
         });
 
-        EditText itemNameEditText = findViewById(R.id.itemNameEditText);
-        EditText itemDetailEditText = findViewById(R.id.itemDetailEditText);
-        EditText itemPriceEditText = findViewById(R.id.itemPriceEditText);
-        EditText storeNameEditText = findViewById(R.id.storeNameEditText);
         Button addItemButton = findViewById(R.id.addItemButton);
         imageView = findViewById(R.id.imageView);
         databaseRef = FirebaseDatabase.getInstance().getReference();
@@ -156,6 +153,9 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     private void saveItemToDatabase(String itemKey, String imageURL) {
+
+        String authUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         EditText itemNameEditText = findViewById(R.id.itemNameEditText);
         EditText itemDetailEditText = findViewById(R.id.itemDetailEditText);
         EditText itemPriceEditText = findViewById(R.id.itemPriceEditText);
@@ -171,6 +171,7 @@ public class AddItemActivity extends AppCompatActivity {
 
         // Create a DocumentItem object with the item's information
         DocumentItem newItem = new DocumentItem(imageURL, itemName, String.valueOf(itemPrice), itemDetail, storeName);
+        newItem.setUserId(authUid);
 
         // Push the item to the appropriate category node
         DatabaseReference categoryNodeRef = databaseRef.child(selectedCategory);
