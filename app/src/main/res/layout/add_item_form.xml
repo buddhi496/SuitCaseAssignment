@@ -111,6 +111,13 @@
         android:layout_marginHorizontal="16dp"
         />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
     <!-- Add Item Button -->
     <Button
         android:id="@+id/addItemButton"
