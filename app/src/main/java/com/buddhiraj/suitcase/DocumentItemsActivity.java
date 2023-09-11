@@ -158,14 +158,8 @@ public class DocumentItemsActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        // Check if the current activity is the main activity
-        if (isTaskRoot()) {
-            // If it's the main activity, exit the app
-            finishAffinity();
-        } else {
-            // If it's not the main activity, allow the default back button behavior
-            super.onBackPressed();
-        }
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     public void itemDetail(View view) {

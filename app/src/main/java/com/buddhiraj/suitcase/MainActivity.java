@@ -1,11 +1,9 @@
 package com.buddhiraj.suitcase;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -17,17 +15,9 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.PopupMenu;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -40,16 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.PopupWindow;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Document;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,9 +39,6 @@ public class MainActivity extends AppCompatActivity {
     ImageView profileImage;
     TextView welcomeText;
     private DatabaseReference databaseReference;
-    private ImageView imageView;
-    private EditText editItemName, editPrice, editItemDetails, editStore;
-    private Button addButton;
 
     private SensorManager sensorManager;
     private float mAccel;
@@ -68,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private View refreshProgressBar;
     private View dimBackground;
     private boolean doubleBackToExitPressedOnce = false;
-    private Handler backButtonHandler = new Handler();
-    private Handler handler = new Handler();
+    final Handler backButtonHandler = new Handler();
+    final Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,12 +107,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(refreshIntent);
 
         // Hide the ProgressBar and dim background overlay after 5 seconds
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refreshProgressBar.setVisibility(View.GONE);
-                dimBackground.setVisibility(View.GONE);
-            }
+        handler.postDelayed(() -> {
+            refreshProgressBar.setVisibility(View.GONE);
+            dimBackground.setVisibility(View.GONE);
         }, 5000); // 5000 milliseconds (5 seconds)
     }
 
@@ -160,12 +136,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
 
             // Set a delay to reset the flag after a certain time (e.g., 2 seconds)
-            backButtonHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    doubleBackToExitPressedOnce = false;
-                }
-            }, 2000); // 2000 milliseconds (2 seconds)
+            backButtonHandler.postDelayed(() -> doubleBackToExitPressedOnce = false, 2000); // 2000 milliseconds (2 seconds)
         }
     }
 
@@ -175,8 +146,9 @@ public class MainActivity extends AppCompatActivity {
         refreshProgressBar.setVisibility(View.GONE);
         dimBackground.setVisibility(View.GONE);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     String userName = dataSnapshot.child("username").getValue(String.class);
                     if (userName != null) {
@@ -198,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle error if data retrieval is cancelled
                 welcomeText.setText("Welcome, User");
                 Log.e("Database", "Data retrieval cancelled: " + databaseError.getMessage());
@@ -206,13 +178,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         FloatingActionButton addButton = findViewById(R.id.addButton);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu(view);
-            }
-        });
-
+        addButton.setOnClickListener(this::PopupMenu);
     }
 
     private void logoutUser() {
@@ -258,21 +224,18 @@ public class MainActivity extends AppCompatActivity {
         PopupMenu popupMenu = new PopupMenu(this, view);
         popupMenu.getMenuInflater().inflate(R.menu.menu_add_options, popupMenu.getMenu());
 
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                int itemId = menuItem.getItemId();
-                if (itemId == R.id.menu_add_item) {
-                    // Handle adding an item
-                    Intent addItemIntent = new Intent(MainActivity.this, AddItemActivity.class);
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            int itemId = menuItem.getItemId();
+            if (itemId == R.id.menu_add_item) {
+                // Handle adding an item
+                Intent addItemIntent = new Intent(MainActivity.this, AddItemActivity.class);
 
-                    // Start the AddItemCategory activity
-                    startActivity(addItemIntent);
+                // Start the AddItemCategory activity
+                startActivity(addItemIntent);
 
-                    return true;
-                }
-                return false;
+                return true;
             }
+            return false;
         });
 
         popupMenu.show();

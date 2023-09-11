@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -34,6 +35,8 @@ public class AddItemActivity extends AppCompatActivity {
     private Uri imageUri;
     private ImageView imageView;
     private DatabaseReference databaseRef;
+    private ProgressBar progressBar; // Declare a ProgressBar
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,8 @@ public class AddItemActivity extends AppCompatActivity {
         Button addItemButton = findViewById(R.id.addItemButton);
         imageView = findViewById(R.id.imageView);
         databaseRef = FirebaseDatabase.getInstance().getReference();
+        progressBar = findViewById(R.id.progressBar); // Initialize ProgressBar
+
 
         // Find the Spinner in the add_item_form layout
         Spinner categorySpinner = findViewById(R.id.categorySpinner);
@@ -85,6 +90,7 @@ public class AddItemActivity extends AppCompatActivity {
 
             // Generate a unique key for the item
             String itemKey = UUID.randomUUID().toString();
+            progressBar.setVisibility(View.VISIBLE);
 
             // Upload the image to Firebase Storage and save the item to the database
             uploadImageToFirebaseStorage(itemKey);
@@ -147,6 +153,7 @@ public class AddItemActivity extends AppCompatActivity {
                     })
                     .addOnFailureListener(e -> {
                         // Handle the error when uploading the image
+                        progressBar.setVisibility(View.GONE); // Hide the ProgressBar
                         Toast.makeText(AddItemActivity.this, "Failed to upload image.", Toast.LENGTH_SHORT).show();
                     });
         }
@@ -176,6 +183,7 @@ public class AddItemActivity extends AppCompatActivity {
         // Push the item to the appropriate category node
         DatabaseReference categoryNodeRef = databaseRef.child(selectedCategory);
         categoryNodeRef.child(itemKey).setValue(newItem);
+        progressBar.setVisibility(View.GONE);
 
         // Optionally, show a success message or navigate back to the main activity
         Toast.makeText(AddItemActivity.this, "Item added successfully!", Toast.LENGTH_SHORT).show();
