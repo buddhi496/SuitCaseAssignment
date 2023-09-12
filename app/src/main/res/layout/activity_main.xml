@@ -191,13 +191,14 @@
                         android:id="@+id/totalItem"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="6 Items"
+                        android:text=""
                         android:textColor="@android:color/black"
                         android:gravity="center"
                         android:textSize="10sp"
                         android:textColorHint="@color/black"
                         android:alpha="0.6"
                         android:layout_marginTop="1dp" />
+
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

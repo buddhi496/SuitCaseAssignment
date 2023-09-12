@@ -27,6 +27,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import android.view.MenuInflater;
@@ -39,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     ImageView profileImage;
     TextView welcomeText;
     private DatabaseReference databaseReference;
-
     private SensorManager sensorManager;
     private float mAccel;
     private float mAccelCurrent;
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             float y = se.values[1];
             float z = se.values[2];
             mAccelLast = mAccelCurrent;
-            mAccelCurrent = (float) Math.sqrt((double) (x * x + y * y + z * z));
+            mAccelCurrent = (float) Math.sqrt(x * x + y * y + z * z);
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta;
             if (mAccel > 12) {
@@ -167,6 +167,37 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     welcomeText.setText("Welcome, User");
                 }
+
+                retrieveUserItemCount(userId);
+            }
+
+            private void retrieveUserItemCount(String userId) {
+                DatabaseReference itemsRef = databaseReference.child("Documents"); // Update with your item node reference
+                Query userItemsQuery = itemsRef.orderByChild("userId").equalTo(userId);
+
+                userItemsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            long itemCount = dataSnapshot.getChildrenCount();
+                            String itemCountText = itemCount + " Items";
+
+                            // Update the totalItem TextView
+                            TextView totalItemTextView = findViewById(R.id.totalItem);
+                            totalItemTextView.setText(itemCountText);
+                        } else {
+                            // If no documents found for the user, set the count to 0
+                            TextView totalItemTextView = findViewById(R.id.totalItem);
+                            totalItemTextView.setText("0 Items");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Handle error if data retrieval is canceled
+                        Log.e("Database", "Data retrieval canceled: " + databaseError.getMessage());
+                    }
+                });
             }
 
             @Override
@@ -176,19 +207,16 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Database", "Data retrieval cancelled: " + databaseError.getMessage());
             }
         });
-
         FloatingActionButton addButton = findViewById(R.id.addButton);
         addButton.setOnClickListener(this::PopupMenu);
     }
 
     private void logoutUser() {
         FirebaseAuth.getInstance().signOut();
-
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
-
 
     public void showPopupMenu(View view) {
         PopupMenu popupMenu = new PopupMenu(this, view);
@@ -198,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 int itemId = item.getItemId();
-
                 if (itemId == R.id.menu_your_profile) {
                     openProfileActivity(); // Open "Your Profile" activity
                     return true;
@@ -206,24 +233,19 @@ public class MainActivity extends AppCompatActivity {
                     logoutUser(); // Log out
                     return true;
                 }
-
                 return false;
             }
-
             private void openProfileActivity() {
                 Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                 startActivity(intent);
             }
-
         });
-
         popupMenu.show();
     }
 
     private void PopupMenu(View view) {
         PopupMenu popupMenu = new PopupMenu(this, view);
         popupMenu.getMenuInflater().inflate(R.menu.menu_add_options, popupMenu.getMenu());
-
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             int itemId = menuItem.getItemId();
             if (itemId == R.id.menu_add_item) {
@@ -237,15 +259,11 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
-
         popupMenu.show();
     }
     public void showDocuments(View view) {
-
         Intent intent = new Intent(MainActivity.this, DocumentItemsActivity.class);
-
         startActivity(intent);
     }
-
 }
 
