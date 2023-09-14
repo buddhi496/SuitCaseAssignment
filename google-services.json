@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "858089216918",
+    "firebase_url": "https://assignment-suitcase-default-rtdb.firebaseio.com",
+    "project_id": "assignment-suitcase",
+    "storage_bucket": "assignment-suitcase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:858089216918:android:6d974663399f344a11dbb7",
+        "android_client_info": {
+          "package_name": "com.buddhiraj.suitcase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "858089216918-nfu5820clt3gfd2g1l3811khgnjtsopt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvvnTQR_T1-yX_NgH4Aapq2YzWY7_TCzM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "858089216918-nabd240cb70rulq848rrhcbgbnbdltlc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,8 @@
 package com.buddhiraj.suitcase;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,6 +23,10 @@ public class ItemDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
         // Find views in the layout
         ProgressBar progressBar = findViewById(R.id.progressBar);
         ImageView itemImageView = findViewById(R.id.itemImage);

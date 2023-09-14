@@ -48,12 +48,7 @@ public class AddItemActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Handle back button click
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         Button addItemButton = findViewById(R.id.addItemButton);
         imageView = findViewById(R.id.imageView);

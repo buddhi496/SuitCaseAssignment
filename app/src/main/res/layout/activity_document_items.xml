@@ -1,71 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/containerLayout"
-    android:orientation="vertical"
-    android:layout_marginTop="10dp"
-    android:clickable="true"
-    android:focusable="true"
-    >
+    android:layout_height="match_parent"
+    tools:context=".DocumentItemsActivity">
 
-    <!-- Content Layout (Number, Name, Checkbox) -->
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-       >
+        android:id="@+id/back"
+        android:layout_height="wrap_content">
 
-        <!-- Number TextView -->
-        <TextView
-            android:id="@+id/textViewNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="10dp"/>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:backgroundTint="@color/buttonBackground"
+            android:layout_height="40dp"
+            android:background="?attr/colorPrimary"
+            android:title="Your Profile"
+            android:elevation="4dp"
+            android:gravity="center_vertical"
+            app:layout_scrollFlags="scroll|enterAlways"/>
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <!-- Document Name TextView -->
-        <TextView
-            android:id="@+id/textViewName"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_gravity="center_vertical"
-            android:onClick="itemDetail"/>
-
-        <!-- CheckBox -->
-        <CheckBox
-            android:id="@+id/checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-
-    <!-- Divider Line -->
-    <View
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
+        android:layout_below="@+id/back"
+        android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/refreshProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        android:indeterminate="true" />
+        <!-- Your content here, e.g., a RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <View
-        android:id="@+id/dimBackground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/black"
-        android:alpha="0.5"
-        android:visibility="gone" />
-</LinearLayout>
+</RelativeLayout>
