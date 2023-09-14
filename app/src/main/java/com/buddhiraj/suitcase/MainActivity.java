@@ -20,6 +20,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean doubleBackToExitPressedOnce = false;
     final Handler backButtonHandler = new Handler();
     final Handler handler = new Handler();
+    GoogleSignInClient googleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         refreshProgressBar = findViewById(R.id.refreshProgressBar);
         dimBackground = findViewById(R.id.dimBackground);
+        googleSignInClient = GoogleSignIn.getClient(this, GoogleSignInOptions.DEFAULT_SIGN_IN);
 
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();

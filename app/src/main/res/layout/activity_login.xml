@@ -6,16 +6,17 @@
     android:background="@color/white"
     tools:context=".LoginActivity">
 
-
     <ImageView
         android:id="@+id/loginImage"
-        android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_width="280dp"
+        android:layout_height="259dp"
         android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="2dp"
         android:background="@drawable/rounded_image_background"
         android:contentDescription="@string/login_image_description"
         android:scaleType="centerCrop"
-        android:src="@drawable/login" />
+        android:src="@drawable/signin" />
 
     <TextView
         android:id="@+id/welcomeText"
