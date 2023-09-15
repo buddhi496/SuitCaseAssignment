@@ -3,6 +3,7 @@ package com.buddhiraj.suitcase;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,9 +16,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 public class ItemDetailActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,74 +30,48 @@ public class ItemDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        // Find views in the layout
         ProgressBar progressBar = findViewById(R.id.progressBar);
-        ImageView itemImageView = findViewById(R.id.itemImage);
-
         // Set ProgressBar visibility to VISIBLE
         progressBar.setVisibility(View.VISIBLE);
 
-        // Retrieve the document name from the intent extras
-        String documentName = getIntent().getStringExtra("documentName");
+        // Get references to TextView and ImageView elements in the layout
+        TextView itemNameTextView = findViewById(R.id.itemName);
+        TextView itemDescriptionTextView = findViewById(R.id.itemDescription);
+        TextView itemPriceTextView = findViewById(R.id.itemPrice);
+        TextView storeNameTextView = findViewById(R.id.storeName);
+        ImageView itemImageView = findViewById(R.id.itemImage);
 
-        // Initialize Firebase Database reference
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Documents");
+        // Get data passed from DocumentItemsActivity
+        Intent intent = getIntent();
+        if (intent != null) {
+            String itemName = intent.getStringExtra("itemName");
+            String itemDescription = intent.getStringExtra("description");
+            String itemPrice = intent.getStringExtra("itemPrice");
+            String itemStoreName = intent.getStringExtra("itemStoreName");
+            String imageUrl = intent.getStringExtra("imageUrl"); // Fetch the image URL
 
-        // Retrieve additional details for the item based on the document name
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            String loggedInUserId = currentUser.getUid();
-            databaseReference.orderByChild("userId").equalTo(loggedInUserId).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot documentSnapshot : dataSnapshot.getChildren()) {
-                        String name = documentSnapshot.child("name").getValue(String.class);
+            // Set the retrieved data to the TextView elements
+            itemNameTextView.setText(itemName);
+            itemDescriptionTextView.setText(itemDescription);
+            itemPriceTextView.setText(itemPrice);
+            storeNameTextView.setText(itemStoreName);
 
-                        if (name != null && name.equals(documentName)) {
-                            // Retrieve additional details
-                            String description = documentSnapshot.child("description").getValue(String.class);
-                            String price = documentSnapshot.child("price").getValue(String.class);
-                            String storeName = documentSnapshot.child("storeName").getValue(String.class);
-                            String imageUrl = documentSnapshot.child("imageUrl").getValue(String.class);
-
-                            // Find other TextViews in the layout
-                            TextView itemNameTextView = findViewById(R.id.itemName);
-                            TextView itemDescriptionTextView = findViewById(R.id.itemDescription);
-                            TextView itemPriceTextView = findViewById(R.id.itemPrice);
-                            TextView storeNameTextView = findViewById(R.id.storeName);
-
-                            // Set the retrieved details to the corresponding TextViews
-                            itemNameTextView.setText(name);
-                            itemDescriptionTextView.setText(description);
-                            itemPriceTextView.setText(price);
-                            storeNameTextView.setText(storeName);
-
-                            // Load the item image using Picasso (you may need to adjust this)
-                            Picasso.get().load(imageUrl).into(itemImageView, new com.squareup.picasso.Callback() {
-                                @Override
-                                public void onSuccess() {
-                                    // Set ProgressBar visibility to GONE when image is loaded successfully
-                                    progressBar.setVisibility(View.GONE);
-                                    itemImageView.setVisibility(View.VISIBLE); // Show the image
-                                }
-
-                                @Override
-                                public void onError(Exception e) {
-                                    // Handle image loading error here if needed
-                                }
-                            });
-
-                            break; // Exit loop after finding the matching document
+            // Load the image using Picasso
+            Picasso.get()
+                    .load(imageUrl)
+                    .into(itemImageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            // Image loaded successfully, hide the progress bar
+                            progressBar.setVisibility(View.GONE);
                         }
-                    }
-                }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Handle errors here
-                    // You can log or display an error message
-                }
-            });
+                        @Override
+                        public void onError(Exception e) {
+                            // Handle any errors here, if needed
+                            progressBar.setVisibility(View.GONE); // Hide the progress bar on error
+                        }
+                    });
         }
     }
 }

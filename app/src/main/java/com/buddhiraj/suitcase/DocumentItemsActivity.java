@@ -116,11 +116,23 @@ public class DocumentItemsActivity extends AppCompatActivity implements Document
     @Override
     public void onItemClick(int position) {
         // Handle item click here
-        // You can start the "ItemDetail" activity with relevant data
+        // Get the clicked item
         DocumentItem clickedItem = documentItemList.get(position);
+
+        // Create an Intent to start the "ItemDetailActivity"
         Intent intent = new Intent(this, ItemDetailActivity.class);
-        intent.putExtra("documentName", clickedItem.getName());
+
+        // Pass all the description details of the clicked item to the "ItemDetailActivity"
+        intent.putExtra("description", clickedItem.getDescription());
+        intent.putExtra("imageUrl", clickedItem.getImageUrl());
+        intent.putExtra("itemName", clickedItem.getName());
+        intent.putExtra("itemPrice", clickedItem.getPrice());
+        intent.putExtra("itemStoreName", clickedItem.getStoreName());
         // Add more data as needed
+
+        // Start the "ItemDetailActivity"
         startActivity(intent);
     }
+
+
 }
