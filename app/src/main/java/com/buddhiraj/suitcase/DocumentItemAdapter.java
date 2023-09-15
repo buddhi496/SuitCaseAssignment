@@ -1,5 +1,6 @@
 package com.buddhiraj.suitcase;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,17 @@ public class DocumentItemAdapter extends RecyclerView.Adapter<DocumentItemAdapte
         this.documentItemList = documentItemList;
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    private OnItemClickListener itemClickListener;
+
+    public DocumentItemAdapter(List<DocumentItem> documentItemList, OnItemClickListener itemClickListener) {
+        this.documentItemList = documentItemList;
+        this.itemClickListener = itemClickListener;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -25,9 +37,19 @@ public class DocumentItemAdapter extends RecyclerView.Adapter<DocumentItemAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         DocumentItem documentItem = documentItemList.get(position);
         holder.nameTextView.setText(documentItem.getName());
+
+        // Set click listener for each item
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(position);
+                }
+            }
+        });
     }
 
     @Override
@@ -42,10 +64,13 @@ public class DocumentItemAdapter extends RecyclerView.Adapter<DocumentItemAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
+        public View itemView;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            this.itemView = itemView;
             nameTextView = itemView.findViewById(R.id.nameTextView);
         }
     }
+
 }

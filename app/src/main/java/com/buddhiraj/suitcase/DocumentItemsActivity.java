@@ -1,4 +1,6 @@
 package com.buddhiraj.suitcase;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.NonNull;
@@ -19,12 +21,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DocumentItemsActivity extends AppCompatActivity {
+public class DocumentItemsActivity extends AppCompatActivity implements DocumentItemAdapter.OnItemClickListener {
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private List<DocumentItem> documentItemList;
     private DocumentItemAdapter adapter;
-    private String currentUserID; // Store the currently logged-in user's ID here
+    private String currentUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,7 @@ public class DocumentItemsActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
 
         documentItemList = new ArrayList<>();
-        adapter = new DocumentItemAdapter(documentItemList);
+        adapter = new DocumentItemAdapter(documentItemList, this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -101,9 +103,6 @@ public class DocumentItemsActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Handle the refresh action here
-                // Typically, you would load new data from a data source or perform some task
-                // For demonstration purposes, we'll simulate a delay using a Handler
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -112,5 +111,16 @@ public class DocumentItemsActivity extends AppCompatActivity {
                 }, 2000); // Simulate a 2-second delay
             }
         });
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        // Handle item click here
+        // You can start the "ItemDetail" activity with relevant data
+        DocumentItem clickedItem = documentItemList.get(position);
+        Intent intent = new Intent(this, ItemDetailActivity.class);
+        intent.putExtra("documentName", clickedItem.getName());
+        // Add more data as needed
+        startActivity(intent);
     }
 }
