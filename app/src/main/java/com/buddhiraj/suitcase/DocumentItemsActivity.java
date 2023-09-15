@@ -3,6 +3,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +30,10 @@ public class DocumentItemsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_document_items);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         recyclerView = findViewById(R.id.recyclerView);
@@ -59,6 +64,9 @@ public class DocumentItemsActivity extends AppCompatActivity {
                 // Clear the existing list
                 documentItemList.clear();
 
+                // Initialize a counter for numbering
+                int counter = 1;
+
                 // Iterate through the dataSnapshot to fetch items
                 for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
                     // Get data fields from the snapshot as before
@@ -68,9 +76,12 @@ public class DocumentItemsActivity extends AppCompatActivity {
                     String description = itemSnapshot.child("description").getValue(String.class);
                     String storeName = itemSnapshot.child("storeName").getValue(String.class);
 
-                    // Create a DocumentItem object and add it to the list
-                    DocumentItem item = new DocumentItem(imageUrl, name, price, description, storeName);
+                    // Create a DocumentItem object and add it to the list with numbering and a space
+                    DocumentItem item = new DocumentItem(imageUrl, counter + ". " + name, price, description, storeName);
                     documentItemList.add(item);
+
+                    // Increment the counter for the next item
+                    counter++;
                 }
 
                 // Notify the adapter of the data change
@@ -96,10 +107,6 @@ public class DocumentItemsActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        // Update the UI or refresh your data
-                        // For example, you can notify your RecyclerView adapter of the data change
-
-                        // Stop the swipe refresh animation
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }, 2000); // Simulate a 2-second delay
