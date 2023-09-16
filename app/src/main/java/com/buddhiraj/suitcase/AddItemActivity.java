@@ -25,13 +25,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.UUID;
 
 public class AddItemActivity extends AppCompatActivity {
-
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri imageUri;
     private ImageView imageView;
@@ -168,7 +166,19 @@ public class AddItemActivity extends AppCompatActivity {
         // Retrieve values from form fields
         String itemName = itemNameEditText.getText().toString();
         String itemDetail = itemDetailEditText.getText().toString();
-        double itemPrice = Double.parseDouble(itemPriceEditText.getText().toString());
+
+        // Check if itemPriceEditText is empty or not a valid double
+        double itemPrice;
+        if (itemPriceEditText.getText().toString().isEmpty()) {
+            itemPrice = 0.0; // Default value for empty price
+        } else {
+            try {
+                itemPrice = Double.parseDouble(itemPriceEditText.getText().toString());
+            } catch (NumberFormatException e) {
+                itemPrice = 0.0; // Default value for invalid price
+            }
+        }
+
         String storeName = storeNameEditText.getText().toString();
         String selectedCategory = categorySpinner.getSelectedItem().toString();
 
@@ -185,4 +195,5 @@ public class AddItemActivity extends AppCompatActivity {
         Toast.makeText(AddItemActivity.this, "Item added successfully!", Toast.LENGTH_SHORT).show();
         finish(); // Finish the AddItemActivity and return to the main activity
     }
+
 }
