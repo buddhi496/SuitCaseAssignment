@@ -13,7 +13,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:backgroundTint="@color/buttonBackground"
+            android:backgroundTint="@color/toolbar"
             android:layout_height="40dp"
             android:background="?attr/colorPrimary"
             android:title="Your Profile"

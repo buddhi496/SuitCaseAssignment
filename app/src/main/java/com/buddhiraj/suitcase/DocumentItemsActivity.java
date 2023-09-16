@@ -36,6 +36,7 @@ public class DocumentItemsActivity extends AppCompatActivity implements Document
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         recyclerView = findViewById(R.id.recyclerView);
@@ -66,9 +67,6 @@ public class DocumentItemsActivity extends AppCompatActivity implements Document
                 // Clear the existing list
                 documentItemList.clear();
 
-                // Initialize a counter for numbering
-                int counter = 1;
-
                 // Iterate through the dataSnapshot to fetch items
                 for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
                     // Get data fields from the snapshot as before
@@ -78,12 +76,9 @@ public class DocumentItemsActivity extends AppCompatActivity implements Document
                     String description = itemSnapshot.child("description").getValue(String.class);
                     String storeName = itemSnapshot.child("storeName").getValue(String.class);
 
-                    // Create a DocumentItem object and add it to the list with numbering and a space
-                    DocumentItem item = new DocumentItem(imageUrl, counter + ". " + name, price, description, storeName);
+                    // Create a DocumentItem object and add it to the list without numbering
+                    DocumentItem item = new DocumentItem(imageUrl, name, price, description, storeName);
                     documentItemList.add(item);
-
-                    // Increment the counter for the next item
-                    counter++;
                 }
 
                 // Notify the adapter of the data change
@@ -95,6 +90,7 @@ public class DocumentItemsActivity extends AppCompatActivity implements Document
                 // Handle any errors here, if needed
             }
         });
+
 
         // Attach swipe-to-delete functionality
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(this, adapter));

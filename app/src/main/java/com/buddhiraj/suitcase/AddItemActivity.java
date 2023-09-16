@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +36,7 @@ public class AddItemActivity extends AppCompatActivity {
     private Uri imageUri;
     private ImageView imageView;
     private DatabaseReference databaseRef;
-    private ProgressBar progressBar; // Declare a ProgressBar
+    private ProgressBar progressBar;
 
 
     @Override
@@ -72,7 +73,7 @@ public class AddItemActivity extends AppCompatActivity {
         categorySpinner.setAdapter(adapter);
 
         // Choose Image Button click listener
-        Button chooseImageButton = findViewById(R.id.chooseImageButton);
+        TextView chooseImageButton = findViewById(R.id.chooseImageButton);
         chooseImageButton.setOnClickListener(v -> openImageChooser());
 
         // Add Item Button click listener

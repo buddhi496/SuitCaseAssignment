@@ -3,18 +3,10 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="buttonBackground">#01D3D4</color>
+    <color name="toolbar">#71D9D9</color>
     <color name="secondaryColor">#DB5252</color>
     <color name="grey">#DCE1E8</color>
     <color name="popupBackground">#F5F5F5</color>
-    <color name="separator_color">#CCCCCC</color>
+    <color name="button">#E2F8F8</color>
 
-
-    //form material.io
-    <color name="CustomColor1">#01D3D4</color>
-
-    <color name="CustomColor2">#008DA4</color>
-
-    <color name="CustomColor3">#81B8B3</color>
-
-    <color name="CustomColor4">#00756F</color>
 </resources>

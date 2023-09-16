@@ -39,7 +39,10 @@ public class DocumentItemAdapter extends RecyclerView.Adapter<DocumentItemAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         DocumentItem documentItem = documentItemList.get(position);
-        holder.nameTextView.setText(documentItem.getName());
+
+        // Set the numbering (position + 1) and the name
+        String itemNumber = String.valueOf(position + 1);
+        holder.nameTextView.setText(itemNumber + ". " + documentItem.getName());
 
         // Set click listener for each item
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +54,7 @@ public class DocumentItemAdapter extends RecyclerView.Adapter<DocumentItemAdapte
             }
         });
     }
+
 
     @Override
     public int getItemCount() {

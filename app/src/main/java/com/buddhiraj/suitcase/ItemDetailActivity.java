@@ -4,7 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.util.TypedValue;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ProgressBar;
@@ -50,10 +56,18 @@ public class ItemDetailActivity extends AppCompatActivity {
             String itemStoreName = intent.getStringExtra("itemStoreName");
             String imageUrl = intent.getStringExtra("imageUrl"); // Fetch the image URL
 
+            // Create a SpannableString with "Rs" in green color
+            SpannableString spannableString = new SpannableString("Rs " + itemPrice);
+            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#01D3D4")), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            // Set the SpannableString to the TextView
+            itemPriceTextView.setText(spannableString);
+            int fontSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
+            spannableString.setSpan(new AbsoluteSizeSpan(fontSize), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
             // Set the retrieved data to the TextView elements
             itemNameTextView.setText(itemName);
             itemDescriptionTextView.setText(itemDescription);
-            itemPriceTextView.setText(itemPrice);
             storeNameTextView.setText(itemStoreName);
 
             // Load the image using Picasso
