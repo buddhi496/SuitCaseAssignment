@@ -83,11 +83,14 @@ public class DocumentItemsActivity extends AppCompatActivity implements Document
 
                 // Notify the adapter of the data change
                 adapter.notifyDataSetChanged();
+
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle any errors here, if needed
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 

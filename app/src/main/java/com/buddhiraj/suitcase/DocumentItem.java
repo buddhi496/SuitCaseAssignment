@@ -49,4 +49,5 @@ public class DocumentItem {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
 }

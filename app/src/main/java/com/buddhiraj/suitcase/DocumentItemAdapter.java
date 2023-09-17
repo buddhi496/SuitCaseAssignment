@@ -18,6 +18,13 @@ public class DocumentItemAdapter extends RecyclerView.Adapter<DocumentItemAdapte
         this.documentItemList = documentItemList;
     }
 
+    public String getItemName(int position) {
+        if (position >= 0 && position < documentItemList.size()) {
+            return documentItemList.get(position).getName();
+        }
+        return null;
+    }
+
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
@@ -45,16 +52,12 @@ public class DocumentItemAdapter extends RecyclerView.Adapter<DocumentItemAdapte
         holder.nameTextView.setText(itemNumber + ". " + documentItem.getName());
 
         // Set click listener for each item
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (itemClickListener != null) {
-                    itemClickListener.onItemClick(position);
-                }
+        holder.itemView.setOnClickListener(view -> {
+            if (itemClickListener != null) {
+                itemClickListener.onItemClick(position);
             }
         });
     }
-
 
     @Override
     public int getItemCount() {
@@ -64,6 +67,8 @@ public class DocumentItemAdapter extends RecyclerView.Adapter<DocumentItemAdapte
     public void deleteItem(int position) {
         documentItemList.remove(position);
         notifyItemRemoved(position);
+        // Update numbering after an item is removed
+        notifyItemRangeChanged(position, documentItemList.size());
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -76,5 +81,4 @@ public class DocumentItemAdapter extends RecyclerView.Adapter<DocumentItemAdapte
             nameTextView = itemView.findViewById(R.id.nameTextView);
         }
     }
-
 }
