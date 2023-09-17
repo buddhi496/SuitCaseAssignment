@@ -22,6 +22,30 @@
         android:theme="@style/Theme.SuitCase"
         tools:targetApi="31">
         <activity
+            android:name=".SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".OthersItemsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ElectronicItemsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ClothItemsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HealthItemsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PaymentItemsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ItemDetailActivity"
             android:exported="false" />
         <activity
@@ -36,14 +60,6 @@
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
-        <activity
-            android:name=".SplashActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="false" />

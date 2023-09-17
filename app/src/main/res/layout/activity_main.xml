@@ -191,7 +191,7 @@
                         android:id="@+id/totalItem"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
+                        android:text="3 items"
                         android:textColor="@android:color/black"
                         android:gravity="center"
                         android:textSize="10sp"

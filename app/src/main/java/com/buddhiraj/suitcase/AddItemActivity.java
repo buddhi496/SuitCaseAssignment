@@ -44,6 +44,7 @@ public class AddItemActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Add your items");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Handle back button click

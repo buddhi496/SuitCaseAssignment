@@ -1,27 +1,27 @@
 package com.buddhiraj.suitcase;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import java.util.ArrayList;
-import java.util.List;
+        import android.content.Intent;
+        import android.os.Bundle;
+        import android.os.Handler;
+        import androidx.annotation.NonNull;
+        import androidx.appcompat.app.AppCompatActivity;
+        import androidx.appcompat.widget.Toolbar;
+        import androidx.recyclerview.widget.ItemTouchHelper;
+        import androidx.recyclerview.widget.LinearLayoutManager;
+        import androidx.recyclerview.widget.RecyclerView;
+        import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+        import com.google.firebase.auth.FirebaseAuth;
+        import com.google.firebase.auth.FirebaseUser;
+        import com.google.firebase.database.DataSnapshot;
+        import com.google.firebase.database.DatabaseError;
+        import com.google.firebase.database.DatabaseReference;
+        import com.google.firebase.database.FirebaseDatabase;
+        import com.google.firebase.database.Query;
+        import com.google.firebase.database.ValueEventListener;
+        import java.util.ArrayList;
+        import java.util.List;
 
-public class DocumentItemsActivity extends AppCompatActivity implements DocumentItemAdapter.OnItemClickListener {
+public class OthersItemsActivity extends AppCompatActivity implements DocumentItemAdapter.OnItemClickListener {
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private List<DocumentItem> documentItemList;
@@ -36,7 +36,7 @@ public class DocumentItemsActivity extends AppCompatActivity implements Document
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Your Document Items");
+        getSupportActionBar().setTitle("Your Others Items");
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
@@ -56,7 +56,7 @@ public class DocumentItemsActivity extends AppCompatActivity implements Document
 
         // Initialize Firebase Database reference
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference itemsRef = database.getReference("Documents");
+        DatabaseReference itemsRef = database.getReference("Others");
 
         // Modify the query to fetch items associated with the current user
         Query query = itemsRef.orderByChild("userId").equalTo(currentUserID);

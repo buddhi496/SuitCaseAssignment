@@ -173,27 +173,32 @@ public class MainActivity extends AppCompatActivity {
                     welcomeText.setText("Welcome, User");
                 }
 
-                retrieveUserItemCount(userId);
+                retrieveUserCategoryCount(userId, "Health");
+                retrieveUserCategoryCount(userId, "Clothing");
+                retrieveUserCategoryCount(userId, "Electronic");
+                retrieveUserCategoryCount(userId, "Documents");
+                retrieveUserCategoryCount(userId, "Payment");
+                retrieveUserCategoryCount(userId, "Others");
             }
 
-            private void retrieveUserItemCount(String userId) {
-                DatabaseReference itemsRef = databaseReference.child("Documents"); // Update with your item node reference
-                Query userItemsQuery = itemsRef.orderByChild("userId").equalTo(userId);
+            private void retrieveUserCategoryCount(String userId, String category) {
+                DatabaseReference categoryRef = databaseReference.child(category); // Update with your category node reference
+                Query userCategoryQuery = categoryRef.orderByChild("userId").equalTo(userId);
 
-                userItemsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                userCategoryQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
-                            long itemCount = dataSnapshot.getChildrenCount();
-                            String itemCountText = itemCount + " Items";
+                            long categoryCount = dataSnapshot.getChildrenCount();
+                            String categoryCountText = categoryCount + " " + category + "s"; // Pluralize the category name
 
-                            // Update the totalItem TextView
-                            TextView totalItemTextView = findViewById(R.id.totalItem);
-                            totalItemTextView.setText(itemCountText);
+                            // Update the TextView based on the category
+                            TextView categoryTextView = getCategoryTextView(category);
+                            categoryTextView.setText(categoryCountText);
                         } else {
-                            // If no documents found for the user, set the count to 0
-                            TextView totalItemTextView = findViewById(R.id.totalItem);
-                            totalItemTextView.setText("0 Items");
+                            // If no items found for the category and user, set the count to 0
+                            TextView categoryTextView = getCategoryTextView(category);
+                            categoryTextView.setText("0 " + category + "s");
                         }
                     }
 
@@ -204,6 +209,29 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
+
+            // Helper method to get the appropriate TextView for the category
+            private TextView getCategoryTextView(String category) {
+                switch (category) {
+                    case "Documents":
+                        return findViewById(R.id.totalItem);
+                    case "Payment":
+                        return findViewById(R.id.totalPaymentMethods);
+                    case "Health":
+                        return findViewById(R.id.totalHealthItems);
+                    case "Clothing":
+                        return findViewById(R.id.totalClothItems);
+                    case "Electronic":
+                        return findViewById(R.id.totalelectronicItems);
+                    case "Others":
+                        return findViewById(R.id.totalotherItems);
+                    // Add more cases for other categories
+                    default:
+                        return null; // Handle unknown categories or return the appropriate TextView
+                }
+            }
+
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -268,6 +296,31 @@ public class MainActivity extends AppCompatActivity {
     }
     public void showDocuments(View view) {
         Intent intent = new Intent(MainActivity.this, DocumentItemsActivity.class);
+        startActivity(intent);
+    }
+
+    public void showPayment(View view) {
+        Intent intent = new Intent(MainActivity.this, PaymentItemsActivity.class);
+        startActivity(intent);
+    }
+
+    public void showHealth(View view) {
+        Intent intent = new Intent(MainActivity.this, HealthItemsActivity.class);
+        startActivity(intent);
+    }
+
+    public void showCloth(View view) {
+        Intent intent = new Intent(MainActivity.this, ClothItemsActivity.class);
+        startActivity(intent);
+    }
+
+    public void showElectronic(View view) {
+        Intent intent = new Intent(MainActivity.this, ElectronicItemsActivity.class);
+        startActivity(intent);
+    }
+
+    public void showOthers(View view) {
+        Intent intent = new Intent(MainActivity.this, OthersItemsActivity.class);
         startActivity(intent);
     }
 }
