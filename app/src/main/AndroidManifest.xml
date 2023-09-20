@@ -43,7 +43,7 @@
             android:name=".HealthItemsActivity"
             android:exported="false" />
         <activity
-            android:name=".PaymentItemsActivity"
+            android:name=".BAMActivity"
             android:exported="false" />
         <activity
             android:name=".ItemDetailActivity"
@@ -64,7 +64,7 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".DocumentItemsActivity"
+            android:name=".AccessoriesActivity"
             android:exported="false" />
     </application>
 

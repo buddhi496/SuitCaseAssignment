@@ -299,8 +299,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void showPayment(View view) {
-        Intent intent = new Intent(MainActivity.this, PaymentItemsActivity.class);
+    public void showBooks(View view) {
+        Intent intent = new Intent(MainActivity.this, BAMActivity.class);
         startActivity(intent);
     }
 
@@ -309,8 +309,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void showCloth(View view) {
-        Intent intent = new Intent(MainActivity.this, ClothItemsActivity.class);
+    public void showAccessories(View view) {
+        Intent intent = new Intent(MainActivity.this, AccessoriesActivity.class);
         startActivity(intent);
     }
 

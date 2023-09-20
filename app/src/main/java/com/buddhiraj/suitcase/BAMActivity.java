@@ -21,7 +21,7 @@ package com.buddhiraj.suitcase;
         import java.util.ArrayList;
         import java.util.List;
 
-public class PaymentItemsActivity extends AppCompatActivity implements DocumentItemAdapter.OnItemClickListener {
+public class BAMActivity extends AppCompatActivity implements DocumentItemAdapter.OnItemClickListener {
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private List<DocumentItem> documentItemList;
@@ -56,7 +56,7 @@ public class PaymentItemsActivity extends AppCompatActivity implements DocumentI
 
         // Initialize Firebase Database reference
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference itemsRef = database.getReference("Payment");
+        DatabaseReference itemsRef = database.getReference("Books and Magazines");
 
         // Modify the query to fetch items associated with the current user
         Query query = itemsRef.orderByChild("userId").equalTo(currentUserID);
