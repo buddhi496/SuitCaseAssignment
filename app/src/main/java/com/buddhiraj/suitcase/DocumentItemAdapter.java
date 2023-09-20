@@ -71,6 +71,7 @@ public class DocumentItemAdapter extends RecyclerView.Adapter<DocumentItemAdapte
         notifyItemRangeChanged(position, documentItemList.size());
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
         public View itemView;

@@ -60,7 +60,7 @@ public class AddItemActivity extends AppCompatActivity {
         Spinner categorySpinner = findViewById(R.id.categorySpinner);
 
         // Define the array of category options
-        String[] categoryOptions = {"Documents", "Payment", "Health", "Clothing", "Electronic", "Others"};
+        String[] categoryOptions = { "Clothing","Books and Magazines", "Health", "Electronic","Accessories", "Others"};
 
         // Create an ArrayAdapter using the defined categoryOptions array
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryOptions);

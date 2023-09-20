@@ -36,7 +36,7 @@ public class DocumentItemsActivity extends AppCompatActivity implements Document
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Your Document Items");
+        getSupportActionBar().setTitle("Your Clothing Items");
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
@@ -56,7 +56,7 @@ public class DocumentItemsActivity extends AppCompatActivity implements Document
 
         // Initialize Firebase Database reference
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference itemsRef = database.getReference("Documents");
+        DatabaseReference itemsRef = database.getReference("Clothing");
 
         // Modify the query to fetch items associated with the current user
         Query query = itemsRef.orderByChild("userId").equalTo(currentUserID);

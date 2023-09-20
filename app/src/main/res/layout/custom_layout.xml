@@ -1,42 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+app:cardElevation="4dp"
+app:cardCornerRadius="8dp"
+android:layout_margin="16dp">
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+    <ImageView
+        android:id="@+id/itemImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/document"
+        android:contentDescription="@string/product_image_description" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingRight="20dp">
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_marginStart="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/nameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Item Name"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black" />
+
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/textViewNumber"
+            android:id="@+id/productDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text=""
-            android:gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:textColor="@android:color/black"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="10dp"/>
+            android:textColor="@color/black"
+            android:alpha="0.6"
+            android:text="Product Description Product Description Product Description" />
 
         <TextView
-            android:id="@+id/nameTextView"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="48dp"
-            android:textSize="16sp"
-            android:text="This is your list"
-            android:gravity="center_vertical"
-            android:textColor="@android:color/black"
-            android:layout_gravity="center_vertical" />
-
-        <CheckBox
-            android:id="@+id/checkbox"
+            android:id="@+id/productPrice"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="Price: $9.99"  />
     </LinearLayout>
 </LinearLayout>
+</androidx.cardview.widget.CardView>
+
+
+

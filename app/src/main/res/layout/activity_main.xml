@@ -99,7 +99,7 @@
                 android:id="@+id/payBox"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:layout_toEndOf="@id/documentBox"
+                android:layout_toEndOf="@id/clothingBox"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
@@ -126,7 +126,7 @@
                         android:id="@+id/paymentName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Payment"
+                        android:text="Books and Magazines"
                         android:textColor="@android:color/black"
                         android:gravity="center"
                         android:textSize="14sp"
@@ -149,7 +149,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/documentBox"
+                android:id="@+id/clothingBox"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_marginStart="16dp"
@@ -161,7 +161,7 @@
                 app:cardCornerRadius="15dp"
                 android:background="@color/white"
                 app:cardElevation="4dp"
-                android:onClick="showDocuments">
+                android:onClick="showClothing">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -173,14 +173,14 @@
                         android:id="@+id/documentIcon"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:src="@drawable/document"
+                        android:src="@drawable/clothing"
                         android:layout_gravity="center_horizontal" />
 
                     <TextView
                         android:id="@+id/categoryName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Documents"
+                        android:text="Clothing"
                         android:textColor="@android:color/black"
                         android:gravity="center"
                         android:textSize="14sp"
@@ -258,7 +258,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/clothinghBox"
+                android:id="@+id/accessoriesBox"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_toEndOf="@id/healthBox"
@@ -279,17 +279,17 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:id="@+id/clothIcon"
+                        android:id="@+id/accesoriesIcon"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:src="@drawable/clothing"
+                        android:src="@drawable/accessories"
                         android:layout_gravity="center_horizontal" />
 
                     <TextView
                         android:id="@+id/clothItems"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Clothing"
+                        android:text="Accessories"
                         android:textColor="@android:color/black"
                         android:gravity="center"
                         android:textSize="14sp"
@@ -315,7 +315,7 @@
                 android:id="@+id/electronicBox"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:layout_toEndOf="@id/clothinghBox"
+                android:layout_toEndOf="@id/accessoriesBox"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
@@ -463,4 +463,16 @@
         android:alpha="0.5"
         android:visibility="gone" />
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/allItems"
+        android:layout_height="match_parent">
+
+        <!-- Your content here, e.g., a RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </RelativeLayout>

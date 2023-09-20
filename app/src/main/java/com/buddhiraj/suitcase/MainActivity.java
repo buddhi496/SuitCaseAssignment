@@ -176,8 +176,8 @@ public class MainActivity extends AppCompatActivity {
                 retrieveUserCategoryCount(userId, "Health");
                 retrieveUserCategoryCount(userId, "Clothing");
                 retrieveUserCategoryCount(userId, "Electronic");
-                retrieveUserCategoryCount(userId, "Documents");
-                retrieveUserCategoryCount(userId, "Payment");
+                retrieveUserCategoryCount(userId, "Accessories");
+                retrieveUserCategoryCount(userId, "Books and Magazines");
                 retrieveUserCategoryCount(userId, "Others");
             }
 
@@ -213,13 +213,13 @@ public class MainActivity extends AppCompatActivity {
             // Helper method to get the appropriate TextView for the category
             private TextView getCategoryTextView(String category) {
                 switch (category) {
-                    case "Documents":
+                    case "Clothing":
                         return findViewById(R.id.totalItem);
-                    case "Payment":
+                    case "Books and Magazines":
                         return findViewById(R.id.totalPaymentMethods);
                     case "Health":
                         return findViewById(R.id.totalHealthItems);
-                    case "Clothing":
+                    case "Accessories":
                         return findViewById(R.id.totalClothItems);
                     case "Electronic":
                         return findViewById(R.id.totalelectronicItems);
@@ -294,8 +294,8 @@ public class MainActivity extends AppCompatActivity {
         });
         popupMenu.show();
     }
-    public void showDocuments(View view) {
-        Intent intent = new Intent(MainActivity.this, DocumentItemsActivity.class);
+    public void showClothing(View view) {
+        Intent intent = new Intent(MainActivity.this, ClothItemsActivity.class);
         startActivity(intent);
     }
 
