@@ -97,8 +97,11 @@ public class ClothItemsActivity extends AppCompatActivity implements DocumentIte
 
 
         // Attach swipe-to-delete functionality
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(this, adapter));
+        String category = "Clothing"; // Replace with the actual category name
+        SwipeToDeleteCallback callback = new SwipeToDeleteCallback(this, adapter, category);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
+
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

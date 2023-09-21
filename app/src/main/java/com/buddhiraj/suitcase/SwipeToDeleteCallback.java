@@ -1,4 +1,5 @@
 package com.buddhiraj.suitcase;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,11 +19,13 @@ import com.google.firebase.database.ValueEventListener;
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     private DocumentItemAdapter adapter;
     private Context context;
+    private String category; // Added category variable
 
-    public SwipeToDeleteCallback(Context context, DocumentItemAdapter adapter) {
+    public SwipeToDeleteCallback(Context context, DocumentItemAdapter adapter, String category) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         this.context = context;
         this.adapter = adapter;
+        this.category = category; // Initialize the category
     }
 
     @Override
@@ -61,8 +64,8 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     private void removeFromDatabase(String itemName) {
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
 
-        // Specify the category where your items are stored (e.g., "Documents")
-        DatabaseReference categoryRef = databaseRef.child("Documents");
+        // Specify the category where your items are stored
+        DatabaseReference categoryRef = databaseRef.child(category);
 
         // Query the category to find the item with the matching name
         Query query = categoryRef.orderByChild("name").equalTo(itemName);
@@ -92,5 +95,5 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
             }
         });
     }
-
 }
+
