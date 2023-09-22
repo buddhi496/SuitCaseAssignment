@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 public class DocumentItemAdapter extends RecyclerView.Adapter<DocumentItemAdapter.ViewHolder> {
@@ -51,6 +54,11 @@ public class DocumentItemAdapter extends RecyclerView.Adapter<DocumentItemAdapte
         String itemNumber = String.valueOf(position + 1);
         holder.nameTextView.setText(itemNumber + ". " + documentItem.getName());
 
+        // Set description and price
+        holder.descriptionTextView.setText(documentItem.getDescription());
+        holder.priceTextView.setText("Price: " + documentItem.getPrice());
+        Picasso.get().load(documentItem.getImageUrl()).into(holder.itemImageView);
+
         // Set click listener for each item
         holder.itemView.setOnClickListener(view -> {
             if (itemClickListener != null) {
@@ -58,6 +66,7 @@ public class DocumentItemAdapter extends RecyclerView.Adapter<DocumentItemAdapte
             }
         });
     }
+
 
     @Override
     public int getItemCount() {
@@ -74,12 +83,19 @@ public class DocumentItemAdapter extends RecyclerView.Adapter<DocumentItemAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
+        public TextView descriptionTextView; // Add this TextView for description
+        public TextView priceTextView; // Add this TextView for price
         public View itemView;
+        public ImageView itemImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
             nameTextView = itemView.findViewById(R.id.nameTextView);
+            descriptionTextView = itemView.findViewById(R.id.productDescription);
+            priceTextView = itemView.findViewById(R.id.productPrice);
+            itemImageView = itemView.findViewById(R.id.itemImage);
         }
     }
+
 }

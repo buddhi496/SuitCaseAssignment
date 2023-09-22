@@ -63,6 +63,7 @@ public class ClothItemsActivity extends AppCompatActivity implements DocumentIte
 
         // Retrieve data from Firebase based on the modified query
         query.addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Clear the existing list
@@ -70,14 +71,14 @@ public class ClothItemsActivity extends AppCompatActivity implements DocumentIte
 
                 // Iterate through the dataSnapshot to fetch items
                 for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
-                    // Get data fields from the snapshot as before
+                    // Get data fields from the snapshot
                     String imageUrl = itemSnapshot.child("imageUrl").getValue(String.class);
                     String name = itemSnapshot.child("name").getValue(String.class);
                     String price = itemSnapshot.child("price").getValue(String.class);
                     String description = itemSnapshot.child("description").getValue(String.class);
                     String storeName = itemSnapshot.child("storeName").getValue(String.class);
 
-                    // Create a DocumentItem object and add it to the list without numbering
+                    // Create a DocumentItem object and add it to the list
                     DocumentItem item = new DocumentItem(imageUrl, name, price, description, storeName);
                     documentItemList.add(item);
                 }
@@ -87,6 +88,7 @@ public class ClothItemsActivity extends AppCompatActivity implements DocumentIte
 
                 swipeRefreshLayout.setRefreshing(false);
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
