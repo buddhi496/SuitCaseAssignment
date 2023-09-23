@@ -1,6 +1,6 @@
 package com.buddhiraj.suitcase;
 
-public class DocumentItem {
+public class Items {
     private final String imageUrl;
     private final String name;
     private final String price;
@@ -8,7 +8,7 @@ public class DocumentItem {
     private final String storeName;
     private String userId;
 
-    public DocumentItem(String imageUrl, String name, String price, String description, String storeName) {
+    public Items(String imageUrl, String name, String price, String description, String storeName) {
         this.imageUrl = imageUrl;
         this.name = name;
         this.price = price;

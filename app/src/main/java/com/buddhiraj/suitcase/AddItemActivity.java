@@ -184,7 +184,7 @@ public class AddItemActivity extends AppCompatActivity {
         String selectedCategory = categorySpinner.getSelectedItem().toString();
 
         // Create a DocumentItem object with the item's information
-        DocumentItem newItem = new DocumentItem(imageURL, itemName, String.valueOf(itemPrice), itemDetail, storeName);
+        Items newItem = new Items(imageURL, itemName, String.valueOf(itemPrice), itemDetail, storeName);
         newItem.setUserId(authUid);
 
         // Push the item to the appropriate category node

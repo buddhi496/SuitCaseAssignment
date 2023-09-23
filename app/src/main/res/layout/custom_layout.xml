@@ -75,6 +75,7 @@
                 >
 
                 <ImageView
+                    android:id="@+id/deleteItem"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/remove"
@@ -82,6 +83,7 @@
                     android:contentDescription="@string/product_image_description" />
 
                 <ImageView
+                    android:id="@+id/editItem"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginEnd="10dp"
@@ -89,6 +91,7 @@
                     android:contentDescription="@string/product_image_description" />
 
                 <ImageView
+                    android:id="@+id/findInMap"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginEnd="10dp"
@@ -96,6 +99,7 @@
                     android:contentDescription="@string/product_image_description" />
 
                 <ImageView
+                    android:id="@+id/shareItem"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/share"

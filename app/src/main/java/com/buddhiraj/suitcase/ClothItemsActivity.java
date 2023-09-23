@@ -4,6 +4,7 @@ package com.buddhiraj.suitcase;
         import android.os.Bundle;
         import android.os.Handler;
         import androidx.annotation.NonNull;
+        import androidx.appcompat.app.AlertDialog;
         import androidx.appcompat.app.AppCompatActivity;
         import androidx.appcompat.widget.Toolbar;
         import androidx.recyclerview.widget.ItemTouchHelper;
@@ -21,11 +22,11 @@ package com.buddhiraj.suitcase;
         import java.util.ArrayList;
         import java.util.List;
 
-public class ClothItemsActivity extends AppCompatActivity implements DocumentItemAdapter.OnItemClickListener {
+public class ClothItemsActivity extends AppCompatActivity implements ItemAdapter.OnItemClickListener {
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
-    private List<DocumentItem> documentItemList;
-    private DocumentItemAdapter adapter;
+    private List<Items> documentItemList;
+    private ItemAdapter adapter;
     private String currentUserID;
 
     @Override
@@ -43,7 +44,7 @@ public class ClothItemsActivity extends AppCompatActivity implements DocumentIte
         recyclerView = findViewById(R.id.recyclerView);
 
         documentItemList = new ArrayList<>();
-        adapter = new DocumentItemAdapter(documentItemList, this);
+        adapter = new ItemAdapter(documentItemList, this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -79,7 +80,7 @@ public class ClothItemsActivity extends AppCompatActivity implements DocumentIte
                     String storeName = itemSnapshot.child("storeName").getValue(String.class);
 
                     // Create a DocumentItem object and add it to the list
-                    DocumentItem item = new DocumentItem(imageUrl, name, price, description, storeName);
+                    Items item = new Items(imageUrl, name, price, description, storeName);
                     documentItemList.add(item);
                 }
 
@@ -122,7 +123,7 @@ public class ClothItemsActivity extends AppCompatActivity implements DocumentIte
     public void onItemClick(int position) {
         // Handle item click here
         // Get the clicked item
-        DocumentItem clickedItem = documentItemList.get(position);
+        Items clickedItem = documentItemList.get(position);
 
         // Create an Intent to start the "ItemDetailActivity"
         Intent intent = new Intent(this, ItemDetailActivity.class);
@@ -138,6 +139,5 @@ public class ClothItemsActivity extends AppCompatActivity implements DocumentIte
         // Start the "ItemDetailActivity"
         startActivity(intent);
     }
-
 
 }

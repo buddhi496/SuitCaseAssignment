@@ -2,7 +2,6 @@ package com.buddhiraj.suitcase;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,11 +16,11 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
-    private DocumentItemAdapter adapter;
+    private ItemAdapter adapter;
     private Context context;
     private String category; // Added category variable
 
-    public SwipeToDeleteCallback(Context context, DocumentItemAdapter adapter, String category) {
+    public SwipeToDeleteCallback(Context context, ItemAdapter adapter, String category) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         this.context = context;
         this.adapter = adapter;
