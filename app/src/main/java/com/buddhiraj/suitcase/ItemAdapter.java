@@ -92,6 +92,16 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             // Implement your sharing logic here
             shareItem(itemName, itemDescription, itemPrice);
         });
+
+        // Inside onBindViewHolder method
+        holder.editImageView.setOnClickListener(view -> {
+            String itemId = documentItem.getName();
+            Intent editIntent = new Intent(context, EditActivity.class);
+            editIntent.putExtra("itemId", itemId);
+            context.startActivity(editIntent);
+        });
+
+
     }
 
     @Override
@@ -163,6 +173,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         public ImageView itemImageView;
         public ImageView deleteImageView;
         public ImageView shareImageView;
+        public View editImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -172,6 +183,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             itemImageView = itemView.findViewById(R.id.itemImage);
             deleteImageView = itemView.findViewById(R.id.deleteItem);
             shareImageView = itemView.findViewById(R.id.shareItem);
+            editImageView = itemView.findViewById(R.id.editItem);
         }
     }
 }

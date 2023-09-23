@@ -1,30 +1,30 @@
 package com.buddhiraj.suitcase;
 
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.os.Handler;
-        import androidx.annotation.NonNull;
-        import androidx.appcompat.app.AlertDialog;
-        import androidx.appcompat.app.AppCompatActivity;
-        import androidx.appcompat.widget.Toolbar;
-        import androidx.recyclerview.widget.ItemTouchHelper;
-        import androidx.recyclerview.widget.LinearLayoutManager;
-        import androidx.recyclerview.widget.RecyclerView;
-        import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-        import com.google.firebase.auth.FirebaseAuth;
-        import com.google.firebase.auth.FirebaseUser;
-        import com.google.firebase.database.DataSnapshot;
-        import com.google.firebase.database.DatabaseError;
-        import com.google.firebase.database.DatabaseReference;
-        import com.google.firebase.database.FirebaseDatabase;
-        import com.google.firebase.database.Query;
-        import com.google.firebase.database.ValueEventListener;
-        import java.util.ArrayList;
-        import java.util.List;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class ClothItemsActivity extends AppCompatActivity implements ItemAdapter.OnItemClickListener {
     private SwipeRefreshLayout swipeRefreshLayout;
-    private RecyclerView recyclerView;
     private List<Items> documentItemList;
     private ItemAdapter adapter;
     private String currentUserID;
@@ -36,12 +36,12 @@ public class ClothItemsActivity extends AppCompatActivity implements ItemAdapter
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Your Clothing Items");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Your Clothing Items");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-        recyclerView = findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
         documentItemList = new ArrayList<>();
         adapter = new ItemAdapter(documentItemList, this);
@@ -55,22 +55,17 @@ public class ClothItemsActivity extends AppCompatActivity implements ItemAdapter
             currentUserID = currentUser.getUid();
         }
 
-        // Initialize Firebase Database reference
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference itemsRef = database.getReference("Clothing");
 
-        // Modify the query to fetch items associated with the current user
         Query query = itemsRef.orderByChild("userId").equalTo(currentUserID);
 
-        // Retrieve data from Firebase based on the modified query
         query.addListenerForSingleValueEvent(new ValueEventListener() {
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Clear the existing list
                 documentItemList.clear();
-
-                // Iterate through the dataSnapshot to fetch items
                 for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
                     // Get data fields from the snapshot
                     String imageUrl = itemSnapshot.child("imageUrl").getValue(String.class);
@@ -79,12 +74,11 @@ public class ClothItemsActivity extends AppCompatActivity implements ItemAdapter
                     String description = itemSnapshot.child("description").getValue(String.class);
                     String storeName = itemSnapshot.child("storeName").getValue(String.class);
 
-                    // Create a DocumentItem object and add it to the list
                     Items item = new Items(imageUrl, name, price, description, storeName);
                     documentItemList.add(item);
                 }
 
-                // Notify the adapter of the data change
+
                 adapter.notifyDataSetChanged();
 
                 swipeRefreshLayout.setRefreshing(false);
@@ -93,50 +87,32 @@ public class ClothItemsActivity extends AppCompatActivity implements ItemAdapter
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle any errors here, if needed
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
 
-
-        // Attach swipe-to-delete functionality
-        String category = "Clothing"; // Replace with the actual category name
+        String category = "Clothing";
         SwipeToDeleteCallback callback = new SwipeToDeleteCallback(this, adapter, category);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 2000); // Simulate a 2-second delay
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 2000); // Simulate a 2-second delay
         });
     }
 
     @Override
     public void onItemClick(int position) {
-        // Handle item click here
-        // Get the clicked item
         Items clickedItem = documentItemList.get(position);
-
-        // Create an Intent to start the "ItemDetailActivity"
         Intent intent = new Intent(this, ItemDetailActivity.class);
 
-        // Pass all the description details of the clicked item to the "ItemDetailActivity"
         intent.putExtra("description", clickedItem.getDescription());
         intent.putExtra("imageUrl", clickedItem.getImageUrl());
         intent.putExtra("itemName", clickedItem.getName());
         intent.putExtra("itemPrice", clickedItem.getPrice());
         intent.putExtra("itemStoreName", clickedItem.getStoreName());
-        // Add more data as needed
 
-        // Start the "ItemDetailActivity"
         startActivity(intent);
     }
 
