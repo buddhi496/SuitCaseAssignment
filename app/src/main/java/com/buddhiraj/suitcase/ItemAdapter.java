@@ -2,11 +2,14 @@ package com.buddhiraj.suitcase;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
@@ -55,28 +59,38 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Items documentItem = documentItemList.get(position);
 
-        // Set the numbering (position + 1) and the name
         String itemNumber = String.valueOf(position + 1);
         holder.nameTextView.setText(itemNumber + ". " + documentItem.getName());
 
-        // Set description and price
         holder.descriptionTextView.setText(documentItem.getDescription());
         holder.priceTextView.setText("Price: " + documentItem.getPrice());
         Picasso.get().load(documentItem.getImageUrl()).into(holder.itemImageView);
 
-        // Set click listener for each item
         holder.itemView.setOnClickListener(view -> {
             if (itemClickListener != null) {
                 itemClickListener.onItemClick(position);
             }
         });
 
-        // Set click listener for the delete ImageView
         holder.deleteImageView.setOnClickListener(view -> {
             String itemName = documentItem.getName();
-            String category1 = "Books and Magazines"; // Set the first category name here
-            String category2 = "Clothing"; // Set the second category name here
-            showDeleteConfirmationDialog(itemName, position, category1, category2);
+            String category1 = "Books and Magazines";
+            String category2 = "Clothing";
+            String category3 = "Health";
+            String category4 = "Accessories";
+            String category5 = "Electronic";
+            String category6 = "Others";
+            showDeleteConfirmationDialog(itemName, position, category1, category2, category3, category4, category5, category6);
+        });
+
+        // Add click listener for the "shareItem" ImageView
+        holder.shareImageView.setOnClickListener(view -> {
+            String itemName = documentItem.getName();
+            String itemDescription = documentItem.getDescription();
+            String itemPrice = documentItem.getPrice();
+
+            // Implement your sharing logic here
+            shareItem(itemName, itemDescription, itemPrice);
         });
     }
 
@@ -101,7 +115,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                     deleteItem(position);
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> {
-                    // User canceled, do nothing
                 })
                 .show();
     }
@@ -119,28 +132,37 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                     for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
                         itemSnapshot.getRef().removeValue();
                     }
-                    // Item(s) removed successfully from the category
-                    // You can add any necessary logic here
+                    Toast.makeText(context, "Item removed", Toast.LENGTH_SHORT).show();
+
                 } else {
-                    // No matching item found in the category
-                    // You can add error handling logic here
+                    Toast.makeText(context, "Failed to remove item", Toast.LENGTH_SHORT).show();
+
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle any errors that occur during the query
-                // You can add error handling logic here
+                Toast.makeText(context, "Failed to remove item", Toast.LENGTH_SHORT).show();
+
             }
         });
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    private void shareItem(String itemName, String itemDescription, String itemPrice) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        String shareText = "Check out this item:\nName: " + itemName + "\nDescription: " + itemDescription + "\nPrice: " + itemPrice;
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+        context.startActivity(Intent.createChooser(shareIntent, "Share via"));
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
         public TextView descriptionTextView;
         public TextView priceTextView;
         public ImageView itemImageView;
         public ImageView deleteImageView;
+        public ImageView shareImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -149,6 +171,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             priceTextView = itemView.findViewById(R.id.productPrice);
             itemImageView = itemView.findViewById(R.id.itemImage);
             deleteImageView = itemView.findViewById(R.id.deleteItem);
+            shareImageView = itemView.findViewById(R.id.shareItem);
         }
     }
 }
