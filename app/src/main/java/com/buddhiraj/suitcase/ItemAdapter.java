@@ -29,10 +29,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     private List<Items> documentItemList;
     private OnItemClickListener itemClickListener;
     private Context context;
+    private DatabaseReference databaseReference;
 
     public ItemAdapter(List<Items> documentItemList, Context context) {
         this.documentItemList = documentItemList;
         this.context = context;
+        this.databaseReference = databaseReference;
+
     }
 
     public interface OnItemClickListener {
@@ -132,22 +135,46 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             openMapWithStoreLocation(storeName);
         });
 
-        // Set the initial state of the checkbox based on the 'status' field in your database
-        boolean isChecked = documentItem.isStatus();
-        holder.checkbox.setChecked(isChecked);
+        // Set the initial checkbox state based on the item's status
+        holder.checkbox.setChecked(documentItem.isStatus());
 
-        // Add an OnCheckedChangeListener to the checkbox
-        holder.checkbox.setOnCheckedChangeListener((compoundButton, checked) -> {
-            // Update the 'status' field in the database for the corresponding item
-            updateStatusInDatabase(documentItem.getName(), checked);
+        // Add a click listener to the checkbox
+        holder.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // Update the item's status in the local data
+            documentItem.setStatus(isChecked);
 
-            // Update the 'status' field in the item object to reflect the current state
-            documentItem.setStatus(checked);
-
-            // Notify the adapter that the dataset has changed
-            notifyDataSetChanged();
+            // Update the item's status in the Firebase Realtime Database
+            updateItemStatusInDatabase(documentItem);
         });
         }
+
+    // Add a method to update the item's status in the Firebase Realtime Database
+    private void updateItemStatusInDatabase(Items item) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference categoryRef = databaseRef.child("Books and Magazines");
+
+        Query query = categoryRef.orderByChild("name").equalTo(item.getName());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                        // Update the "status" field in the database
+                        itemSnapshot.getRef().child("status").setValue(item.isStatus());
+                    }
+                    Toast.makeText(context, "Status updated", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Failed to update status", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, "Failed to update status", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private void openMapWithStoreLocation(String storeName) {
         // Create an intent to open a mapping application
@@ -227,22 +254,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         String shareText = "Check out this item for me:\nName: " + itemName + "\nDescription: " + itemDescription + "\nPrice: " + itemPrice + "\nStore Name: " + storeName;
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
         context.startActivity(Intent.createChooser(shareIntent, "Share via"));
-    }
-
-    private void updateStatusInDatabase(String itemId, boolean isChecked) {
-        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference itemRef = databaseRef.child("Health").child(itemId);
-
-        // Update the 'status' field in the database
-        itemRef.child("status").setValue(isChecked)
-                .addOnSuccessListener(aVoid -> {
-                    // The status was successfully updated in the database
-                    Toast.makeText(context, "Status updated", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    // There was an error updating the status
-                    Toast.makeText(context, "Failed to update status", Toast.LENGTH_SHORT).show();
-                });
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
