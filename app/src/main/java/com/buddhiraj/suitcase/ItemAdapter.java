@@ -3,9 +3,11 @@ package com.buddhiraj.suitcase;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -93,6 +95,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             shareItem(itemName, itemDescription, itemPrice);
         });
 
+
         // Inside onBindViewHolder method
         holder.editImageView.setOnClickListener(view -> {
             String itemId = documentItem.getName();
@@ -101,8 +104,47 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             context.startActivity(editIntent);
         });
 
+        // Inside onBindViewHolder method
+        holder.findInMapImageView.setOnClickListener(view -> {
+            String storeName = documentItem.getStoreName();
+            // Implement the logic to open a map with the store location based on the storeName.
+            openMapWithStoreLocation(storeName);
+        });
+
+        // Set the initial state of the checkbox based on the 'status' field in your database
+        boolean isChecked = documentItem.isStatus();
+        holder.checkbox.setChecked(isChecked);
+
+        // Add an OnCheckedChangeListener to the checkbox
+        holder.checkbox.setOnCheckedChangeListener((compoundButton, checked) -> {
+            // Update the 'status' field in the database for the corresponding item
+            updateStatusInDatabase(documentItem.getName(), checked);
+
+            // Update the 'status' field in the item object to reflect the current state
+            documentItem.setStatus(checked);
+
+            // Notify the adapter that the dataset has changed
+            notifyDataSetChanged();
+        });
+        }
+
+    private void openMapWithStoreLocation(String storeName) {
+        // Create an intent to open a mapping application
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + Uri.encode(storeName));
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(mapIntent);
+        } else {
+            // Fallback: Open a web map in a browser
+            Uri webMapUri = Uri.parse("https://www.google.com/maps/search/?api=1&query=" + Uri.encode(storeName));
+            Intent webMapIntent = new Intent(Intent.ACTION_VIEW, webMapUri);
+            context.startActivity(webMapIntent);
+        }
 
     }
+
 
     @Override
     public int getItemCount() {
@@ -166,6 +208,22 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         context.startActivity(Intent.createChooser(shareIntent, "Share via"));
     }
 
+    private void updateStatusInDatabase(String itemId, boolean isChecked) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference itemRef = databaseRef.child("Health").child(itemId);
+
+        // Update the 'status' field in the database
+        itemRef.child("status").setValue(isChecked)
+                .addOnSuccessListener(aVoid -> {
+                    // The status was successfully updated in the database
+                    Toast.makeText(context, "Status updated", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    // There was an error updating the status
+                    Toast.makeText(context, "Failed to update status", Toast.LENGTH_SHORT).show();
+                });
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
         public TextView descriptionTextView;
@@ -174,6 +232,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         public ImageView deleteImageView;
         public ImageView shareImageView;
         public View editImageView;
+        public CheckBox checkbox;
+        public View findInMapImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -184,6 +244,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             deleteImageView = itemView.findViewById(R.id.deleteItem);
             shareImageView = itemView.findViewById(R.id.shareItem);
             editImageView = itemView.findViewById(R.id.editItem);
+            findInMapImageView = itemView.findViewById(R.id.findInMap);
+            checkbox = itemView.findViewById(R.id.checkbox);
+
         }
     }
 }

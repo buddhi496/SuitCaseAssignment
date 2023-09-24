@@ -7,6 +7,7 @@ public class Items {
     private final String description;
     private final String storeName;
     private String userId;
+    private boolean status;
 
     public Items(String imageUrl, String name, String price, String description, String storeName) {
         this.imageUrl = imageUrl;
@@ -14,7 +15,7 @@ public class Items {
         this.price = price;
         this.description = description;
         this.storeName = storeName;
-        this.userId = userId;
+        this.status = false;
     }
 
 
@@ -43,11 +44,14 @@ public class Items {
         return storeName;
     }
 
-    public String getUserId() {
-        return userId;
-    }
     public void setUserId(String userId) {
         this.userId = userId;
     }
+    public boolean isStatus() {
+        return status;
+    }
 
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 }
