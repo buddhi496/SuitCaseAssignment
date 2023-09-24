@@ -90,9 +90,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             String itemName = documentItem.getName();
             String itemDescription = documentItem.getDescription();
             String itemPrice = documentItem.getPrice();
+            String storeName = documentItem.getStoreName();
 
             // Implement your sharing logic here
-            shareItem(itemName, itemDescription, itemPrice);
+            shareItem(itemName, itemDescription, itemPrice, storeName);
         });
 
 
@@ -200,10 +201,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         });
     }
 
-    private void shareItem(String itemName, String itemDescription, String itemPrice) {
+    private void shareItem(String itemName, String itemDescription, String itemPrice, String storeName) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
-        String shareText = "Check out this item:\nName: " + itemName + "\nDescription: " + itemDescription + "\nPrice: " + itemPrice;
+        String shareText = "Check out this item for me:\nName: " + itemName + "\nDescription: " + itemDescription + "\nPrice: " + itemPrice + "\nStore Name: " + storeName;
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
         context.startActivity(Intent.createChooser(shareIntent, "Share via"));
     }
