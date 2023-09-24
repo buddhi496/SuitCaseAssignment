@@ -36,7 +36,6 @@ public class AddItemActivity extends AppCompatActivity {
     private DatabaseReference databaseRef;
     private ProgressBar progressBar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
