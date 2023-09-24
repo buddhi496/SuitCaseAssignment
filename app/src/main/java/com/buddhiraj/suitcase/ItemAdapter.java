@@ -74,6 +74,26 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             }
         });
 
+        holder.itemView.setOnClickListener(view -> {
+            if (itemClickListener != null) {
+                itemClickListener.onItemClick(position);
+            }
+
+            // Create an Intent to open the ItemDetailActivity
+            Intent intent = new Intent(context, ItemDetailActivity.class);
+
+            // Pass the necessary data as extras in the Intent
+            intent.putExtra("itemName", documentItem.getName());
+            intent.putExtra("description", documentItem.getDescription());
+            intent.putExtra("itemPrice", documentItem.getPrice());
+            intent.putExtra("itemStoreName", documentItem.getStoreName());
+            intent.putExtra("imageUrl", documentItem.getImageUrl());
+
+            // Start the ItemDetailActivity
+            context.startActivity(intent);
+        });
+
+
         holder.deleteImageView.setOnClickListener(view -> {
             String itemName = documentItem.getName();
             String category1 = "Books and Magazines";
