@@ -23,18 +23,17 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     private List<Items> documentItemList;
     private OnItemClickListener itemClickListener;
     private Context context;
-    private DatabaseReference databaseReference;
 
     public ItemAdapter(List<Items> documentItemList, Context context) {
         this.documentItemList = documentItemList;
         this.context = context;
-        this.databaseReference = databaseReference;
 
     }
 
@@ -66,10 +65,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         Items item = documentItemList.get(position);
 
 
-        String itemNumber = String.valueOf(position + 1);
-        holder.nameTextView.setText(itemNumber + ". " + documentItem.getName());
-
-        holder.descriptionTextView.setText(documentItem.getDescription());
+        holder.nameTextView.setText(documentItem.getName());
         holder.priceTextView.setText("Price: " + documentItem.getPrice());
         Picasso.get().load(documentItem.getImageUrl()).into(holder.itemImageView);
 
@@ -144,6 +140,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             // Update the item's status in the local data
             documentItem.setStatus(isChecked);
 
+            if (isChecked) {
+                documentItemList.remove(position);
+                documentItemList.add(documentItem);
+                notifyItemMoved(position, documentItemList.size() - 1);
+            }
+
             updateItemStatusInCategory(item, "Books and Magazines");
             updateItemStatusInCategory(item, "Clothing");
             updateItemStatusInCategory(item, "Health");
@@ -169,7 +171,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                         // Update the "status" field in the database
                         itemSnapshot.getRef().child("status").setValue(item.isStatus());
                     }
-                    Toast.makeText(context, "Marked as Purchased ", Toast.LENGTH_SHORT).show();
+
                 }
             }
 

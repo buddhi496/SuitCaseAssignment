@@ -65,8 +65,9 @@ public class ClothItemsActivity extends AppCompatActivity implements ItemAdapter
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 documentItemList.clear();
-                List<Items> itemsWithStatusFalse = new ArrayList<>();
                 List<Items> itemsWithStatusTrue = new ArrayList<>();
+                List<Items> itemsWithStatusFalse = new ArrayList<>();
+
                 for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
                     // Get data fields from the snapshot
                     String imageUrl = itemSnapshot.child("imageUrl").getValue(String.class);
@@ -74,7 +75,10 @@ public class ClothItemsActivity extends AppCompatActivity implements ItemAdapter
                     String price = itemSnapshot.child("price").getValue(String.class);
                     String description = itemSnapshot.child("description").getValue(String.class);
                     String storeName = itemSnapshot.child("storeName").getValue(String.class);
+
                     boolean status = itemSnapshot.child("status").getValue(Boolean.class);
+
+                    // Create an Items object and set the status
                     Items item = new Items(imageUrl, name, price, description, storeName);
                     item.setStatus(status);
 
@@ -84,10 +88,13 @@ public class ClothItemsActivity extends AppCompatActivity implements ItemAdapter
                         itemsWithStatusFalse.add(item);
                     }
                 }
+
                 documentItemList.addAll(itemsWithStatusFalse);
                 documentItemList.addAll(itemsWithStatusTrue);
+
                 adapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
+
             }
 
 
