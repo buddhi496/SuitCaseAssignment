@@ -6,11 +6,14 @@
     android:layout_height="wrap_content"
     app:cardElevation="4dp"
     app:cardCornerRadius="8dp"
-    android:layout_margin="16dp">
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="16dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_gravity="center_vertical"
         android:padding="5dp">
 
         <ImageView
@@ -23,7 +26,7 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="130dp"
             android:orientation="vertical"
             android:layout_weight="1"
             android:layout_marginStart="16dp">
@@ -48,6 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textColor="@color/black" />
+
             </LinearLayout>
 
             <TextView
@@ -70,9 +74,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_gravity="bottom"
                 android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                >
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:id="@+id/deleteItem"
@@ -103,6 +107,14 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/share"
+                    android:contentDescription="@string/product_image_description" />
+
+                <ImageView
+                    android:id="@+id/messageItem"
+                    android:layout_width="29dp"
+                    android:layout_height="29dp"
+                    android:src="@drawable/message"
+                    android:layout_marginLeft="10dp"
                     android:contentDescription="@string/product_image_description" />
 
             </LinearLayout>

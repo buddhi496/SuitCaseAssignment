@@ -3,6 +3,7 @@ package com.buddhiraj.suitcase;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +64,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Items documentItem = documentItemList.get(position);
+        Items item = documentItemList.get(position);
+
 
         String itemNumber = String.valueOf(position + 1);
         holder.nameTextView.setText(itemNumber + ". " + documentItem.getName());
@@ -82,7 +85,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 itemClickListener.onItemClick(position);
             }
 
-            // Create an Intent to open the ItemDetailActivity
             Intent intent = new Intent(context, ItemDetailActivity.class);
 
             // Pass the necessary data as extras in the Intent
@@ -92,7 +94,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             intent.putExtra("itemStoreName", documentItem.getStoreName());
             intent.putExtra("imageUrl", documentItem.getImageUrl());
 
-            // Start the ItemDetailActivity
             context.startActivity(intent);
         });
 
@@ -108,19 +109,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             showDeleteConfirmationDialog(itemName, position, category1, category2, category3, category4, category5, category6);
         });
 
-        // Add click listener for the "shareItem" ImageView
         holder.shareImageView.setOnClickListener(view -> {
             String itemName = documentItem.getName();
             String itemDescription = documentItem.getDescription();
             String itemPrice = documentItem.getPrice();
             String storeName = documentItem.getStoreName();
 
-            // Implement your sharing logic here
             shareItem(itemName, itemDescription, itemPrice, storeName);
         });
 
-
-        // Inside onBindViewHolder method
         holder.editImageView.setOnClickListener(view -> {
             String itemId = documentItem.getName();
             Intent editIntent = new Intent(context, EditActivity.class);
@@ -131,27 +128,27 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         // Inside onBindViewHolder method
         holder.findInMapImageView.setOnClickListener(view -> {
             String storeName = documentItem.getStoreName();
-            // Implement the logic to open a map with the store location based on the storeName.
             openMapWithStoreLocation(storeName);
         });
 
-        // Set the initial checkbox state based on the item's status
+
         holder.checkbox.setChecked(documentItem.isStatus());
 
-        // Add a click listener to the checkbox
         holder.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // Update the item's status in the local data
             documentItem.setStatus(isChecked);
 
-            // Update the item's status in the Firebase Realtime Database
-            updateItemStatusInDatabase(documentItem);
+            updateItemStatusInCategory(item, "Books and Magazines");
+            updateItemStatusInCategory(item, "Clothing");
+            updateItemStatusInCategory(item, "Health");
+            updateItemStatusInCategory(item, "Others");
+            updateItemStatusInCategory(item, "Accessories");
+            updateItemStatusInCategory(item, "Electronic");
         });
         }
 
-    // Add a method to update the item's status in the Firebase Realtime Database
-    private void updateItemStatusInDatabase(Items item) {
+    private void updateItemStatusInCategory(Items item, String categoryName) {
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference categoryRef = databaseRef.child("Books and Magazines");
+        DatabaseReference categoryRef = databaseRef.child(categoryName);
 
         Query query = categoryRef.orderByChild("name").equalTo(item.getName());
 
@@ -160,24 +157,21 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
-                        // Update the "status" field in the database
                         itemSnapshot.getRef().child("status").setValue(item.isStatus());
                     }
-                    Toast.makeText(context, "Status updated", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, "Failed to update status", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Marked as Purchased ", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(context, "Failed to update status", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Failed to update status in " + categoryName, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+
     private void openMapWithStoreLocation(String storeName) {
-        // Create an intent to open a mapping application
         Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + Uri.encode(storeName));
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
