@@ -59,13 +59,14 @@ public class ClothItemsActivity extends AppCompatActivity implements ItemAdapter
         DatabaseReference itemsRef = database.getReference("Clothing");
 
         Query query = itemsRef.orderByChild("userId").equalTo(currentUserID);
-
         query.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 documentItemList.clear();
+                List<Items> itemsWithStatusFalse = new ArrayList<>();
+                List<Items> itemsWithStatusTrue = new ArrayList<>();
                 for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
                     // Get data fields from the snapshot
                     String imageUrl = itemSnapshot.child("imageUrl").getValue(String.class);
@@ -73,14 +74,19 @@ public class ClothItemsActivity extends AppCompatActivity implements ItemAdapter
                     String price = itemSnapshot.child("price").getValue(String.class);
                     String description = itemSnapshot.child("description").getValue(String.class);
                     String storeName = itemSnapshot.child("storeName").getValue(String.class);
-
+                    boolean status = itemSnapshot.child("status").getValue(Boolean.class);
                     Items item = new Items(imageUrl, name, price, description, storeName);
-                    documentItemList.add(item);
+                    item.setStatus(status);
+
+                    if (status) {
+                        itemsWithStatusTrue.add(item);
+                    } else {
+                        itemsWithStatusFalse.add(item);
+                    }
                 }
-
-
+                documentItemList.addAll(itemsWithStatusFalse);
+                documentItemList.addAll(itemsWithStatusTrue);
                 adapter.notifyDataSetChanged();
-
                 swipeRefreshLayout.setRefreshing(false);
             }
 
