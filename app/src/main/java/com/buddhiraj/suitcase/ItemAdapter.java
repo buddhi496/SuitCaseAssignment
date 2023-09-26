@@ -67,6 +67,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
         holder.nameTextView.setText(documentItem.getName());
         holder.priceTextView.setText("Price: " + documentItem.getPrice());
+        holder.descriptionTextView.setText("Description: " + documentItem.getDescription());
         Picasso.get().load(documentItem.getImageUrl()).into(holder.itemImageView);
 
         holder.itemView.setOnClickListener(view -> {
