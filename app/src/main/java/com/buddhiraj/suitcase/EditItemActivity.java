@@ -13,8 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -67,46 +71,56 @@ public class EditItemActivity extends AppCompatActivity {
         String editedDescription = descriptionEditText.getText().toString().trim();
         String editedItemPrice = priceEditText.getText().toString().trim();
 
-        // Validate the input fields (you can add more validation as needed)
-        if (editedItemName.isEmpty() || editedDescription.isEmpty() || editedItemPrice.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        // Retrieve the item name from the Intent extras
+        String itemName = getIntent().getStringExtra("itemName");
 
-        // Retrieve the item key from the Intent extras
-        String itemKey = getIntent().getStringExtra("itemKey");
-
-        // Update specific fields of the item data in the database
+        // Update all fields of the item data in the database based on the item name
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
 
         // Assuming you have a "Clothing" category in your database
-        DatabaseReference clothingRef = databaseRef.child("Clothing").child(itemKey);
+        DatabaseReference clothingRef = databaseRef.child("Clothing");
 
         // Create a Map to hold the updated item data
         Map<String, Object> updatedData = new HashMap<>();
-        updatedData.put("name", editedItemName);
         updatedData.put("description", editedDescription);
+        updatedData.put("name", editedItemName);
         updatedData.put("price", editedItemPrice);
 
-        // Update only the specified fields in the database
-        clothingRef.updateChildren(updatedData)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // Data updated successfully
-                        Toast.makeText(EditItemActivity.this, "Item updated successfully", Toast.LENGTH_SHORT).show();
-                        finish(); // Close the activity after successful update
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Failed to update data
-                        Toast.makeText(EditItemActivity.this, "Failed to update item", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        // Query the item by name and update its data
+        Query query;
+        query = clothingRef.orderByChild("name").equalTo(itemName);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Get the item's unique key
+                    String itemKey = dataSnapshot.getChildren().iterator().next().getKey();
+                    // Update the item data using the retrieved key
+                    clothingRef.child(itemKey).updateChildren(updatedData)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    // Data updated successfully
+                                    Toast.makeText(EditItemActivity.this, "Item updated successfully", Toast.LENGTH_SHORT).show();
+                                    finish(); // Close the activity after successful update
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Failed to update data
+                                    Toast.makeText(EditItemActivity.this, "Failed to update item", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle any errors here
+                Toast.makeText(EditItemActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
-
-
 
 }
