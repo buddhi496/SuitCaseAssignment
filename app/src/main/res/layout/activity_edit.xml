@@ -30,21 +30,30 @@
         android:layout_height="wrap_content"
         android:hint="Price" />
 
-    <!-- ImageView to display the image -->
+    <!-- Replace ImageView and TextView with updated data -->
     <ImageView
         android:id="@+id/imageViewItem"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/card" />
+
+    <TextView
+        android:id="@+id/ChooseImage"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="8dp"
+        android:text="Choose Image" />
 
-    <!-- TextView to display the store name -->
-    <TextView
+    <EditText
         android:id="@+id/textViewStoreName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:text="Store Name" />
 
     <Button
         android:id="@+id/btnSave"

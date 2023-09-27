@@ -185,6 +185,7 @@ public class AddItemActivity extends AppCompatActivity {
         // Create a DocumentItem object with the item's information
         Items newItem = new Items(imageURL, itemName, String.valueOf(itemPrice), itemDetail, storeName);
         newItem.setUserId(authUid);
+        newItem.setItemKey(itemKey);
 
         // Push the item to the appropriate category node
         DatabaseReference categoryNodeRef = databaseRef.child(selectedCategory);

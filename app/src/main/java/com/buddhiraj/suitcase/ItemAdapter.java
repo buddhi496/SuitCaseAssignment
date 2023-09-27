@@ -122,6 +122,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             Intent editIntent = new Intent(context, EditItemActivity.class);
 
             // Pass the necessary data as extras in the Intent
+            editIntent.putExtra("itemKey", documentItem.getItemKey());
             editIntent.putExtra("itemName", documentItem.getName());
             editIntent.putExtra("description", documentItem.getDescription());
             editIntent.putExtra("itemPrice", documentItem.getPrice());
