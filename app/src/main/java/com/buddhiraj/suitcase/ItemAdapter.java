@@ -23,7 +23,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.util.Collections;
 import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
@@ -118,14 +117,22 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             shareItem(itemName, itemDescription, itemPrice, storeName);
         });
 
-
-        // Inside onBindViewHolder method
         holder.editImageView.setOnClickListener(view -> {
-            String itemId = documentItem.getName();
-            Intent editIntent = new Intent(context, EditActivity.class);
-            editIntent.putExtra("itemId", itemId);
+            // Create an Intent to open the EditItemActivity
+            Intent editIntent = new Intent(context, EditItemActivity.class);
+
+            // Pass the necessary data as extras in the Intent
+            editIntent.putExtra("itemName", documentItem.getName());
+            editIntent.putExtra("description", documentItem.getDescription());
+            editIntent.putExtra("itemPrice", documentItem.getPrice());
+            editIntent.putExtra("imageUrl", documentItem.getImageUrl()); // Add image URL
+            editIntent.putExtra("storeName", documentItem.getStoreName()); // Add store name
+
+            // Start the EditItemActivity
             context.startActivity(editIntent);
         });
+
+
 
         // Inside onBindViewHolder method
         holder.findInMapImageView.setOnClickListener(view -> {

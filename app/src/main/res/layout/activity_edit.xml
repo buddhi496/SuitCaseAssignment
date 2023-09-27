@@ -1,129 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_gravity="center_horizontal">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:id="@+id/back"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:backgroundTint="@color/toolbar"
-            android:layout_height="40dp"
-            android:background="?attr/colorPrimary"
-            android:title="Your Profile"
-            android:elevation="4dp"
-            android:gravity="center_vertical"
-            app:layout_scrollFlags="scroll|enterAlways"/>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_below="@+id/back"
-        android:src="@drawable/boxxx"
-        android:scaleType="centerCrop" />
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <TextView
-        android:id="@+id/chooseImageButton"
-        android:layout_below="@+id/imageView"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="Choose Image"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?android:attr/selectableItemBackground"
-        />
-
-
-    <EditText
-        android:id="@+id/itemNameEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Item Name"
-        android:layout_below="@+id/chooseImageButton"
-        android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="16dp"
-        android:background="@drawable/button_background"
-        android:padding="12dp"
-        android:textColorHint="@color/black"
-        android:textColor="@android:color/black"
-        android:textSize="12sp"
-        />
-
-    <!-- Item Detail Field -->
-    <EditText
-        android:id="@+id/itemDetailEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Item Detail"
-        android:layout_below="@+id/itemNameEditText"
-        android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="16dp"
-        android:background="@drawable/button_background"
-        android:padding="12dp"
-        android:textColorHint="@color/black"
-        android:textColor="@android:color/black"
-        android:textSize="12sp"/>
-
-    <!-- Item Price Field -->
-    <EditText
-        android:id="@+id/itemPriceEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Item Price"
-        android:inputType="numberDecimal"
-        android:layout_below="@+id/itemDetailEditText"
-        android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="16dp"
-        android:background="@drawable/button_background"
-        android:padding="12dp"
-        android:textColorHint="@color/black"
-        android:textColor="@android:color/black"
-        android:textSize="12sp"/>
-
-    <!-- Store Name Field -->
-    <EditText
-        android:id="@+id/storeNameEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Store Name"
-        android:layout_below="@+id/itemPriceEditText"
-        android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="16dp"
-        android:background="@drawable/button_background"
-        android:padding="12dp"
-        android:textColorHint="@color/black"
-        android:textColor="@android:color/black"
-        android:textSize="12sp"/>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
+        android:text="Edit Item"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
-    <!-- Add Item Button -->
+    <EditText
+        android:id="@+id/editTextItemName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Item Name" />
+
+    <EditText
+        android:id="@+id/editTextDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Description" />
+
+    <EditText
+        android:id="@+id/editTextPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Price" />
+
+    <!-- ImageView to display the image -->
+    <ImageView
+        android:id="@+id/imageViewItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp" />
+
+    <!-- TextView to display the store name -->
+    <TextView
+        android:id="@+id/textViewStoreName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp" />
+
     <Button
-        android:id="@+id/updateItemButton"
-        android:layout_width="200dp"
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/storeNameEditText"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="21dp"
-        android:backgroundTint="@color/buttonBackground"
-        android:gravity="center"
-        android:text="Update Item" />
-</RelativeLayout>
+        android:text="Save" />
+
+</LinearLayout>

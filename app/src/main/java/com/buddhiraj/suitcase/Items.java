@@ -18,17 +18,6 @@ public class Items {
         this.status = false;
     }
 
-    // Constructor that allows setting userId during object creation
-    public Items(String imageUrl, String name, String price, String description, String storeName, String userId) {
-        this.imageUrl = imageUrl;
-        this.name = name;
-        this.price = price;
-        this.description = description;
-        this.storeName = storeName;
-        this.userId = userId;
-        this.status = false;
-    }
-
     public String getImageUrl() {
         return imageUrl;
     }
