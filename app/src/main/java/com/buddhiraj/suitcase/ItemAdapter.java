@@ -133,8 +133,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             context.startActivity(editIntent);
         });
 
-
-
         // Inside onBindViewHolder method
         holder.findInMapImageView.setOnClickListener(view -> {
             String storeName = documentItem.getStoreName();

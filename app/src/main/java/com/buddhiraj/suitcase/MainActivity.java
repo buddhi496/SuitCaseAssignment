@@ -173,31 +173,26 @@ public class MainActivity extends AppCompatActivity {
                     welcomeText.setText("Welcome, User");
                 }
 
-                retrieveUserCategoryCount(userId, "Health");
-                retrieveUserCategoryCount(userId, "Clothing");
-                retrieveUserCategoryCount(userId, "Electronic");
-                retrieveUserCategoryCount(userId, "Accessories");
-                retrieveUserCategoryCount(userId, "Books and Magazines");
-                retrieveUserCategoryCount(userId, "Others");
+                setupCategoryCountListener(userId, "Health", findViewById(R.id.totalHealthItems));
+                setupCategoryCountListener(userId, "Clothing", findViewById(R.id.totalItem));
+                setupCategoryCountListener(userId, "Electronic", findViewById(R.id.totalelectronicItems));
+                setupCategoryCountListener(userId, "Accessories", findViewById(R.id.totalClothItems));
+                setupCategoryCountListener(userId, "Books and Magazines", findViewById(R.id.totalPaymentMethods));
+                setupCategoryCountListener(userId, "Others", findViewById(R.id.totalotherItems));
             }
 
-            private void retrieveUserCategoryCount(String userId, String category) {
-                DatabaseReference categoryRef = databaseReference.child(category); // Update with your category node reference
+            private void setupCategoryCountListener(String userId, String category, TextView categoryTextView) {
+                DatabaseReference categoryRef = databaseReference.child(category);
                 Query userCategoryQuery = categoryRef.orderByChild("userId").equalTo(userId);
 
-                userCategoryQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                ValueEventListener valueEventListener = new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             long categoryCount = dataSnapshot.getChildrenCount();
                             String categoryCountText = categoryCount + " " + category + "s"; // Pluralize the category name
-
-                            // Update the TextView based on the category
-                            TextView categoryTextView = getCategoryTextView(category);
                             categoryTextView.setText(categoryCountText);
                         } else {
-                            // If no items found for the category and user, set the count to 0
-                            TextView categoryTextView = getCategoryTextView(category);
                             categoryTextView.setText("0 " + category + "s");
                         }
                     }
@@ -207,30 +202,10 @@ public class MainActivity extends AppCompatActivity {
                         // Handle error if data retrieval is canceled
                         Log.e("Database", "Data retrieval canceled: " + databaseError.getMessage());
                     }
-                });
-            }
+                };
 
-            // Helper method to get the appropriate TextView for the category
-            private TextView getCategoryTextView(String category) {
-                switch (category) {
-                    case "Clothing":
-                        return findViewById(R.id.totalItem);
-                    case "Books and Magazines":
-                        return findViewById(R.id.totalPaymentMethods);
-                    case "Health":
-                        return findViewById(R.id.totalHealthItems);
-                    case "Accessories":
-                        return findViewById(R.id.totalClothItems);
-                    case "Electronic":
-                        return findViewById(R.id.totalelectronicItems);
-                    case "Others":
-                        return findViewById(R.id.totalotherItems);
-                    // Add more cases for other categories
-                    default:
-                        return null; // Handle unknown categories or return the appropriate TextView
-                }
+                userCategoryQuery.addValueEventListener(valueEventListener);
             }
-
 
 
             @Override

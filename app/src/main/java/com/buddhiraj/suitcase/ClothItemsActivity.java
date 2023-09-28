@@ -23,6 +23,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 public class ClothItemsActivity extends AppCompatActivity implements ItemAdapter.OnItemClickListener {
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Items> documentItemList;
@@ -55,13 +77,38 @@ public class ClothItemsActivity extends AppCompatActivity implements ItemAdapter
             currentUserID = currentUser.getUid();
         }
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference itemsRef = database.getReference("Clothing");
+        // Set up the database listener
+        setupDatabaseListener();
 
+        String category = "Clothing";
+        SwipeToDeleteCallback callback = new SwipeToDeleteCallback(this, adapter, category);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 2000); // Simulate a 2-second delay
+        });
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Items clickedItem = documentItemList.get(position);
+        Intent intent = new Intent(this, ItemDetailActivity.class);
+
+        intent.putExtra("description", clickedItem.getDescription());
+        intent.putExtra("imageUrl", clickedItem.getImageUrl());
+        intent.putExtra("itemName", clickedItem.getName());
+        intent.putExtra("itemPrice", clickedItem.getPrice());
+        intent.putExtra("itemStoreName", clickedItem.getStoreName());
+
+        startActivity(intent);
+    }
+
+    private void setupDatabaseListener() {
+        DatabaseReference itemsRef = FirebaseDatabase.getInstance().getReference("Clothing");
         Query query = itemsRef.orderByChild("userId").equalTo(currentUserID);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
 
-            @SuppressLint("NotifyDataSetChanged")
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 documentItemList.clear();
@@ -94,39 +141,12 @@ public class ClothItemsActivity extends AppCompatActivity implements ItemAdapter
 
                 adapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
-
             }
-
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-
-        String category = "Clothing";
-        SwipeToDeleteCallback callback = new SwipeToDeleteCallback(this, adapter, category);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-
-
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 2000); // Simulate a 2-second delay
-        });
     }
-
-    @Override
-    public void onItemClick(int position) {
-        Items clickedItem = documentItemList.get(position);
-        Intent intent = new Intent(this, ItemDetailActivity.class);
-
-        intent.putExtra("description", clickedItem.getDescription());
-        intent.putExtra("imageUrl", clickedItem.getImageUrl());
-        intent.putExtra("itemName", clickedItem.getName());
-        intent.putExtra("itemPrice", clickedItem.getPrice());
-        intent.putExtra("itemStoreName", clickedItem.getStoreName());
-
-        startActivity(intent);
-    }
-
 }
