@@ -246,12 +246,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                     for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
                         itemSnapshot.getRef().removeValue();
                     }
-                    Toast.makeText(context, "Item removed", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    Toast.makeText(context, "Failed to remove item", Toast.LENGTH_SHORT).show();
-
-                }
+                    Toast.makeText(context, "Item removed", Toast.LENGTH_SHORT).show();}
             }
 
             @Override
