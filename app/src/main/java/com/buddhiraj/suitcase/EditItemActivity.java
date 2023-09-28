@@ -19,6 +19,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +30,11 @@ public class EditItemActivity extends AppCompatActivity {
     private EditText itemNameEditText;
     private EditText descriptionEditText;
     private EditText priceEditText;
+    private EditText editTextStoreName;
     private ImageView itemImageView;
     private Button chooseImageButton;
     private static final int PICK_IMAGE_REQUEST = 1;
+    private Uri selectedImageUri;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,17 +45,15 @@ public class EditItemActivity extends AppCompatActivity {
         itemNameEditText = findViewById(R.id.editTextItemName);
         descriptionEditText = findViewById(R.id.editTextDescription);
         priceEditText = findViewById(R.id.editTextPrice);
-        TextView storeNameTextView = findViewById(R.id.textViewStoreName); // Add TextView for the store name
+        editTextStoreName = findViewById(R.id.editTextStoreName); // Add TextView for the store name
         // Initialize views
         itemImageView = findViewById(R.id.imageViewItem);
         chooseImageButton = findViewById(R.id.btnChooseImage);
 
-        // Set a click listener for the "Choose Image" button
         chooseImageButton.setOnClickListener(v -> {
-            // Open the image picker when the button is clicked
             openImagePicker();
         });
-        
+
 
         // Retrieve the data from the Intent extras
         String itemName = getIntent().getStringExtra("itemName");
@@ -65,7 +67,7 @@ public class EditItemActivity extends AppCompatActivity {
         descriptionEditText.setText(description);
         priceEditText.setText(itemPrice);
         Picasso.get().load(imageUrl).into(itemImageView);
-        storeNameTextView.setText("Store Name: " + storeName);
+        editTextStoreName.setText(storeName);
 
         Button saveButton = findViewById(R.id.btnSave);
         saveButton.setOnClickListener(v -> {
@@ -87,6 +89,8 @@ public class EditItemActivity extends AppCompatActivity {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
+            selectedImageUri = imageUri;
+
 
             // Load the selected image into the ImageView
             Picasso.get().load(imageUri).into(itemImageView);
@@ -98,6 +102,7 @@ public class EditItemActivity extends AppCompatActivity {
         String editedItemName = itemNameEditText.getText().toString().trim();
         String editedDescription = descriptionEditText.getText().toString().trim();
         String editedItemPrice = priceEditText.getText().toString().trim();
+        String editedStoreName = editTextStoreName.getText().toString().trim();
 
         // Retrieve the item name from the Intent extras
         String itemName = getIntent().getStringExtra("itemName");
@@ -114,41 +119,90 @@ public class EditItemActivity extends AppCompatActivity {
         updatedData.put("name", editedItemName);
         updatedData.put("price", editedItemPrice);
 
-        // Query the item by name and update its data
-        Query query;
-        query = clothingRef.orderByChild("name").equalTo(itemName);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Get the item's unique key
-                    String itemKey = dataSnapshot.getChildren().iterator().next().getKey();
-                    // Update the item data using the retrieved key
-                    clothingRef.child(itemKey).updateChildren(updatedData)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
+        if (!editedStoreName.isEmpty()) {
+            updatedData.put("storeName", editedStoreName);
+        }
+
+        // Upload the selected image to Firebase Storage and get the download URL
+        if (selectedImageUri != null) {
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+            StorageReference imageRef = storageRef.child("item_images" + itemName + ".jpg");
+
+            imageRef.putFile(selectedImageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Image uploaded successfully, get the download URL
+                        imageRef.getDownloadUrl()
+                                .addOnSuccessListener(uri -> {
+                                    // Update the image URL in the database
+                                    updatedData.put("imageUrl", uri.toString());
+
+                                    // Query the item by name and update its data
+                                    Query query = clothingRef.orderByChild("name").equalTo(itemName);
+                                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists()) {
+                                                // Get the item's unique key
+                                                String itemKey = dataSnapshot.getChildren().iterator().next().getKey();
+                                                // Update the item data using the retrieved key
+                                                clothingRef.child(itemKey).updateChildren(updatedData)
+                                                        .addOnSuccessListener(aVoid -> {
+                                                            // Data updated successfully
+                                                            Toast.makeText(EditItemActivity.this, "Item updated successfully", Toast.LENGTH_SHORT).show();
+                                                            finish(); // Close the activity after successful update
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            // Failed to update data
+                                                            Toast.makeText(EditItemActivity.this, "Failed to update item", Toast.LENGTH_SHORT).show();
+                                                        });
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                            // Handle any errors here
+                                            Toast.makeText(EditItemActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Handle the error of getting download URL
+                                    Toast.makeText(EditItemActivity.this, "Failed to get download URL", Toast.LENGTH_SHORT).show();
+                                });
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle the error of uploading the image
+                        Toast.makeText(EditItemActivity.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            // If no image was selected, update the item data without the image URL
+            Query query = clothingRef.orderByChild("name").equalTo(itemName);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        // Get the item's unique key
+                        String itemKey = dataSnapshot.getChildren().iterator().next().getKey();
+                        // Update the item data using the retrieved key
+                        clothingRef.child(itemKey).updateChildren(updatedData)
+                                .addOnSuccessListener(aVoid -> {
                                     // Data updated successfully
                                     Toast.makeText(EditItemActivity.this, "Item updated successfully", Toast.LENGTH_SHORT).show();
                                     finish(); // Close the activity after successful update
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
+                                })
+                                .addOnFailureListener(e -> {
                                     // Failed to update data
                                     Toast.makeText(EditItemActivity.this, "Failed to update item", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                                });
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle any errors here
-                Toast.makeText(EditItemActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Handle any errors here
+                    Toast.makeText(EditItemActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
-
 }

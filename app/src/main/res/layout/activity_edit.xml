@@ -46,10 +46,11 @@
         android:text="Choose Image" />
 
     <EditText
-        android:id="@+id/textViewStoreName"
+        android:id="@+id/editTextStoreName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Price" />
+        android:hint="Store Name" />
+
 
     <Button
         android:id="@+id/btnSave"
