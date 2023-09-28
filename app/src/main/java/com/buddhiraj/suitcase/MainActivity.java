@@ -2,6 +2,10 @@ package com.buddhiraj.suitcase;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.Intent;
@@ -36,9 +40,12 @@ import com.google.firebase.database.ValueEventListener;
 import android.view.MenuInflater;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ItemAdapter.OnItemClickListener {
 
     ImageView profileImage;
     TextView welcomeText;
@@ -53,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
     final Handler backButtonHandler = new Handler();
     final Handler handler = new Handler();
     GoogleSignInClient googleSignInClient;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private List<Items> documentItemList;
+    private ItemAdapter adapter;
+    private String currentUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +84,31 @@ public class MainActivity extends AppCompatActivity {
         refreshProgressBar = findViewById(R.id.refreshProgressBar);
         dimBackground = findViewById(R.id.dimBackground);
         googleSignInClient = GoogleSignIn.getClient(this, GoogleSignInOptions.DEFAULT_SIGN_IN);
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
+        documentItemList = new ArrayList<>();
+        adapter = new ItemAdapter(documentItemList, this);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             retrieveUserNameFromDatabase(currentUser.getUid());
+            currentUserID = currentUser.getUid();
         }
+
+        setupDatabaseListener();
+
+        String category = "Clothing";
+        SwipeToDeleteCallback callback = new SwipeToDeleteCallback(this, adapter, category);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 2000); // Simulate a 2-second delay
+        });
     }
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {
@@ -297,6 +328,66 @@ public class MainActivity extends AppCompatActivity {
     public void showOthers(View view) {
         Intent intent = new Intent(MainActivity.this, OthersItemsActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Items clickedItem = documentItemList.get(position);
+        Intent intent = new Intent(this, ItemDetailActivity.class);
+
+        intent.putExtra("description", clickedItem.getDescription());
+        intent.putExtra("imageUrl", clickedItem.getImageUrl());
+        intent.putExtra("itemName", clickedItem.getName());
+        intent.putExtra("itemPrice", clickedItem.getPrice());
+        intent.putExtra("itemStoreName", clickedItem.getStoreName());
+
+        startActivity(intent);
+    }
+
+    private void setupDatabaseListener() {
+        DatabaseReference itemsRef = FirebaseDatabase.getInstance().getReference("Clothing");
+        Query query = itemsRef.orderByChild("userId").equalTo(currentUserID);
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                documentItemList.clear();
+                List<Items> itemsWithStatusTrue = new ArrayList<>();
+                List<Items> itemsWithStatusFalse = new ArrayList<>();
+
+                for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                    // Get data fields from the snapshot
+                    String imageUrl = itemSnapshot.child("imageUrl").getValue(String.class);
+                    String name = itemSnapshot.child("name").getValue(String.class);
+                    String price = itemSnapshot.child("price").getValue(String.class);
+                    String description = itemSnapshot.child("description").getValue(String.class);
+                    String storeName = itemSnapshot.child("storeName").getValue(String.class);
+
+                    boolean status = itemSnapshot.child("status").getValue(Boolean.class);
+
+                    // Create an Items object and set the status
+                    Items item = new Items(imageUrl, name, price, description, storeName);
+                    item.setStatus(status);
+
+                    if (status) {
+                        itemsWithStatusTrue.add(item);
+                    } else {
+                        itemsWithStatusFalse.add(item);
+                    }
+                }
+
+                documentItemList.addAll(itemsWithStatusFalse);
+                documentItemList.addAll(itemsWithStatusTrue);
+
+                adapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 }
 
