@@ -39,21 +39,17 @@
         android:layout_marginTop="16dp"
         android:src="@drawable/card" />
 
-    <TextView
-        android:id="@+id/ChooseImage"
+    <Button
+        android:id="@+id/btnChooseImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp"
         android:text="Choose Image" />
 
     <EditText
         android:id="@+id/textViewStoreName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp"
-        android:text="Store Name" />
+        android:hint="Price" />
 
     <Button
         android:id="@+id/btnSave"

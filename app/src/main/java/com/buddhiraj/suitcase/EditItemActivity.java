@@ -1,16 +1,16 @@
 package com.buddhiraj.suitcase;
+
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -20,7 +20,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +28,9 @@ public class EditItemActivity extends AppCompatActivity {
     private EditText itemNameEditText;
     private EditText descriptionEditText;
     private EditText priceEditText;
-
+    private ImageView itemImageView;
+    private Button chooseImageButton;
+    private static final int PICK_IMAGE_REQUEST = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,8 +41,17 @@ public class EditItemActivity extends AppCompatActivity {
         itemNameEditText = findViewById(R.id.editTextItemName);
         descriptionEditText = findViewById(R.id.editTextDescription);
         priceEditText = findViewById(R.id.editTextPrice);
-        ImageView itemImageView = findViewById(R.id.imageViewItem); // Add ImageView for the image
         TextView storeNameTextView = findViewById(R.id.textViewStoreName); // Add TextView for the store name
+        // Initialize views
+        itemImageView = findViewById(R.id.imageViewItem);
+        chooseImageButton = findViewById(R.id.btnChooseImage);
+
+        // Set a click listener for the "Choose Image" button
+        chooseImageButton.setOnClickListener(v -> {
+            // Open the image picker when the button is clicked
+            openImagePicker();
+        });
+        
 
         // Retrieve the data from the Intent extras
         String itemName = getIntent().getStringExtra("itemName");
@@ -64,6 +74,24 @@ public class EditItemActivity extends AppCompatActivity {
         });
     }
 
+    private void openImagePicker() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+
+            // Load the selected image into the ImageView
+            Picasso.get().load(imageUri).into(itemImageView);
+        }
+    }
 
     private void saveEditedData() {
         // Get the edited values from the input fields
