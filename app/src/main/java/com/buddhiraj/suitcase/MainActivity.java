@@ -66,6 +66,13 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
     private ItemAdapter adapter;
     private String currentUserID;
 
+    private List<Items> booksItems;
+    private List<Items> clothingItems;
+    private List<Items> accessoriesItems;
+    private List<Items> healthItems;
+    private List<Items> otherItems;
+    private List<Items> electronicsItems;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +106,21 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
             currentUserID = currentUser.getUid();
         }
 
-        setupDatabaseListener();
+        // Initialize separate lists for each category
+        booksItems = new ArrayList<>();
+        clothingItems = new ArrayList<>();
+        accessoriesItems = new ArrayList<>();
+        healthItems = new ArrayList<>();
+        otherItems = new ArrayList<>();
+        electronicsItems = new ArrayList<>();
+
+        // Set up the database listener for each category
+        setupDatabaseListener("Books and Magazines", booksItems);
+        setupDatabaseListener("Clothing", clothingItems);
+        setupDatabaseListener("Accessories", accessoriesItems);
+        setupDatabaseListener("Electronic", electronicsItems);
+        setupDatabaseListener("Health", healthItems);
+        setupDatabaseListener("Others", otherItems);
 
         String category = "Clothing";
         SwipeToDeleteCallback callback = new SwipeToDeleteCallback(this, adapter, category);
@@ -344,16 +365,14 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         startActivity(intent);
     }
 
-    private void setupDatabaseListener() {
-        DatabaseReference itemsRef = FirebaseDatabase.getInstance().getReference("Clothing");
+    private void setupDatabaseListener(String category, final List<Items> itemList) {
+        DatabaseReference itemsRef = FirebaseDatabase.getInstance().getReference(category);
         Query query = itemsRef.orderByChild("userId").equalTo(currentUserID);
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                documentItemList.clear();
-                List<Items> itemsWithStatusTrue = new ArrayList<>();
-                List<Items> itemsWithStatusFalse = new ArrayList<>();
+                itemList.clear();
 
                 for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
                     // Get data fields from the snapshot
@@ -369,15 +388,17 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
                     Items item = new Items(imageUrl, name, price, description, storeName);
                     item.setStatus(status);
 
-                    if (status) {
-                        itemsWithStatusTrue.add(item);
-                    } else {
-                        itemsWithStatusFalse.add(item);
-                    }
+                    itemList.add(item);
                 }
 
-                documentItemList.addAll(itemsWithStatusFalse);
-                documentItemList.addAll(itemsWithStatusTrue);
+                // Merge data from all categories into documentItemList
+                documentItemList.clear();
+                documentItemList.addAll(booksItems);
+                documentItemList.addAll(clothingItems);
+                documentItemList.addAll(accessoriesItems);
+                documentItemList.addAll(healthItems);
+                documentItemList.addAll(otherItems);
+                documentItemList.addAll(electronicsItems);
 
                 adapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
@@ -390,4 +411,3 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         });
     }
 }
-

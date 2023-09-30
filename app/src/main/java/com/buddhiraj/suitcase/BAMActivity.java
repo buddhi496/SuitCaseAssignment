@@ -23,33 +23,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItemClickListener {
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Items> documentItemList;
     private ItemAdapter adapter;
     private String currentUserID;
+
+    private List<Items> booksItems;
+    private List<Items> clothingItems;
+    private List<Items> accessoriesItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +40,7 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Your Clothing Items");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Your Items");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
@@ -77,16 +59,23 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
             currentUserID = currentUser.getUid();
         }
 
-        // Set up the database listener
-        setupDatabaseListener();
+        // Initialize separate lists for each category
+        booksItems = new ArrayList<>();
+        clothingItems = new ArrayList<>();
+        accessoriesItems = new ArrayList<>();
 
-        String category = "Books and Magazines";
+        // Set up the database listener for each category
+        setupDatabaseListener("Books and Magazines", booksItems);
+        setupDatabaseListener("Clothing", clothingItems);
+        setupDatabaseListener("Accessories", accessoriesItems);
+
+        String category = "Clothing";
         SwipeToDeleteCallback callback = new SwipeToDeleteCallback(this, adapter, category);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 2000); // Simulate a 2-second delay
+            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 2000);
         });
     }
 
@@ -104,16 +93,14 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
         startActivity(intent);
     }
 
-    private void setupDatabaseListener() {
-        DatabaseReference itemsRef = FirebaseDatabase.getInstance().getReference("Books and Magazines");
+    private void setupDatabaseListener(String category, final List<Items> itemList) {
+        DatabaseReference itemsRef = FirebaseDatabase.getInstance().getReference(category);
         Query query = itemsRef.orderByChild("userId").equalTo(currentUserID);
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                documentItemList.clear();
-                List<Items> itemsWithStatusTrue = new ArrayList<>();
-                List<Items> itemsWithStatusFalse = new ArrayList<>();
+                itemList.clear();
 
                 for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
                     // Get data fields from the snapshot
@@ -129,15 +116,14 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
                     Items item = new Items(imageUrl, name, price, description, storeName);
                     item.setStatus(status);
 
-                    if (status) {
-                        itemsWithStatusTrue.add(item);
-                    } else {
-                        itemsWithStatusFalse.add(item);
-                    }
+                    itemList.add(item);
                 }
 
-                documentItemList.addAll(itemsWithStatusFalse);
-                documentItemList.addAll(itemsWithStatusTrue);
+                // Merge data from all categories into documentItemList
+                documentItemList.clear();
+                documentItemList.addAll(booksItems);
+                documentItemList.addAll(clothingItems);
+                documentItemList.addAll(accessoriesItems);
 
                 adapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
