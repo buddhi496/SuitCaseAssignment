@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -58,12 +59,27 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Items documentItem = documentItemList.get(position);
         Items item = documentItemList.get(position);
-
-
         holder.nameTextView.setText(documentItem.getName());
         holder.priceTextView.setText("Price: " + documentItem.getPrice());
         holder.descriptionTextView.setText("Description: " + documentItem.getDescription());
         Picasso.get().load(documentItem.getImageUrl()).into(holder.itemImageView);
+
+        holder.progressBar.setVisibility(View.VISIBLE);
+
+        Picasso.get().load(documentItem.getImageUrl()).into(holder.itemImageView, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                // Image loaded successfully, hide the ProgressBar
+                holder.progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                // Handle any errors that occur during image loading (optional)
+                // You can choose to leave the ProgressBar visible or handle errors differently.
+                holder.progressBar.setVisibility(View.GONE);
+            }
+        });
 
         holder.itemView.setOnClickListener(view -> {
             if (itemClickListener != null) {
@@ -282,6 +298,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         public View editImageView;
         public CheckBox checkbox;
         public View findInMapImageView;
+        public ProgressBar progressBar;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -294,6 +312,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             editImageView = itemView.findViewById(R.id.editItem);
             findInMapImageView = itemView.findViewById(R.id.findInMap);
             checkbox = itemView.findViewById(R.id.checkbox);
+            progressBar = itemView.findViewById(R.id.progressBar);
 
         }
     }

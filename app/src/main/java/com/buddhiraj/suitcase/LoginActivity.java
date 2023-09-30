@@ -1,6 +1,5 @@
 package com.buddhiraj.suitcase;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
@@ -20,7 +19,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
@@ -82,29 +80,22 @@ public class LoginActivity extends AppCompatActivity {
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("858089216918-nfu5820clt3gfd2g1l3811khgnjtsopt.apps.googleusercontent.com").requestEmail().build();
         GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
-        googleSignin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Sign out of Google first (clear cached credentials)
-                googleSignInClient.signOut().addOnCompleteListener(LoginActivity.this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            // Sign-out successful, now start the Google Sign-In intent
-                            Intent intent = googleSignInClient.getSignInIntent();
-                            startActivityForResult(intent, 100);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Google signin failed", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
+        googleSignin.setOnClickListener(v -> {
+            // Sign out of Google first (clear cached credentials)
+            googleSignInClient.signOut().addOnCompleteListener(LoginActivity.this, task -> {
+                if (task.isSuccessful()) {
+                    // Sign-out successful, now start the Google Sign-In intent
+                    Intent intent = googleSignInClient.getSignInIntent();
+                    startActivityForResult(intent, 100);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Google signin failed", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         //check condition
         if(firebaseUser!= null){
-            //when user is alread signed in redirect to mainactivity
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
 
