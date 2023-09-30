@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
         // Set on Click Listener on Registration button
         loginButton.setOnClickListener(v -> loginUserAccount());
         forgetPassword.setOnClickListener(v -> showForgotPasswordDialog());
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("414408632509-mmmpdkqiurlvkcpovbc6rhafjnfi4kmh.apps.googleusercontent.com").requestEmail().build();
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("858089216918-nfu5820clt3gfd2g1l3811khgnjtsopt.apps.googleusercontent.com").requestEmail().build();
         GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
         googleSignin.setOnClickListener(new View.OnClickListener() {
