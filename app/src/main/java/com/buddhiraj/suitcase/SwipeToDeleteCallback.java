@@ -18,7 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     private ItemAdapter adapter;
     private Context context;
-    private String category; // Added category variable
+    private String category;
 
     public SwipeToDeleteCallback(Context context, ItemAdapter adapter, String category) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);

@@ -126,8 +126,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             editIntent.putExtra("itemName", documentItem.getName());
             editIntent.putExtra("description", documentItem.getDescription());
             editIntent.putExtra("itemPrice", documentItem.getPrice());
-            editIntent.putExtra("imageUrl", documentItem.getImageUrl()); // Add image URL
-            editIntent.putExtra("storeName", documentItem.getStoreName()); // Add store name
+            editIntent.putExtra("imageUrl", documentItem.getImageUrl());
+            editIntent.putExtra("storeName", documentItem.getStoreName());
+
 
             // Start the EditItemActivity
             context.startActivity(editIntent);

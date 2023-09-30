@@ -36,7 +36,7 @@ public class AccessoriesActivity extends AppCompatActivity implements ItemAdapte
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Your Clothing Items");
+        getSupportActionBar().setTitle("Your Accessories Items");
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
