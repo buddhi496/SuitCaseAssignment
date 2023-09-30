@@ -11,10 +11,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,7 +20,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
@@ -33,7 +30,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     public ItemAdapter(List<Items> documentItemList, Context context) {
         this.documentItemList = documentItemList;
         this.context = context;
-
     }
 
     public interface OnItemClickListener {
@@ -120,6 +116,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         holder.editImageView.setOnClickListener(view -> {
             // Create an Intent to open the EditItemActivity
             Intent editIntent = new Intent(context, EditItemActivity.class);
+            Intent editIntentBAM = new Intent(context, EditBAMActivity.class);
 
             // Pass the necessary data as extras in the Intent
             editIntent.putExtra("itemKey", documentItem.getItemKey());
@@ -129,9 +126,18 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             editIntent.putExtra("imageUrl", documentItem.getImageUrl());
             editIntent.putExtra("storeName", documentItem.getStoreName());
 
+            // Pass the necessary data as extras in the Intent
+            editIntentBAM.putExtra("itemKey", documentItem.getItemKey());
+            editIntentBAM.putExtra("itemName", documentItem.getName());
+            editIntentBAM.putExtra("description", documentItem.getDescription());
+            editIntentBAM.putExtra("itemPrice", documentItem.getPrice());
+            editIntentBAM.putExtra("imageUrl", documentItem.getImageUrl());
+            editIntentBAM.putExtra("storeName", documentItem.getStoreName());
+
 
             // Start the EditItemActivity
             context.startActivity(editIntent);
+            context.startActivity(editIntentBAM);
         });
 
         // Inside onBindViewHolder method
