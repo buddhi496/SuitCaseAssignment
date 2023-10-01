@@ -147,12 +147,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             // Update the item's status in the local data
             documentItem.setStatus(isChecked);
 
-            if (isChecked) {
-                documentItemList.remove(position);
-                documentItemList.add(documentItem);
-                notifyItemMoved(position, documentItemList.size() - 1);
-            }
-
             updateItemStatusInCategory(item, "Books and Magazines");
             updateItemStatusInCategory(item, "Clothing");
             updateItemStatusInCategory(item, "Health");

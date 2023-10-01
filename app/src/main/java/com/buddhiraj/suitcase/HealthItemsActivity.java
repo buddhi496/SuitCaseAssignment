@@ -20,10 +20,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class HealthItemsActivity extends AppCompatActivity implements ItemAdapter.OnItemClickListener {
     private SwipeRefreshLayout swipeRefreshLayout;
-    private RecyclerView recyclerView;
     private List<Items> documentItemList;
     private ItemAdapter adapter;
     private String currentUserID;
@@ -35,12 +35,12 @@ public class HealthItemsActivity extends AppCompatActivity implements ItemAdapte
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Your Health Items");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Your Health Items");
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-        recyclerView = findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
         documentItemList = new ArrayList<>();
         adapter = new ItemAdapter(documentItemList, this);
@@ -54,53 +54,13 @@ public class HealthItemsActivity extends AppCompatActivity implements ItemAdapte
             currentUserID = currentUser.getUid();
         }
 
-        // Initialize Firebase Database reference
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference itemsRef = database.getReference("Health");
+        // Set up the database listener
+        setupDatabaseListener();
 
-        // Modify the query to fetch items associated with the current user
-        Query query = itemsRef.orderByChild("userId").equalTo(currentUserID);
-
-        // Retrieve data from Firebase based on the modified query
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Clear the existing list
-                documentItemList.clear();
-
-                // Iterate through the dataSnapshot to fetch items
-                for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
-                    // Get data fields from the snapshot as before
-                    String imageUrl = itemSnapshot.child("imageUrl").getValue(String.class);
-                    String name = itemSnapshot.child("name").getValue(String.class);
-                    String price = itemSnapshot.child("price").getValue(String.class);
-                    String description = itemSnapshot.child("description").getValue(String.class);
-                    String storeName = itemSnapshot.child("storeName").getValue(String.class);
-
-                    // Create a DocumentItem object and add it to the list without numbering
-                    Items item = new Items(imageUrl, name, price, description, storeName);
-                    documentItemList.add(item);
-                }
-
-                // Notify the adapter of the data change
-                adapter.notifyDataSetChanged();
-
-                swipeRefreshLayout.setRefreshing(false);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle any errors here, if needed
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-
-
-        String category = "Health"; // Replace with the actual category name
+        String category = "Health";
         SwipeToDeleteCallback callback = new SwipeToDeleteCallback(this, adapter, category);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
-
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 2000); // Simulate a 2-second delay
@@ -109,24 +69,61 @@ public class HealthItemsActivity extends AppCompatActivity implements ItemAdapte
 
     @Override
     public void onItemClick(int position) {
-        // Handle item click here
-        // Get the clicked item
         Items clickedItem = documentItemList.get(position);
-
-        // Create an Intent to start the "ItemDetailActivity"
         Intent intent = new Intent(this, ItemDetailActivity.class);
 
-        // Pass all the description details of the clicked item to the "ItemDetailActivity"
         intent.putExtra("description", clickedItem.getDescription());
         intent.putExtra("imageUrl", clickedItem.getImageUrl());
         intent.putExtra("itemName", clickedItem.getName());
         intent.putExtra("itemPrice", clickedItem.getPrice());
         intent.putExtra("itemStoreName", clickedItem.getStoreName());
-        // Add more data as needed
 
-        // Start the "ItemDetailActivity"
         startActivity(intent);
     }
 
+    private void setupDatabaseListener() {
+        DatabaseReference itemsRef = FirebaseDatabase.getInstance().getReference("Health");
+        Query query = itemsRef.orderByChild("userId").equalTo(currentUserID);
 
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                documentItemList.clear();
+                List<Items> itemsWithStatusTrue = new ArrayList<>();
+                List<Items> itemsWithStatusFalse = new ArrayList<>();
+
+                for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                    // Get data fields from the snapshot
+                    String imageUrl = itemSnapshot.child("imageUrl").getValue(String.class);
+                    String name = itemSnapshot.child("name").getValue(String.class);
+                    String price = itemSnapshot.child("price").getValue(String.class);
+                    String description = itemSnapshot.child("description").getValue(String.class);
+                    String storeName = itemSnapshot.child("storeName").getValue(String.class);
+
+                    boolean status = itemSnapshot.child("status").getValue(Boolean.class);
+
+                    // Create an Items object and set the status
+                    Items item = new Items(imageUrl, name, price, description, storeName);
+                    item.setStatus(status);
+
+                    if (status) {
+                        itemsWithStatusTrue.add(item);
+                    } else {
+                        itemsWithStatusFalse.add(item);
+                    }
+                }
+
+                documentItemList.addAll(itemsWithStatusFalse);
+                documentItemList.addAll(itemsWithStatusTrue);
+
+                adapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
 }
