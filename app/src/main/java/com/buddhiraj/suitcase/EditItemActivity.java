@@ -48,7 +48,7 @@ public class EditItemActivity extends AppCompatActivity {
         editTextStoreName = findViewById(R.id.editTextStoreName); // Add TextView for the store name
         // Initialize views
         itemImageView = findViewById(R.id.imageViewItem);
-        chooseImageButton = findViewById(R.id.btnChooseImage);
+//        chooseImageButton = findViewById(R.id.btnChooseImage);
 
         chooseImageButton.setOnClickListener(v -> {
             openImagePicker();
@@ -69,11 +69,11 @@ public class EditItemActivity extends AppCompatActivity {
         Picasso.get().load(imageUrl).into(itemImageView);
         editTextStoreName.setText(storeName);
 
-        Button saveButton = findViewById(R.id.btnSave);
-        saveButton.setOnClickListener(v -> {
-            // Handle saving the edited data to the database
-            saveEditedData();
-        });
+//        Button saveButton = findViewById(R.id.btnSave);
+//        saveButton.setOnClickListener(v -> {
+//            // Handle saving the edited data to the database
+//            saveEditedData();
+//        });
     }
 
     private void openImagePicker() {
@@ -206,3 +206,30 @@ public class EditItemActivity extends AppCompatActivity {
         }
     }
 }
+
+//holder.editImageView.setOnClickListener(view -> {
+//                // Create an Intent to open the EditItemActivity
+//                Intent editIntent = new Intent(context, EditItemActivity.class);
+//                Intent editIntentBAM = new Intent(context, EditBAMActivity.class);
+//
+//                // Pass the necessary data as extras in the Intent
+//                editIntent.putExtra("itemKey", documentItem.getItemKey());
+//                editIntent.putExtra("itemName", documentItem.getName());
+//                editIntent.putExtra("description", documentItem.getDescription());
+//                editIntent.putExtra("itemPrice", documentItem.getPrice());
+//                editIntent.putExtra("imageUrl", documentItem.getImageUrl());
+//                editIntent.putExtra("storeName", documentItem.getStoreName());
+//
+//                // Pass the necessary data as extras in the Intent
+//                editIntentBAM.putExtra("itemKey", documentItem.getItemKey());
+//                editIntentBAM.putExtra("itemName", documentItem.getName());
+//                editIntentBAM.putExtra("description", documentItem.getDescription());
+//                editIntentBAM.putExtra("itemPrice", documentItem.getPrice());
+//                editIntentBAM.putExtra("imageUrl", documentItem.getImageUrl());
+//                editIntentBAM.putExtra("storeName", documentItem.getStoreName());
+//
+//
+//                // Start the EditItemActivity
+//                context.startActivity(editIntent);
+//                context.startActivity(editIntentBAM);
+//            });

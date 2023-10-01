@@ -131,104 +131,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             shareItem(itemName, itemDescription, itemPrice, storeName);
         });
 
-        holder.editImageView.setOnClickListener(view -> {
-//            holder.editImageView.setOnClickListener(view -> {
-//                // Create an Intent to open the EditItemActivity
-//                Intent editIntent = new Intent(context, EditItemActivity.class);
-//                Intent editIntentBAM = new Intent(context, EditBAMActivity.class);
-//
-//                // Pass the necessary data as extras in the Intent
-//                editIntent.putExtra("itemKey", documentItem.getItemKey());
-//                editIntent.putExtra("itemName", documentItem.getName());
-//                editIntent.putExtra("description", documentItem.getDescription());
-//                editIntent.putExtra("itemPrice", documentItem.getPrice());
-//                editIntent.putExtra("imageUrl", documentItem.getImageUrl());
-//                editIntent.putExtra("storeName", documentItem.getStoreName());
-//
-//                // Pass the necessary data as extras in the Intent
-//                editIntentBAM.putExtra("itemKey", documentItem.getItemKey());
-//                editIntentBAM.putExtra("itemName", documentItem.getName());
-//                editIntentBAM.putExtra("description", documentItem.getDescription());
-//                editIntentBAM.putExtra("itemPrice", documentItem.getPrice());
-//                editIntentBAM.putExtra("imageUrl", documentItem.getImageUrl());
-//                editIntentBAM.putExtra("storeName", documentItem.getStoreName());
-//
-//
-//                // Start the EditItemActivity
-//                context.startActivity(editIntent);
-//                context.startActivity(editIntentBAM);
-//            });
-            // Inflate the custom edit dialog layout (activity_edit.xml)
-            View dialogView = LayoutInflater.from(context).inflate(R.layout.activity_edit, null);
 
-            // Initialize the dialog and set its content view
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
-            dialogBuilder.setView(dialogView);
-            AlertDialog editDialog = dialogBuilder.create();
-
-            // Initialize EditText fields and other views within the dialog
-            EditText itemNameEditText = dialogView.findViewById(R.id.editTextItemName);
-            EditText descriptionEditText = dialogView.findViewById(R.id.editTextDescription);
-            EditText priceEditText = dialogView.findViewById(R.id.editTextPrice);
-            EditText editTextStoreName = dialogView.findViewById(R.id.editTextStoreName);
-            ImageView imageView = dialogView.findViewById(R.id.imageViewItem);
-
-            // Retrieve the current item details and prepopulate the EditText fields
-            itemNameEditText.setText(documentItem.getName());
-            descriptionEditText.setText(documentItem.getDescription());
-            priceEditText.setText(documentItem.getPrice());
-            editTextStoreName.setText(documentItem.getStoreName()); // Prepopulate store name
-
-            // Load the current item's image into the ImageView
-            Picasso.get().load(documentItem.getImageUrl()).into(imageView);
-
-            // Set a click listener for the "Save" button within the dialog
-            Button btnSave = dialogView.findViewById(R.id.btnSave);
-            btnSave.setOnClickListener(innerView -> {
-                // Handle saving the edited data here
-                String editedItemName = itemNameEditText.getText().toString().trim();
-                String editedDescription = descriptionEditText.getText().toString().trim();
-                String editedPrice = priceEditText.getText().toString().trim();
-                String editedStoreName = editTextStoreName.getText().toString().trim();
-
-                // Update the item details in your data source (e.g., Firebase Realtime Database)
-                DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
-
-                // Assuming your data structure has a node for each category (e.g., "Books and Magazines")
-                DatabaseReference categoryRef = databaseRef.child("Books and Magazines"); // Adjust the category as needed
-
-                // Use a query to find the item by its name
-                Query query = categoryRef.orderByChild("name").equalTo(documentItem.getName());
-
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
-                                // Update the item's details with the edited values
-                                itemSnapshot.getRef().child("name").setValue(editedItemName);
-                                itemSnapshot.getRef().child("description").setValue(editedDescription);
-                                itemSnapshot.getRef().child("price").setValue(editedPrice);
-                                itemSnapshot.getRef().child("storeName").setValue(editedStoreName);
-                                // You can also update the image URL here if it's changed
-                                // itemSnapshot.getRef().child("imageUrl").setValue(newImageUrl);
-                            }
-                        }
-
-                        // Dismiss the dialog
-                        editDialog.dismiss();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        // Handle the cancellation or errors if needed
-                    }
-                });
-            });
-
-            // Show the dialog
-            editDialog.show();
-        });
 
         // Inside onBindViewHolder method
         holder.findInMapImageView.setOnClickListener(view -> {
@@ -258,7 +161,229 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             updateItemStatusInCategory(item, "Electronic");
 
         });
-        }
+
+        // Inside onBindViewHolder method
+        holder.editImageView.setOnClickListener(view -> {
+            // Create an AlertDialog.Builder
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+            // Inflate the custom layout (activity_edit.xml) for the dialog
+            View dialogView = LayoutInflater.from(context).inflate(R.layout.activity_edit, null);
+
+            // Find and initialize the UI elements within the dialogView if needed
+            EditText itemNameEditText = dialogView.findViewById(R.id.editTextItemName);
+            EditText descriptionEditText = dialogView.findViewById(R.id.editTextDescription);
+            EditText priceEditText = dialogView.findViewById(R.id.editTextPrice);
+            EditText storeNameEditText = dialogView.findViewById(R.id.editTextStoreName);
+
+            // Populate the UI elements with data from the selected item
+            itemNameEditText.setText(documentItem.getName());
+            descriptionEditText.setText(documentItem.getDescription());
+            priceEditText.setText(documentItem.getPrice());
+            storeNameEditText.setText(documentItem.getStoreName());
+
+            // Set the dialog's custom view
+            builder.setView(dialogView);
+
+            // Add positive and negative buttons (e.g., Save and Cancel)
+            builder.setPositiveButton("Save", (dialog, which) -> {
+                // Retrieve updated data from the dialog's UI elements
+                String updatedItemName = itemNameEditText.getText().toString();
+                String updatedItemDescription = descriptionEditText.getText().toString();
+                String updatedItemPrice = priceEditText.getText().toString();
+                String updatedStoreName = storeNameEditText.getText().toString();
+
+                // Update the item data in the database
+                updateClothingInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName);
+                updateAccessoriesInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName);
+                updateBAMInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName);
+                updateHealthInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName);
+                updateElectronicInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName);
+                updateOthersInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName);
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> {
+                // Handle the cancel action if needed
+            });
+
+            // Create and show the AlertDialog
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
+
+    }
+
+    private void updateAccessoriesInDatabase(Items item, String updatedName, String updatedDescription, String updatedPrice, String updatedStoreName) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference categoryRef = databaseRef.child("Accessories"); // Replace with the appropriate category in your database
+
+        Query query = categoryRef.orderByChild("name").equalTo(item.getName());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                        // Update the item's data in the database
+                        itemSnapshot.getRef().child("name").setValue(updatedName);
+                        itemSnapshot.getRef().child("description").setValue(updatedDescription);
+                        itemSnapshot.getRef().child("price").setValue(updatedPrice);
+                        itemSnapshot.getRef().child("storeName").setValue(updatedStoreName);
+                    }
+                    // Notify the user that the item has been updated
+                    Toast.makeText(context, "Item updated successfully", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, "Failed to update item", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateBAMInDatabase(Items item, String updatedName, String updatedDescription, String updatedPrice, String updatedStoreName) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference categoryRef = databaseRef.child("Books and Magazines"); // Replace with the appropriate category in your database
+
+        Query query = categoryRef.orderByChild("name").equalTo(item.getName());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                        // Update the item's data in the database
+                        itemSnapshot.getRef().child("name").setValue(updatedName);
+                        itemSnapshot.getRef().child("description").setValue(updatedDescription);
+                        itemSnapshot.getRef().child("price").setValue(updatedPrice);
+                        itemSnapshot.getRef().child("storeName").setValue(updatedStoreName);
+                    }
+                    // Notify the user that the item has been updated
+                    Toast.makeText(context, "Item updated successfully", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, "Failed to update item", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateHealthInDatabase(Items item, String updatedName, String updatedDescription, String updatedPrice, String updatedStoreName) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference categoryRef = databaseRef.child("Health"); // Replace with the appropriate category in your database
+
+        Query query = categoryRef.orderByChild("name").equalTo(item.getName());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                        // Update the item's data in the database
+                        itemSnapshot.getRef().child("name").setValue(updatedName);
+                        itemSnapshot.getRef().child("description").setValue(updatedDescription);
+                        itemSnapshot.getRef().child("price").setValue(updatedPrice);
+                        itemSnapshot.getRef().child("storeName").setValue(updatedStoreName);
+                    }
+                    // Notify the user that the item has been updated
+                    Toast.makeText(context, "Item updated successfully", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, "Failed to update item", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void updateElectronicInDatabase(Items item, String updatedName, String updatedDescription, String updatedPrice, String updatedStoreName) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference categoryRef = databaseRef.child("Electronic"); // Replace with the appropriate category in your database
+
+        Query query = categoryRef.orderByChild("name").equalTo(item.getName());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                        // Update the item's data in the database
+                        itemSnapshot.getRef().child("name").setValue(updatedName);
+                        itemSnapshot.getRef().child("description").setValue(updatedDescription);
+                        itemSnapshot.getRef().child("price").setValue(updatedPrice);
+                        itemSnapshot.getRef().child("storeName").setValue(updatedStoreName);
+                    }
+                    // Notify the user that the item has been updated
+                    Toast.makeText(context, "Item updated successfully", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, "Failed to update item", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void updateOthersInDatabase(Items item, String updatedName, String updatedDescription, String updatedPrice, String updatedStoreName) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference categoryRef = databaseRef.child("Others"); // Replace with the appropriate category in your database
+
+        Query query = categoryRef.orderByChild("name").equalTo(item.getName());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                        // Update the item's data in the database
+                        itemSnapshot.getRef().child("name").setValue(updatedName);
+                        itemSnapshot.getRef().child("description").setValue(updatedDescription);
+                        itemSnapshot.getRef().child("price").setValue(updatedPrice);
+                        itemSnapshot.getRef().child("storeName").setValue(updatedStoreName);
+                    }
+                    // Notify the user that the item has been updated
+                    Toast.makeText(context, "Item updated successfully", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, "Failed to update item", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void updateClothingInDatabase(Items item, String updatedName, String updatedDescription, String updatedPrice, String updatedStoreName) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference categoryRef = databaseRef.child("Clothing"); // Replace with the appropriate category in your database
+
+        Query query = categoryRef.orderByChild("name").equalTo(item.getName());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                        // Update the item's data in the database
+                        itemSnapshot.getRef().child("name").setValue(updatedName);
+                        itemSnapshot.getRef().child("description").setValue(updatedDescription);
+                        itemSnapshot.getRef().child("price").setValue(updatedPrice);
+                        itemSnapshot.getRef().child("storeName").setValue(updatedStoreName);
+                    }
+                    // Notify the user that the item has been updated
+                    Toast.makeText(context, "Item updated successfully", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, "Failed to update item", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     // Add a method to update the item's status in the Firebase Realtime Database
     private void updateItemStatusInCategory(Items item, String categoryName) {
