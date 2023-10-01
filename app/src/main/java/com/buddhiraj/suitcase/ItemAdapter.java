@@ -7,7 +7,9 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -130,30 +132,102 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         });
 
         holder.editImageView.setOnClickListener(view -> {
-            // Create an Intent to open the EditItemActivity
-            Intent editIntent = new Intent(context, EditItemActivity.class);
-            Intent editIntentBAM = new Intent(context, EditBAMActivity.class);
+//            holder.editImageView.setOnClickListener(view -> {
+//                // Create an Intent to open the EditItemActivity
+//                Intent editIntent = new Intent(context, EditItemActivity.class);
+//                Intent editIntentBAM = new Intent(context, EditBAMActivity.class);
+//
+//                // Pass the necessary data as extras in the Intent
+//                editIntent.putExtra("itemKey", documentItem.getItemKey());
+//                editIntent.putExtra("itemName", documentItem.getName());
+//                editIntent.putExtra("description", documentItem.getDescription());
+//                editIntent.putExtra("itemPrice", documentItem.getPrice());
+//                editIntent.putExtra("imageUrl", documentItem.getImageUrl());
+//                editIntent.putExtra("storeName", documentItem.getStoreName());
+//
+//                // Pass the necessary data as extras in the Intent
+//                editIntentBAM.putExtra("itemKey", documentItem.getItemKey());
+//                editIntentBAM.putExtra("itemName", documentItem.getName());
+//                editIntentBAM.putExtra("description", documentItem.getDescription());
+//                editIntentBAM.putExtra("itemPrice", documentItem.getPrice());
+//                editIntentBAM.putExtra("imageUrl", documentItem.getImageUrl());
+//                editIntentBAM.putExtra("storeName", documentItem.getStoreName());
+//
+//
+//                // Start the EditItemActivity
+//                context.startActivity(editIntent);
+//                context.startActivity(editIntentBAM);
+//            });
+            // Inflate the custom edit dialog layout (activity_edit.xml)
+            View dialogView = LayoutInflater.from(context).inflate(R.layout.activity_edit, null);
 
-            // Pass the necessary data as extras in the Intent
-            editIntent.putExtra("itemKey", documentItem.getItemKey());
-            editIntent.putExtra("itemName", documentItem.getName());
-            editIntent.putExtra("description", documentItem.getDescription());
-            editIntent.putExtra("itemPrice", documentItem.getPrice());
-            editIntent.putExtra("imageUrl", documentItem.getImageUrl());
-            editIntent.putExtra("storeName", documentItem.getStoreName());
+            // Initialize the dialog and set its content view
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+            dialogBuilder.setView(dialogView);
+            AlertDialog editDialog = dialogBuilder.create();
 
-            // Pass the necessary data as extras in the Intent
-            editIntentBAM.putExtra("itemKey", documentItem.getItemKey());
-            editIntentBAM.putExtra("itemName", documentItem.getName());
-            editIntentBAM.putExtra("description", documentItem.getDescription());
-            editIntentBAM.putExtra("itemPrice", documentItem.getPrice());
-            editIntentBAM.putExtra("imageUrl", documentItem.getImageUrl());
-            editIntentBAM.putExtra("storeName", documentItem.getStoreName());
+            // Initialize EditText fields and other views within the dialog
+            EditText itemNameEditText = dialogView.findViewById(R.id.editTextItemName);
+            EditText descriptionEditText = dialogView.findViewById(R.id.editTextDescription);
+            EditText priceEditText = dialogView.findViewById(R.id.editTextPrice);
+            EditText editTextStoreName = dialogView.findViewById(R.id.editTextStoreName);
+            ImageView imageView = dialogView.findViewById(R.id.imageViewItem);
 
+            // Retrieve the current item details and prepopulate the EditText fields
+            itemNameEditText.setText(documentItem.getName());
+            descriptionEditText.setText(documentItem.getDescription());
+            priceEditText.setText(documentItem.getPrice());
+            editTextStoreName.setText(documentItem.getStoreName()); // Prepopulate store name
 
-            // Start the EditItemActivity
-            context.startActivity(editIntent);
-            context.startActivity(editIntentBAM);
+            // Load the current item's image into the ImageView
+            Picasso.get().load(documentItem.getImageUrl()).into(imageView);
+
+            // Set a click listener for the "Save" button within the dialog
+            Button btnSave = dialogView.findViewById(R.id.btnSave);
+            btnSave.setOnClickListener(innerView -> {
+                // Handle saving the edited data here
+                String editedItemName = itemNameEditText.getText().toString().trim();
+                String editedDescription = descriptionEditText.getText().toString().trim();
+                String editedPrice = priceEditText.getText().toString().trim();
+                String editedStoreName = editTextStoreName.getText().toString().trim();
+
+                // Update the item details in your data source (e.g., Firebase Realtime Database)
+                DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+
+                // Assuming your data structure has a node for each category (e.g., "Books and Magazines")
+                DatabaseReference categoryRef = databaseRef.child("Books and Magazines"); // Adjust the category as needed
+
+                // Use a query to find the item by its name
+                Query query = categoryRef.orderByChild("name").equalTo(documentItem.getName());
+
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                                // Update the item's details with the edited values
+                                itemSnapshot.getRef().child("name").setValue(editedItemName);
+                                itemSnapshot.getRef().child("description").setValue(editedDescription);
+                                itemSnapshot.getRef().child("price").setValue(editedPrice);
+                                itemSnapshot.getRef().child("storeName").setValue(editedStoreName);
+                                // You can also update the image URL here if it's changed
+                                // itemSnapshot.getRef().child("imageUrl").setValue(newImageUrl);
+                            }
+                        }
+
+                        // Dismiss the dialog
+                        editDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Handle the cancellation or errors if needed
+                    }
+                });
+            });
+
+            // Show the dialog
+            editDialog.show();
         });
 
         // Inside onBindViewHolder method
