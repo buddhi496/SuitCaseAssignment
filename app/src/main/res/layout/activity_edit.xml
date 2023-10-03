@@ -9,8 +9,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Edit Item"
+        android:layout_gravity="center"
         android:textSize="18sp"
         android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/imageViewItem"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/card" />
+
+    <TextView
+        android:id="@+id/btnChooseImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Choose Image"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="chooseImage" />
+
 
     <EditText
         android:id="@+id/editTextItemName"
@@ -30,26 +50,10 @@
         android:layout_height="wrap_content"
         android:hint="Price" />
 
-    <!-- Replace ImageView and TextView with updated data -->
-    <ImageView
-        android:id="@+id/imageViewItem"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/card" />
-
-        <TextView
-            android:id="@+id/btnChooseImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Choose Image" />
-
     <EditText
         android:id="@+id/editTextStoreName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Store Name" />
-
 
 </LinearLayout>

@@ -55,4 +55,7 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="product_image_description">\n</string>
+    <string name="product_description_product_description_product_description">Product Description Product Description Product Description</string>
+    <string name="price_9_99">Price: $9.99</string>
+    <string name="item_name">Item Name</string>
 </resources>

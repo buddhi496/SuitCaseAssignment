@@ -6,13 +6,10 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,7 +30,7 @@ public class EditItemActivity extends AppCompatActivity {
     private EditText editTextStoreName;
     private ImageView itemImageView;
     private Button chooseImageButton;
-    private static final int PICK_IMAGE_REQUEST = 1;
+    static final int PICK_IMAGE_REQUEST = 1;
     private Uri selectedImageUri;
 
     @Override

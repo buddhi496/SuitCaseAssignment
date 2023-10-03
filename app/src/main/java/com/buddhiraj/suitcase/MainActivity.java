@@ -13,12 +13,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,6 +38,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import android.view.MenuInflater;
 import android.widget.TextView;
@@ -72,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
     private List<Items> healthItems;
     private List<Items> otherItems;
     private List<Items> electronicsItems;
+    private static final int PICK_IMAGE_REQUEST = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         googleSignInClient = GoogleSignIn.getClient(this, GoogleSignInOptions.DEFAULT_SIGN_IN);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
+
+
 
         documentItemList = new ArrayList<>();
         adapter = new ItemAdapter(documentItemList, this);
@@ -410,4 +417,23 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
             }
         });
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            // Get the selected image URI
+            Uri selectedImageUri = data.getData();
+
+            // Inflate the activity_edit.xml layout for the dialog
+            View dialogView = LayoutInflater.from(this).inflate(R.layout.activity_edit, null);
+
+            // Find the itemImageView within the inflated layout
+            ImageView itemImageView = dialogView.findViewById(R.id.imageViewItem);
+
+            // Load the selected image into the itemImageView using Picasso
+            Picasso.get().load(selectedImageUri).into(itemImageView);
+        }
+    }
+
 }
