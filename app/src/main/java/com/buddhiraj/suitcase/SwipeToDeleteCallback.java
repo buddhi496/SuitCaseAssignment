@@ -1,7 +1,10 @@
 package com.buddhiraj.suitcase;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,8 +18,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
-    private ItemAdapter adapter;
-    private Context context;
+    final ItemAdapter adapter;
+    final Context context;
 
     public SwipeToDeleteCallback(Context context, ItemAdapter adapter) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
@@ -34,6 +37,51 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         // Get the position of the swiped item
         final int position = viewHolder.getAdapterPosition();
 
+        if (direction == ItemTouchHelper.RIGHT) {
+            // Swiped right, show a custom edit dialog
+            showEditDialog(position);
+        } else {
+            // Swiped left, show a confirmation dialog for deletion
+            showDeleteConfirmationDialog(position);
+        }
+    }
+
+    // Method to show a custom edit dialog
+    @SuppressLint("NotifyDataSetChanged")
+    private void showEditDialog(int position) {
+        // Create a custom dialog view using your activity_edit.xml layout
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View dialogView = inflater.inflate(R.layout.activity_edit, null);
+
+        // Create an AlertDialog with your custom view
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setView(dialogView)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    // Handle the save action here
+                    // You can access views within your custom dialog view using dialogView.findViewById
+                    // For example, EditText editText = dialogView.findViewById(R.id.editText);
+
+                    // After editing, you can update the item in your adapter or database
+                    // adapter.updateItem(position, editedItem);
+
+                    // Notify the adapter to refresh the view
+                    adapter.notifyDataSetChanged();
+
+                    // Dismiss the dialog
+                    dialog.dismiss();
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    // User canceled, notify the adapter to refresh the view
+                    adapter.notifyItemChanged(position);
+
+                    // Dismiss the dialog
+                    dialog.dismiss();
+                })
+                .show();
+    }
+
+    // Method to show a confirmation dialog for deletion
+    private void showDeleteConfirmationDialog(final int position) {
         // Get the item name from your adapter
         String itemName = adapter.getItemName(position);
 
@@ -56,7 +104,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
                 .show();
     }
 
-
+    // Method to remove the item from the database
     private void removeFromDatabase(String itemName) {
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
 
