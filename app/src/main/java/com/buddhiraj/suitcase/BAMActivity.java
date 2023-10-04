@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView; // Import SearchView
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,7 +27,6 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
     private List<Items> documentItemList;
     private ItemAdapter adapter;
     private String currentUserID;
-
     private List<Items> booksItems;
     private List<Items> clothingItems;
     private List<Items> accessoriesItems;
@@ -39,9 +38,7 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
 
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Enable the back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        // Set the back button's click listener
         toolbar.setNavigationOnClickListener(view -> onBackPressed());
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
@@ -76,11 +73,26 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-
         swipeRefreshLayout.setOnRefreshListener(() -> {
             new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 2000);
         });
 
+        // Find the SearchView widget and set up a listener for search queries
+        SearchView searchBar = findViewById(R.id.searchBar);
+        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Handle search submit (if needed)
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Filter items by name when the query text changes
+                adapter.filterByName(newText);
+                return true;
+            }
+        });
     }
 
     @Override

@@ -29,7 +29,9 @@
             android:background="@drawable/search_border"
             app:layout_collapseMode="pin"
             app:layout_collapseParallaxMultiplier="1.0"
-            android:queryHint="Search your items" />
+            android:queryHint="Search your items"
+            app:actionViewClass="androidx.appcompat.widget.SearchView" />
+
 
     </com.google.android.material.appbar.AppBarLayout>
 

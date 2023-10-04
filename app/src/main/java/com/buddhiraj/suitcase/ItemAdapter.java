@@ -26,6 +26,8 @@
     import com.google.firebase.database.Query;
     import com.google.firebase.database.ValueEventListener;
     import com.squareup.picasso.Picasso;
+
+    import java.util.ArrayList;
     import java.util.List;
 
     public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
@@ -38,6 +40,22 @@
         public ItemAdapter(List<Items> documentItemList, Context context) {
             this.documentItemList = documentItemList;
             this.context = context;
+        }
+
+        public void filterByName(String query) {
+            query = query.toLowerCase(); // Convert the query to lowercase for case-insensitive search
+            ArrayList<Items> filteredItems = new ArrayList<>();
+
+            for (Items item : documentItemList) {
+                String itemName = item.getName().toLowerCase();
+                if (itemName.contains(query)) {
+                    filteredItems.add(item);
+                }
+            }
+
+            documentItemList.clear();
+            documentItemList.addAll(filteredItems);
+            notifyDataSetChanged();
         }
 
         public interface OnItemClickListener {
