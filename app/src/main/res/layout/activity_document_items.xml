@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/buttonBackground"
-            app:title="Your Title" />
+            app:title="All Items" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchBar"
