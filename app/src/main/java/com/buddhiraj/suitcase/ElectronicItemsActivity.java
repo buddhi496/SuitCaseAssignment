@@ -57,10 +57,13 @@ public class ElectronicItemsActivity extends AppCompatActivity implements ItemAd
         // Set up the database listener
         setupDatabaseListener();
 
-        String category = "Electronic";
-        SwipeToDeleteCallback callback = new SwipeToDeleteCallback(this, adapter, category);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        // Create an instance of the SwipeToDeleteCallback
+        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this, adapter);
+
+        // Attach the SwipeToDeleteCallback to your RecyclerView
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
+
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 2000); // Simulate a 2-second delay

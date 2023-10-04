@@ -12,19 +12,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     private ItemAdapter adapter;
     private Context context;
-    private String category;
 
-    public SwipeToDeleteCallback(Context context, ItemAdapter adapter, String category) {
+    public SwipeToDeleteCallback(Context context, ItemAdapter adapter) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         this.context = context;
         this.adapter = adapter;
-        this.category = category; // Initialize the category
     }
 
     @Override
@@ -33,7 +30,6 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         return false;
     }
 
-    // Inside onSwiped method
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         // Get the position of the swiped item
         final int position = viewHolder.getAdapterPosition();
@@ -60,39 +56,34 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
                 .show();
     }
 
+
     private void removeFromDatabase(String itemName) {
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
 
-        // Specify the category where your items are stored
-        DatabaseReference categoryRef = databaseRef.child(category);
-
-        // Query the category to find the item with the matching name
-        Query query = categoryRef.orderByChild("name").equalTo(itemName);
-
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Iterate through the matching items (there may be multiple with the same name)
-                    for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
-                        // Remove each matching item from the database
-                        itemSnapshot.getRef().removeValue();
-                    }
+                for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
+                    for (DataSnapshot itemSnapshot : categorySnapshot.getChildren()) {
+                        // Iterate through items in all categories
+                        String itemNameInDatabase = itemSnapshot.child("name").getValue(String.class);
 
-                    // Item(s) removed successfully from the database
-                    Toast.makeText(context, "Item removed", Toast.LENGTH_SHORT).show();
-                } else {
-                    // No matching item found in the database
-                    Toast.makeText(context, "Item not found", Toast.LENGTH_SHORT).show();
+                        if (itemNameInDatabase != null && itemNameInDatabase.equals(itemName)) {
+                            // Item name matches, delete the item
+                            itemSnapshot.getRef().removeValue();
+                        }
+                    }
                 }
+
+                // All items with the matching name have been removed
+                Toast.makeText(context, "Items removed", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle any errors that occur during the query
-                Toast.makeText(context, "Failed to remove item from database.", Toast.LENGTH_SHORT).show();
+                // Handle any errors that occur during the operation
+                Toast.makeText(context, "Failed to remove items from the database.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 }
-
