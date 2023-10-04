@@ -24,16 +24,13 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.lifecycle.ViewModelProvider;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
 
 public class AddItemActivity extends AppCompatActivity implements SensorEventListener {
@@ -42,7 +39,6 @@ public class AddItemActivity extends AppCompatActivity implements SensorEventLis
     private ImageView imageView;
     private DatabaseReference databaseRef;
     private ProgressBar progressBar;
-    private ShakeViewModel shakeViewModel;
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private long lastShakeTime = 0;
@@ -56,7 +52,7 @@ public class AddItemActivity extends AppCompatActivity implements SensorEventLis
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Add your items");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Add your items");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Handle back button click
@@ -66,7 +62,6 @@ public class AddItemActivity extends AppCompatActivity implements SensorEventLis
         imageView = findViewById(R.id.imageView);
         databaseRef = FirebaseDatabase.getInstance().getReference();
         progressBar = findViewById(R.id.progressBar); // Initialize ProgressBar
-        shakeViewModel = new ViewModelProvider(this).get(ShakeViewModel.class);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
@@ -209,7 +204,7 @@ public class AddItemActivity extends AppCompatActivity implements SensorEventLis
 
     private void saveItemToDatabase(String itemKey, String imageURL) {
 
-        String authUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String authUid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
         EditText itemNameEditText = findViewById(R.id.itemNameEditText);
         EditText itemDetailEditText = findViewById(R.id.itemDetailEditText);
