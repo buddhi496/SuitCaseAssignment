@@ -29,7 +29,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
         android:layout_below="@+id/back"
-        android:src="@drawable/boxxx"
+        android:src="@drawable/imageview"
         android:scaleType="centerCrop" />
 
     <TextView

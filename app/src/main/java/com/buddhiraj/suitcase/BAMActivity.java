@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.SearchView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -82,6 +84,43 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 2000);
+        });
+
+        SearchView searchView = findViewById(R.id.searchBar);
+
+        // Set a listener for the SearchView
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Handle the search query when the user submits it (if needed)
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Filter the item list based on the user's input
+                filterItems(newText);
+                return true;
+            }
+
+            private void filterItems(String query) {
+                List<Items> filteredList = new ArrayList<>();
+
+                for (Items item : documentItemList) {
+                    // Check if the item's name contains the search query (case-insensitive)
+                    if (item.getName().toLowerCase().contains(query.toLowerCase())) {
+                        filteredList.add(item);
+                    }
+                }
+
+                // Clear the current list and add filtered items
+                documentItemList.clear();
+                documentItemList.addAll(filteredList);
+
+                // Notify the adapter that the data has changed
+                adapter.notifyDataSetChanged();
+            }
+
         });
     }
 

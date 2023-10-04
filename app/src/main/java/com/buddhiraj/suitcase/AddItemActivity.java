@@ -4,8 +4,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,6 +25,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -29,12 +36,18 @@ import com.google.firebase.storage.StorageReference;
 import java.io.IOException;
 import java.util.UUID;
 
-public class AddItemActivity extends AppCompatActivity {
+public class AddItemActivity extends AppCompatActivity implements SensorEventListener {
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri imageUri;
     private ImageView imageView;
     private DatabaseReference databaseRef;
     private ProgressBar progressBar;
+    private ShakeViewModel shakeViewModel;
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private long lastShakeTime = 0;
+
+    private static final int SHAKE_THRESHOLD = 1000; // Adjust this threshold as needed
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +66,15 @@ public class AddItemActivity extends AppCompatActivity {
         imageView = findViewById(R.id.imageView);
         databaseRef = FirebaseDatabase.getInstance().getReference();
         progressBar = findViewById(R.id.progressBar); // Initialize ProgressBar
-
+        shakeViewModel = new ViewModelProvider(this).get(ShakeViewModel.class);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         // Find the Spinner in the add_item_form layout
         Spinner categorySpinner = findViewById(R.id.categorySpinner);
 
         // Define the array of category options
-        String[] categoryOptions = { "Clothing","Books and Magazines", "Health", "Electronic","Accessories", "Others"};
+        String[] categoryOptions = {"Clothing", "Books and Magazines", "Health", "Electronic", "Accessories", "Others"};
 
         // Create an ArrayAdapter using the defined categoryOptions array
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryOptions);
@@ -89,6 +104,45 @@ public class AddItemActivity extends AppCompatActivity {
             // Upload the image to Firebase Storage and save the item to the database
             uploadImageToFirebaseStorage(itemKey);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Register accelerometer sensor listener
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Unregister accelerometer sensor listener
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            long currentTime = System.currentTimeMillis();
+            if ((currentTime - lastShakeTime) > SHAKE_THRESHOLD) {
+                float x = event.values[0];
+                float y = event.values[1];
+                float z = event.values[2];
+                float acceleration = x * x + y * y + z * z;
+
+                // You can adjust this threshold as needed
+                if (acceleration > 400) {
+                    // Shake detected, clear fields
+                    clearFields();
+                    lastShakeTime = currentTime;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // Not needed for this example
     }
 
     @Override
@@ -197,4 +251,19 @@ public class AddItemActivity extends AppCompatActivity {
         finish(); // Finish the AddItemActivity and return to the main activity
     }
 
+    private void clearFields() {
+        imageView.setImageResource(R.drawable.imageview); // Set the ImageView to display the default image
+
+        // Show the default image
+        imageView.setVisibility(View.VISIBLE);
+        EditText itemNameEditText = findViewById(R.id.itemNameEditText);
+        EditText itemDetailEditText = findViewById(R.id.itemDetailEditText);
+        EditText itemPriceEditText = findViewById(R.id.itemPriceEditText);
+        EditText storeNameEditText = findViewById(R.id.storeNameEditText);
+
+        itemNameEditText.setText(""); // Clear the text fields
+        itemDetailEditText.setText("");
+        itemPriceEditText.setText("");
+        storeNameEditText.setText("");
+    }
 }

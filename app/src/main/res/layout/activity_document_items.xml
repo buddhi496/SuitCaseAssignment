@@ -17,6 +17,20 @@
             android:background="@color/buttonBackground"
             app:title="Your Title" />
 
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/searchDescription"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/search_border"
+            app:layout_collapseMode="pin"
+            app:layout_collapseParallaxMultiplier="1.0"
+            android:queryHint="Search your items" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
