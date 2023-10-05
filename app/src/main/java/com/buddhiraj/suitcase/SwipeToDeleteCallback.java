@@ -15,6 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
@@ -39,46 +40,95 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
         if (direction == ItemTouchHelper.RIGHT) {
             // Swiped right, show a custom edit dialog
-            showEditDialog(position);
+            showMarkAsPurchasedConfirmationDialog(position);
         } else {
             // Swiped left, show a confirmation dialog for deletion
             showDeleteConfirmationDialog(position);
         }
     }
 
-    // Method to show a custom edit dialog
-    @SuppressLint("NotifyDataSetChanged")
-    private void showEditDialog(int position) {
-        // Create a custom dialog view using your activity_edit.xml layout
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View dialogView = inflater.inflate(R.layout.activity_edit, null);
-
-        // Create an AlertDialog with your custom view
+    private void showMarkAsPurchasedConfirmationDialog(final int position) {
+        // Show a confirmation dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setView(dialogView)
-                .setPositiveButton("Save", (dialog, which) -> {
-                    // Handle the save action here
-                    // You can access views within your custom dialog view using dialogView.findViewById
-                    // For example, EditText editText = dialogView.findViewById(R.id.editText);
-
-                    // After editing, you can update the item in your adapter or database
-                    // adapter.updateItem(position, editedItem);
-
-                    // Notify the adapter to refresh the view
-                    adapter.notifyDataSetChanged();
-
-                    // Dismiss the dialog
-                    dialog.dismiss();
-                })
-                .setNegativeButton("Cancel", (dialog, which) -> {
-                    // User canceled, notify the adapter to refresh the view
+        builder.setMessage("Do you want to mark this item as purchased?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    // User confirmed marking the item as purchased, update the item status and database
+                    updateItemStatusAndDatabase(position, true);
                     adapter.notifyItemChanged(position);
 
-                    // Dismiss the dialog
-                    dialog.dismiss();
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    // User canceled, notify the adapter to refresh the view
+                    adapter.notifyItemChanged(position);
+                })
+                .setOnCancelListener(dialog -> {
+                    // Dialog canceled, notify the adapter to refresh the view
+                    adapter.notifyItemChanged(position);
                 })
                 .show();
     }
+
+    private void updateItemStatusAndDatabase(int position, boolean isPurchased) {
+        Items itemToUpdate = adapter.documentItemList.get(position);
+        itemToUpdate.setStatus(isPurchased); // Update the local data
+
+        // Call the method to update the item's status in the database for the appropriate category
+        String categoryName = getCategoryNameForItem(itemToUpdate);
+        if (categoryName != null) {
+            updateItemStatusInCategory(itemToUpdate, "Clothing");
+            updateItemStatusInCategory(itemToUpdate, "Books and Magazines");
+            updateItemStatusInCategory(itemToUpdate, "Health");
+            updateItemStatusInCategory(itemToUpdate, "Accessories");
+            updateItemStatusInCategory(itemToUpdate, "Electronic");
+            updateItemStatusInCategory(itemToUpdate, "Others");
+        }
+    }
+
+    private String getCategoryNameForItem(Items item) {
+        String itemName = item.getName();
+
+        // Add your logic to determine the category based on item name or any other criteria
+        if (itemName.toLowerCase().contains("books") || itemName.toLowerCase().contains("magazines")) {
+            return "Books and Magazines";
+        } else if (itemName.toLowerCase().contains("clothing")) {
+            return "Clothing";
+        } else if (itemName.toLowerCase().contains("health")) {
+            return "Health";
+        } else if (itemName.toLowerCase().contains("accessories")) {
+            return "Accessories";
+        } else if (itemName.toLowerCase().contains("electronics")) {
+            return "Electronic";
+        } else {
+            return "Others"; // Default category if no specific match is found
+        }
+    }
+
+    private void updateItemStatusInCategory(Items item, String categoryName) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference categoryRef = databaseRef.child(categoryName);
+
+        Query query = categoryRef.orderByChild("name").equalTo(item.getName());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                        // Update the "status" field in the database
+                        itemSnapshot.getRef().child("status").setValue(item.isStatus());
+                    }
+                    Toast.makeText(context, "Status updated", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, "Failed to update status in " + categoryName, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
     // Method to show a confirmation dialog for deletion
     private void showDeleteConfirmationDialog(final int position) {
@@ -90,7 +140,6 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         builder.setMessage("Are you sure you want to delete this item?")
                 .setPositiveButton("Delete", (dialog, which) -> {
                     // User confirmed deletion, remove the item from the dataset and the database
-                    adapter.deleteItem(position);
                     removeFromDatabase(itemName); // Call the method to remove the item from the database
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> {
