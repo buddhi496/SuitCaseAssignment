@@ -1,13 +1,13 @@
 package com.buddhiraj.suitcase;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,6 +33,48 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         // Not needed for swipe-to-delete, returning false
         return false;
     }
+
+    @Override
+    public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        // Check if the item is being swiped right (positive dX) and is active
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE && dX > 0 && isCurrentlyActive) {
+            // Get the background drawable for right swipes from a custom XML drawable resource
+            Drawable background = ContextCompat.getDrawable(context, R.drawable.swiped_right_background);
+
+            // Set the bounds for the background drawable
+            background.setBounds(
+                    viewHolder.itemView.getLeft(),
+                    viewHolder.itemView.getTop(),
+                    viewHolder.itemView.getLeft() + (int) dX, // Adjust the width based on the swipe distance
+                    viewHolder.itemView.getBottom()
+            );
+
+            // Draw the custom background for right swipes
+            background.draw(c);
+        }
+
+        // Check if the item is being swiped left (negative dX) and is active
+        else if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE && dX < 0 && isCurrentlyActive) {
+            // Get the background drawable for left swipes from a custom XML drawable resource
+            Drawable background = ContextCompat.getDrawable(context, R.drawable.swiped_left_background);
+
+            // Set the bounds for the background drawable
+            background.setBounds(
+                    viewHolder.itemView.getRight() + (int) dX, // Adjust the starting position based on the swipe distance
+                    viewHolder.itemView.getTop(),
+                    viewHolder.itemView.getRight(),
+                    viewHolder.itemView.getBottom()
+            );
+
+            // Draw the custom background for left swipes
+            background.draw(c);
+        }
+
+        // Call the default behavior to draw the item
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+    }
+
+
 
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         // Get the position of the swiped item
