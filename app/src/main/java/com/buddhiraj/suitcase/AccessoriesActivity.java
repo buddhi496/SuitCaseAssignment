@@ -31,7 +31,7 @@ public class AccessoriesActivity extends AppCompatActivity implements ItemAdapte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_document_items);
+        setContentView(R.layout.activity_list_items);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

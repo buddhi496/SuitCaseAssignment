@@ -3,6 +3,11 @@ package com.buddhiraj.suitcase;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView; // Import SearchView
@@ -34,7 +39,7 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_document_items);
+        setContentView(R.layout.activity_list_items);
 
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -91,6 +96,45 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
                 // Filter items by name when the query text changes
                 adapter.filterByName(newText);
                 return true;
+            }
+        });
+
+        // Initialize the Spinner
+        Spinner sortSpinner = findViewById(R.id.sortSpinner);
+
+        // Create an ArrayAdapter for the Spinner with your sorting options
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.sorting_options,
+                android.R.layout.simple_spinner_item
+        );
+
+        // Set the layout for the Spinner items
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Set the Spinner adapter
+        sortSpinner.setAdapter(spinnerAdapter);
+
+        // Set an item selection listener for the Spinner
+        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // Handle item selection here
+                String selectedItem = parentView.getItemAtPosition(position).toString();
+
+                // Depending on the selected item, you can update your RecyclerView accordingly
+                if ("Unpurchased Items".equals(selectedItem)) {
+                    // Handle Unpurchased Items
+                } else if ("Purchased Items".equals(selectedItem)) {
+                    // Handle Purchased Items
+                } else if ("All Items".equals(selectedItem)) {
+                    // Handle All Items
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Handle the case when nothing is selected (if needed)
             }
         });
     }
