@@ -23,6 +23,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
@@ -41,6 +43,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import android.view.MenuInflater;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,8 +103,6 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
-
-
         documentItemList = new ArrayList<>();
         adapter = new ItemAdapter(documentItemList, this);
 
@@ -139,6 +140,27 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 2000); // Simulate a 2-second delay
+        });
+
+        Spinner sortSpinner = findViewById(R.id.sortSpinner);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.sorting_options,
+                android.R.layout.simple_spinner_item
+        );
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortSpinner.setAdapter(spinnerAdapter);
+
+        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                selectedSortingOption = parentView.getItemAtPosition(position).toString();
+                updateRecyclerView();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
         });
     }
 
@@ -385,7 +407,6 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
                 itemList.clear();
 
                 for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
-                    // Get data fields from the snapshot
                     String imageUrl = itemSnapshot.child("imageUrl").getValue(String.class);
                     String name = itemSnapshot.child("name").getValue(String.class);
                     String price = itemSnapshot.child("price").getValue(String.class);
@@ -394,14 +415,12 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
 
                     boolean status = itemSnapshot.child("status").getValue(Boolean.class);
 
-                    // Create an Items object and set the status
                     Items item = new Items(imageUrl, name, price, description, storeName);
                     item.setStatus(status);
 
                     itemList.add(item);
                 }
 
-                // Merge data from all categories into documentItemList
                 documentItemList.clear();
                 documentItemList.addAll(booksItems);
                 documentItemList.addAll(clothingItems);
@@ -410,7 +429,7 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
                 documentItemList.addAll(otherItems);
                 documentItemList.addAll(electronicsItems);
 
-                adapter.notifyDataSetChanged();
+                updateRecyclerView();
                 swipeRefreshLayout.setRefreshing(false);
             }
 
@@ -420,6 +439,64 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
             }
         });
     }
+
+
+    private void updateRecyclerView() {
+        if ("Unpurchased Items".equals(selectedSortingOption)) {
+            filterItemsByStatus(false);
+        } else if ("Purchased Items".equals(selectedSortingOption)) {
+            filterItemsByStatus(true);
+        } else if ("All Items".equals(selectedSortingOption)) {
+            documentItemList.clear();
+            documentItemList.addAll(booksItems);
+            documentItemList.addAll(clothingItems);
+            documentItemList.addAll(accessoriesItems);
+            documentItemList.addAll(healthItems);
+            documentItemList.addAll(otherItems);
+            documentItemList.addAll(electronicsItems);
+        }
+
+        adapter.notifyDataSetChanged();
+    }
+
+    private void filterItemsByStatus(boolean statusToDisplay) {
+        documentItemList.clear();
+
+        for (Items item : booksItems) {
+            if (item.isStatus() == statusToDisplay) {
+                documentItemList.add(item);
+            }
+        }
+        for (Items item : clothingItems) {
+            if (item.isStatus() == statusToDisplay) {
+                documentItemList.add(item);
+            }
+        }
+        for (Items item : accessoriesItems) {
+            if (item.isStatus() == statusToDisplay) {
+                documentItemList.add(item);
+            }
+        }
+
+        for (Items item : healthItems) {
+            if (item.isStatus() == statusToDisplay) {
+                documentItemList.add(item);
+            }
+        }
+
+        for (Items item : otherItems) {
+            if (item.isStatus() == statusToDisplay) {
+                documentItemList.add(item);
+            }
+        }
+
+        for (Items item : electronicsItems) {
+            if (item.isStatus() == statusToDisplay) {
+                documentItemList.add(item);
+            }
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
