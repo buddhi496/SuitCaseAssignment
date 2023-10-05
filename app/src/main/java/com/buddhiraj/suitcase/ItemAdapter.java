@@ -173,13 +173,22 @@
                 openMapWithStoreLocation(storeName);
             });
 
-            // Set the initial checkbox state based on the item's status
-            holder.checkbox.setChecked(documentItem.isStatus());
-            // Add a click listener to the checkbox
-            holder.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                // Update the item's status in the local data
-                documentItem.setStatus(isChecked);
 
+            // Check the status and set the appropriate checkbox image
+            if (documentItem.isStatus()) {
+                holder.checkBox.setVisibility(View.GONE);
+                holder.purchased.setVisibility(View.VISIBLE);
+            } else {
+                holder.checkBox.setVisibility(View.VISIBLE);
+                holder.purchased.setVisibility(View.GONE);
+            }
+
+            // Add a click listener to the checkbox to update its state and the database
+            holder.checkBox.setOnClickListener(view -> {
+                // Invert the status of the item
+                documentItem.setStatus(!documentItem.isStatus());
+
+                // Update the item's status in the database
                 updateItemStatusInCategory(item, "Books and Magazines");
                 updateItemStatusInCategory(item, "Clothing");
                 updateItemStatusInCategory(item, "Health");
@@ -187,7 +196,45 @@
                 updateItemStatusInCategory(item, "Accessories");
                 updateItemStatusInCategory(item, "Electronic");
 
+                // Check the status and set the appropriate checkbox image
+                if (documentItem.isStatus()) {
+                    holder.checkBox.setVisibility(View.GONE);
+                    holder.purchased.setVisibility(View.VISIBLE);
+                } else {
+                    holder.checkBox.setVisibility(View.VISIBLE);
+                    holder.purchased.setVisibility(View.GONE);
+                }
             });
+
+
+            holder.purchased.setOnClickListener(view -> {
+                // Invert the status of the item
+
+                // Update the item's status in the database
+                updateItemStatus(item, "Books and Magazines");
+                updateItemStatus(item, "Clothing");
+                updateItemStatus(item, "Health");
+                updateItemStatus(item, "Others");
+                updateItemStatus(item, "Accessories");
+                updateItemStatus(item, "Electronic");
+
+            });
+
+//            // Set the initial checkbox state based on the item's status
+//            holder.checkbox.setChecked(documentItem.isStatus());
+//            // Add a click listener to the checkbox
+//            holder.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//                // Update the item's status in the local data
+//                documentItem.setStatus(isChecked);
+//
+//                updateItemStatusInCategory(item, "Books and Magazines");
+//                updateItemStatusInCategory(item, "Clothing");
+//                updateItemStatusInCategory(item, "Health");
+//                updateItemStatusInCategory(item, "Others");
+//                updateItemStatusInCategory(item, "Accessories");
+//                updateItemStatusInCategory(item, "Electronic");
+//
+//            });
 
             // Inside onBindViewHolder method
             holder.editImageView.setOnClickListener(view -> {
@@ -428,7 +475,6 @@
         }
 
 
-        // Add a method to update the item's status in the Firebase Realtime Database
         private void updateItemStatusInCategory(Items item, String categoryName) {
             DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
             DatabaseReference categoryRef = databaseRef.child(categoryName);
@@ -440,10 +486,33 @@
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
-                            // Update the "status" field in the database
-                            itemSnapshot.getRef().child("status").setValue(item.isStatus());
+                            // Update the "status" field in the database to true
+                            itemSnapshot.getRef().child("status").setValue(true);
                         }
+                    }
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(context, "Failed to update status in " + categoryName, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        private void updateItemStatus(Items item, String categoryName) {
+            DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference categoryRef = databaseRef.child(categoryName);
+
+            Query query = categoryRef.orderByChild("name").equalTo(item.getName());
+
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                            // Update the "status" field in the database to true
+                            itemSnapshot.getRef().child("status").setValue(false);
+                        }
                     }
                 }
 
@@ -552,12 +621,13 @@
             public TextView nameTextView;
             public TextView descriptionTextView;
             public TextView priceTextView;
+            public TextView purchased;
             public ImageView itemImageView;
             public ImageView deleteImageView;
             public ImageView shareImageView;
             public ImageView sendSMS;
+            public ImageView checkBox;
             public View editImageView;
-            public CheckBox checkbox;
             public View findInMapImageView;
             public ProgressBar progressBar;
 
@@ -573,9 +643,9 @@
                 editImageView = itemView.findViewById(R.id.editItem);
                 sendSMS = itemView.findViewById(R.id.messageItem);
                 findInMapImageView = itemView.findViewById(R.id.findInMap);
-                checkbox = itemView.findViewById(R.id.checkbox);
                 progressBar = itemView.findViewById(R.id.progressBar);
-
+                purchased = itemView.findViewById(R.id.purchasedItem);
+                checkBox = itemView.findViewById(R.id.checkbox);
             }
         }
     }
