@@ -72,36 +72,13 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         Items itemToUpdate = adapter.documentItemList.get(position);
         itemToUpdate.setStatus(isPurchased); // Update the local data
 
-        // Call the method to update the item's status in the database for the appropriate category
-        String categoryName = getCategoryNameForItem(itemToUpdate);
-        if (categoryName != null) {
-            updateItemStatusInCategory(itemToUpdate, "Clothing");
-            updateItemStatusInCategory(itemToUpdate, "Books and Magazines");
-            updateItemStatusInCategory(itemToUpdate, "Health");
-            updateItemStatusInCategory(itemToUpdate, "Accessories");
-            updateItemStatusInCategory(itemToUpdate, "Electronic");
-            updateItemStatusInCategory(itemToUpdate, "Others");
-        }
+        updateItemStatusInCategory(itemToUpdate, "Clothing");
+        updateItemStatusInCategory(itemToUpdate, "Books and Magazines");
+        updateItemStatusInCategory(itemToUpdate, "Health");
+        updateItemStatusInCategory(itemToUpdate, "Accessories");
+        updateItemStatusInCategory(itemToUpdate, "Electronic");
     }
 
-    private String getCategoryNameForItem(Items item) {
-        String itemName = item.getName();
-
-        // Add your logic to determine the category based on item name or any other criteria
-        if (itemName.toLowerCase().contains("books") || itemName.toLowerCase().contains("magazines")) {
-            return "Books and Magazines";
-        } else if (itemName.toLowerCase().contains("clothing")) {
-            return "Clothing";
-        } else if (itemName.toLowerCase().contains("health")) {
-            return "Health";
-        } else if (itemName.toLowerCase().contains("accessories")) {
-            return "Accessories";
-        } else if (itemName.toLowerCase().contains("electronics")) {
-            return "Electronic";
-        } else {
-            return "Others"; // Default category if no specific match is found
-        }
-    }
 
     private void updateItemStatusInCategory(Items item, String categoryName) {
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
