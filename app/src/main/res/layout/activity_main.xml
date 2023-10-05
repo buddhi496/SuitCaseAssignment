@@ -421,29 +421,32 @@
         </RelativeLayout>
     </HorizontalScrollView>
 
-    <TextView
-        android:id="@+id/allItems"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/sortItems"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/playfair"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
-        android:text="All Items:"
+        android:padding="16dp"
         android:layout_below="@id/categoryCards"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal">
 
-    <Spinner
-        android:id="@+id/sortSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/allItems"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/button_background" />
+        <TextView
+            android:id="@+id/allItems"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/playfair"
+            android:text="Sort Items"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <Spinner
+            android:id="@+id/sortSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/playfair"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/button_background"
+            android:padding="8dp" />
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addButton"
@@ -475,7 +478,7 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_below="@+id/sortSpinner"
+        android:layout_below="@+id/sortItems"
         android:layout_height="match_parent">
 
         <!-- Your content here, e.g., a RecyclerView -->

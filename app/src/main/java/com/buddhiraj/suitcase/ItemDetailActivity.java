@@ -58,7 +58,6 @@ public class ItemDetailActivity extends AppCompatActivity {
 
             // Create a SpannableString with "Rs" in green color
             SpannableString spannableString = new SpannableString("Rs " + itemPrice);
-            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#01D3D4")), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             // Set the SpannableString to the TextView
             itemPriceTextView.setText(spannableString);

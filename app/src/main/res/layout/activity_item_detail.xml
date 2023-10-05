@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@color/white">
 
@@ -23,7 +23,7 @@
             android:backgroundTint="@color/toolbar"
             android:layout_height="40dp"
             android:background="?attr/colorPrimary"
-            android:title="Your Profile"
+            android:title="@string/your_profile"
             android:elevation="4dp"
             android:gravity="center_vertical"
             app:layout_scrollFlags="scroll|enterAlways"/>
@@ -31,8 +31,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:layout_height="wrap_content">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -48,46 +47,36 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:src="@drawable/card"
+            android:contentDescription="@string/item_image"
             android:layout_gravity="center_horizontal" />
     </FrameLayout>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/itemName"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp">
+        android:text="@string/item_namee"
+        android:textColor="@color/black"
+        android:fontFamily="@font/playfair"
+        android:layout_marginStart="16dp"
+        android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/itemName"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Item Name"
-            android:fontFamily="@font/playfair"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/itemPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Item Price"
-            android:textColor="@color/buttonBackground"
-            android:textSize="16sp" />
-
-    </LinearLayout>
-
-
+    <TextView
+        android:id="@+id/itemPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/item_price"
+        android:layout_marginStart="16dp"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/itemDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Item Description"
+        android:text="@string/item_description"
         android:textSize="14sp"
-        android:alpha="0.6"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"/>
 
@@ -102,159 +91,19 @@
         android:layout_marginTop="16dp">
 
         <TextView
-            android:layout_width="150dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="You can find this item in:"
+            android:text="@string/you_can_find_this_item_in"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/storeName"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="Store Name"
-            android:textColor="@color/buttonBackground"
+            android:text="@string/store_name"
+            android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
-
-<!--    <LinearLayout-->
-<!--        xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:paddingLeft="16dp"-->
-<!--        android:paddingTop="5dp"-->
-<!--        android:paddingBottom="5dp"-->
-<!--        android:gravity="center_vertical"-->
-<!--        android:background="@color/button">-->
-
-<!--        &lt;!&ndash; ImageView for the image &ndash;&gt;-->
-<!--        <ImageView-->
-<!--            android:layout_width="36dp"-->
-<!--            android:layout_height="36dp"-->
-<!--            android:layout_marginRight="16dp"-->
-<!--            android:src="@drawable/location" />-->
-
-<!--        &lt;!&ndash; TextView for the text &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Find Store in map"-->
-<!--            android:textColor="@color/black" />-->
-
-<!--    </LinearLayout>-->
-
-<!--    <LinearLayout-->
-<!--        xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:paddingLeft="16dp"-->
-<!--        android:paddingTop="5dp"-->
-<!--        android:paddingBottom="5dp"-->
-<!--        android:gravity="center_vertical"-->
-<!--        android:background="@color/button">-->
-
-<!--        &lt;!&ndash; ImageView for the image &ndash;&gt;-->
-<!--        <ImageView-->
-<!--            android:layout_width="36dp"-->
-<!--            android:layout_height="36dp"-->
-<!--            android:layout_marginRight="16dp"-->
-<!--            android:src="@drawable/mark" />-->
-
-<!--        &lt;!&ndash; TextView for the text &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Mark as purchase"-->
-<!--            android:textColor="@color/black" />-->
-
-<!--    </LinearLayout>-->
-
-<!--    <LinearLayout-->
-<!--        xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:paddingLeft="16dp"-->
-<!--        android:paddingTop="5dp"-->
-<!--        android:paddingBottom="5dp"-->
-<!--        android:gravity="center_vertical"-->
-<!--        android:background="@color/button">-->
-
-<!--        &lt;!&ndash; ImageView for the image &ndash;&gt;-->
-<!--        <ImageView-->
-<!--            android:layout_width="36dp"-->
-<!--            android:layout_height="36dp"-->
-<!--            android:layout_marginRight="16dp"-->
-<!--            android:src="@drawable/changeoo" />-->
-
-<!--        &lt;!&ndash; TextView for the text &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Edit Item"-->
-<!--            android:textColor="@color/black" />-->
-
-<!--    </LinearLayout>-->
-
-<!--    <LinearLayout-->
-<!--        xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:paddingLeft="16dp"-->
-<!--        android:paddingTop="5dp"-->
-<!--        android:paddingBottom="5dp"-->
-<!--        android:gravity="center_vertical"-->
-<!--        android:background="@color/button">-->
-
-<!--        &lt;!&ndash; ImageView for the image &ndash;&gt;-->
-<!--        <ImageView-->
-<!--            android:layout_width="36dp"-->
-<!--            android:layout_height="36dp"-->
-<!--            android:layout_marginRight="16dp"-->
-<!--            android:src="@drawable/delete" />-->
-
-<!--        &lt;!&ndash; TextView for the text &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Delete Item"-->
-<!--            android:textColor="@color/black" />-->
-
-<!--    </LinearLayout>-->
-
-<!--    <LinearLayout-->
-<!--        xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:paddingLeft="16dp"-->
-<!--        android:paddingTop="5dp"-->
-<!--        android:paddingBottom="5dp"-->
-<!--        android:gravity="center_vertical"-->
-<!--        android:background="@color/button">-->
-
-<!--        &lt;!&ndash; ImageView for the image &ndash;&gt;-->
-<!--        <ImageView-->
-<!--            android:layout_width="36dp"-->
-<!--            android:layout_height="36dp"-->
-<!--            android:layout_marginRight="16dp"-->
-<!--            android:src="@drawable/send" />-->
-
-<!--        &lt;!&ndash; TextView for the text &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Recomend someone"-->
-<!--            android:textColor="@color/black" />-->
-
-<!--    </LinearLayout>-->
 </LinearLayout>
 </ScrollView>

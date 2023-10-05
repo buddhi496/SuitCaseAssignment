@@ -58,6 +58,13 @@
     <string name="product_description_product_description_product_description">Product Description Product Description Product Description</string>
     <string name="price_9_99">Price: $9.99</string>
     <string name="item_name">Item Name</string>
+    <string name="you_can_find_this_item_in">You can find this item in:</string>
+    <string name="item_price">Item Price</string>
+    <string name="item_description">Item Description</string>
+    <string name="item_image">Item Image</string>
+    <string name="item_namee">Item Name</string>
+    <string name="your_profile">Your Profile</string>
+    <string name="store_name">Store Name</string>
 
     <string-array name="sorting_options">
         <item>Unpurchased Items</item>
