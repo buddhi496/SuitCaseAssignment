@@ -35,6 +35,7 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
     private List<Items> booksItems;
     private List<Items> clothingItems;
     private List<Items> accessoriesItems;
+    private String selectedSortingOption = "All Items"; // Default option
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,26 +56,20 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        // Get the currently logged-in user's ID
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             currentUserID = currentUser.getUid();
         }
 
-        // Initialize separate lists for each category
         booksItems = new ArrayList<>();
         clothingItems = new ArrayList<>();
         accessoriesItems = new ArrayList<>();
 
-        // Set up the database listener for each category
         setupDatabaseListener("Books and Magazines", booksItems);
         setupDatabaseListener("Clothing", clothingItems);
         setupDatabaseListener("Accessories", accessoriesItems);
 
-        // Create an instance of the SwipeToDeleteCallback
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this, adapter);
-
-        // Attach the SwipeToDeleteCallback to your RecyclerView
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
@@ -82,59 +77,38 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
             new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 2000);
         });
 
-        // Find the SearchView widget and set up a listener for search queries
         SearchView searchBar = findViewById(R.id.searchBar);
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // Handle search submit (if needed)
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // Filter items by name when the query text changes
                 adapter.filterByName(newText);
                 return true;
             }
         });
 
-        // Initialize the Spinner
         Spinner sortSpinner = findViewById(R.id.sortSpinner);
-
-        // Create an ArrayAdapter for the Spinner with your sorting options
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.sorting_options,
                 android.R.layout.simple_spinner_item
         );
-
-        // Set the layout for the Spinner items
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Set the Spinner adapter
         sortSpinner.setAdapter(spinnerAdapter);
 
-        // Set an item selection listener for the Spinner
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                // Handle item selection here
-                String selectedItem = parentView.getItemAtPosition(position).toString();
-
-                // Depending on the selected item, you can update your RecyclerView accordingly
-                if ("Unpurchased Items".equals(selectedItem)) {
-                    // Handle Unpurchased Items
-                } else if ("Purchased Items".equals(selectedItem)) {
-                    // Handle Purchased Items
-                } else if ("All Items".equals(selectedItem)) {
-                    // Handle All Items
-                }
+                selectedSortingOption = parentView.getItemAtPosition(position).toString();
+                updateRecyclerView();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // Handle the case when nothing is selected (if needed)
             }
         });
     }
@@ -163,7 +137,6 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
                 itemList.clear();
 
                 for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
-                    // Get data fields from the snapshot
                     String imageUrl = itemSnapshot.child("imageUrl").getValue(String.class);
                     String name = itemSnapshot.child("name").getValue(String.class);
                     String price = itemSnapshot.child("price").getValue(String.class);
@@ -172,20 +145,18 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
 
                     boolean status = itemSnapshot.child("status").getValue(Boolean.class);
 
-                    // Create an Items object and set the status
                     Items item = new Items(imageUrl, name, price, description, storeName);
                     item.setStatus(status);
 
                     itemList.add(item);
                 }
 
-                // Merge data from all categories into documentItemList
                 documentItemList.clear();
                 documentItemList.addAll(booksItems);
                 documentItemList.addAll(clothingItems);
                 documentItemList.addAll(accessoriesItems);
 
-                adapter.notifyDataSetChanged();
+                updateRecyclerView();
                 swipeRefreshLayout.setRefreshing(false);
             }
 
@@ -195,4 +166,40 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
             }
         });
     }
+
+    private void updateRecyclerView() {
+        if ("Unpurchased Items".equals(selectedSortingOption)) {
+            filterItemsByStatus(false);
+        } else if ("Purchased Items".equals(selectedSortingOption)) {
+            filterItemsByStatus(true);
+        } else if ("All Items".equals(selectedSortingOption)) {
+            documentItemList.clear();
+            documentItemList.addAll(booksItems);
+            documentItemList.addAll(clothingItems);
+            documentItemList.addAll(accessoriesItems);
+        }
+
+        adapter.notifyDataSetChanged();
+    }
+
+    private void filterItemsByStatus(boolean statusToDisplay) {
+        documentItemList.clear();
+
+        for (Items item : booksItems) {
+            if (item.isStatus() == statusToDisplay) {
+                documentItemList.add(item);
+            }
+        }
+        for (Items item : clothingItems) {
+            if (item.isStatus() == statusToDisplay) {
+                documentItemList.add(item);
+            }
+        }
+        for (Items item : accessoriesItems) {
+            if (item.isStatus() == statusToDisplay) {
+                documentItemList.add(item);
+            }
+        }
+    }
 }
+

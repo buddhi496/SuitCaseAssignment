@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
     private List<Items> otherItems;
     private List<Items> electronicsItems;
     private static final int PICK_IMAGE_REQUEST = 1;
+    private String selectedSortingOption = "All Items";
 
 
     @Override
