@@ -20,14 +20,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/playfair"
-            android:paddingLeft="16dp"
-            android:text="Welcome User!"
+            android:paddingStart="16dp"
+            android:text="@string/welcome_user"
             android:textColor="@color/black"
             android:textSize="30sp"
             app:layout_constraintEnd_toStartOf="@+id/profileImage"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlSymmetry" />
 
         <ImageView
             android:id="@+id/profileImage"
@@ -36,6 +37,7 @@
             android:layout_marginTop="12dp"
             android:clickable="true"
             android:focusable="true"
+            android:contentDescription="@string/profile"
             android:foregroundGravity="center"
             android:onClick="showPopupMenu"
             android:padding="16dp"
@@ -51,11 +53,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/header"
         android:layout_marginTop="8dp"
-        android:paddingLeft="16dp"
-        android:text="Search for your favorite items"
+        android:paddingStart="16dp"
+        android:text="@string/search_for_your_favorite_items"
         android:textColor="@color/black"
         android:alpha="0.6"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        tools:ignore="RtlSymmetry" />
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchBar"
@@ -77,7 +80,7 @@
         android:fontFamily="@font/playfair"
         android:layout_marginRight="16dp"
         android:layout_marginLeft="16dp"
-        android:text="Categogy:"
+        android:text="@string/categogy"
         android:layout_below="@id/searchBar"
         android:textColor="@color/black"
         android:textSize="16sp"
@@ -100,7 +103,7 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_toEndOf="@id/clothingBox"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
@@ -113,12 +116,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
+                    android:background="@color/white"
                     android:gravity="center">
 
                     <ImageView
                         android:id="@+id/bookIcon"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
+                        android:contentDescription="@string/books_and_magazines"
                         android:src="@drawable/card"
                         android:layout_gravity="center_horizontal" />
 
@@ -126,7 +131,7 @@
                         android:id="@+id/paymentName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Books and Magazines"
+                        android:text="@string/books_and_magazines"
                         android:textColor="@android:color/black"
                         android:gravity="center"
                         android:textSize="14sp"
@@ -137,10 +142,10 @@
                         android:id="@+id/totalPaymentMethods"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="6 Items"
+                        android:text="@string/_6_items"
                         android:textColor="@android:color/black"
                         android:gravity="center"
-                        android:textSize="10sp"
+                        android:textSize="11sp"
                         android:textColorHint="@color/black"
                         android:alpha="0.6"
                         android:layout_marginTop="1dp" />
@@ -167,6 +172,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
+                    android:background="@color/white"
                     android:gravity="center">
 
                     <ImageView
@@ -174,13 +180,14 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:src="@drawable/clothing"
+                        android:contentDescription="@string/clothing"
                         android:layout_gravity="center_horizontal" />
 
                     <TextView
                         android:id="@+id/categoryName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Clothing"
+                        android:text="@string/clothing"
                         android:textColor="@android:color/black"
                         android:gravity="center"
                         android:textSize="14sp"
@@ -191,10 +198,10 @@
                         android:id="@+id/totalItem"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="3 items"
+                        android:text="@string/_6_items"
                         android:textColor="@android:color/black"
                         android:gravity="center"
-                        android:textSize="10sp"
+                        android:textSize="11sp"
                         android:textColorHint="@color/black"
                         android:alpha="0.6"
                         android:layout_marginTop="1dp" />
@@ -222,6 +229,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
+                    android:background="@color/white"
                     android:gravity="center">
 
                     <ImageView
@@ -229,13 +237,14 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:src="@drawable/health"
+                        android:contentDescription="@string/health"
                         android:layout_gravity="center_horizontal" />
 
                     <TextView
                         android:id="@+id/healthItems"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Health"
+                        android:text="@string/health"
                         android:textColor="@android:color/black"
                         android:gravity="center"
                         android:textSize="14sp"
@@ -246,10 +255,10 @@
                         android:id="@+id/totalHealthItems"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="6 Items"
+                        android:text="@string/_6_items"
                         android:textColor="@android:color/black"
                         android:gravity="center"
-                        android:textSize="10sp"
+                        android:textSize="11sp"
                         android:textColorHint="@color/black"
                         android:alpha="0.6"
                         android:layout_marginTop="1dp" />
@@ -276,6 +285,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
+                    android:background="@color/white"
                     android:gravity="center">
 
                     <ImageView
@@ -283,13 +293,14 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:src="@drawable/accessories"
+                        android:contentDescription="@string/accessories"
                         android:layout_gravity="center_horizontal" />
 
                     <TextView
                         android:id="@+id/clothItems"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Accessories"
+                        android:text="@string/Accessories"
                         android:textColor="@android:color/black"
                         android:gravity="center"
                         android:textSize="14sp"
@@ -300,10 +311,10 @@
                         android:id="@+id/totalClothItems"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="6 Items"
+                        android:text="@string/_6_items"
                         android:textColor="@android:color/black"
                         android:gravity="center"
-                        android:textSize="10sp"
+                        android:textSize="11sp"
                         android:textColorHint="@color/black"
                         android:alpha="0.6"
                         android:layout_marginTop="1dp" />
@@ -330,6 +341,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
+                    android:background="@color/white"
                     android:gravity="center">
 
                     <ImageView
@@ -337,13 +349,14 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:src="@drawable/electronics"
+                        android:contentDescription="@string/electronic"
                         android:layout_gravity="center_horizontal" />
 
                     <TextView
                         android:id="@+id/electronicItems"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Electronic"
+                        android:text="@string/electronic"
                         android:textColor="@android:color/black"
                         android:gravity="center"
                         android:textSize="14sp"
@@ -354,10 +367,10 @@
                         android:id="@+id/totalelectronicItems"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="6 Items"
+                        android:text="@string/_6_items"
                         android:textColor="@android:color/black"
                         android:gravity="center"
-                        android:textSize="10sp"
+                        android:textSize="11sp"
                         android:textColorHint="@color/black"
                         android:alpha="0.6"
                         android:layout_marginTop="1dp" />
@@ -384,6 +397,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
+                    android:background="@color/white"
                     android:gravity="center">
 
                     <ImageView
@@ -391,13 +405,14 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:src="@drawable/other"
+                        android:contentDescription="@string/other"
                         android:layout_gravity="center_horizontal" />
 
                     <TextView
                         android:id="@+id/otherItems"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Other"
+                        android:text="@string/other"
                         android:textColor="@android:color/black"
                         android:gravity="center"
                         android:textSize="14sp"
@@ -408,10 +423,10 @@
                         android:id="@+id/totalotherItems"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="6 Items"
+                        android:text="@string/_6_items"
                         android:textColor="@android:color/black"
                         android:gravity="center"
-                        android:textSize="10sp"
+                        android:textSize="11sp"
                         android:textColorHint="@color/black"
                         android:alpha="0.6"
                         android:layout_marginTop="1dp" />
@@ -434,7 +449,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/playfair"
-            android:text="Sort Items"
+            android:text="@string/sort_items"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
@@ -443,7 +458,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/playfair"
-            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:background="@drawable/button_background"
             android:padding="8dp" />
     </LinearLayout>
@@ -456,6 +471,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="25dp"
+        android:contentDescription="@string/button_to_add_items"
         android:backgroundTint="@color/buttonBackground"
         app:srcCompat="@drawable/plus" />
 

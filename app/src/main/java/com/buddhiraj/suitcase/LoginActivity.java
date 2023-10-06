@@ -20,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.android.gms.tasks.Task;
@@ -31,7 +32,8 @@ import java.util.Objects;
 public class LoginActivity extends AppCompatActivity {
 
 
-    EditText emailTextView, passwordTextView;
+    TextInputLayout emailTextInputLayout, passwordTextInputLayout;
+    TextInputEditText emailTextInput, passwordTextInput;
     LinearLayout googleSignin;
     TextView forgetPassword;
     Button loginButton;
@@ -66,8 +68,10 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         // initialising all views through id defined above
-        emailTextView = findViewById(R.id.email);
-        passwordTextView = findViewById(R.id.password);
+        emailTextInputLayout = findViewById(R.id.email);
+        passwordTextInputLayout = findViewById(R.id.password);
+        emailTextInput = findViewById(R.id.emailInput);
+        passwordTextInput = findViewById(R.id.passwoedInput);
         loginButton = findViewById(R.id.loginButton);
         divider = findViewById(R.id.divider);
         forgetPassword = findViewById(R.id.forgetPassword);
@@ -104,8 +108,8 @@ public class LoginActivity extends AppCompatActivity {
         {
             // Take the value of two edit texts in Strings
             String email, password;
-            email = emailTextView.getText().toString();
-            password = passwordTextView.getText().toString();
+            email = Objects.requireNonNull(emailTextInput.getText()).toString();
+            password = Objects.requireNonNull(passwordTextInput.getText()).toString();
 
             // validations for input email and password
             if (TextUtils.isEmpty(email)) {

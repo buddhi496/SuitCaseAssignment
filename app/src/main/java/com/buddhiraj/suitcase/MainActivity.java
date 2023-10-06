@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                ((TextView) parentView.getChildAt(0)).setTextColor(getResources().getColor(R.color.black));
                 selectedSortingOption = parentView.getItemAtPosition(position).toString();
                 updateRecyclerView();
             }

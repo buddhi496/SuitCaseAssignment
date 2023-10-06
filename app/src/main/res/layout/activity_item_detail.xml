@@ -6,104 +6,103 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/white">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:id="@+id/back"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:backgroundTint="@color/toolbar"
-            android:layout_height="40dp"
-            android:background="?attr/colorPrimary"
-            android:title="@string/your_profile"
-            android:elevation="4dp"
-            android:gravity="center_vertical"
-            app:layout_scrollFlags="scroll|enterAlways"/>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="invisible" />
-
-        <ImageView
-            android:id="@+id/itemImage"
-            android:layout_width="wrap_content"
-            android:layout_height="400dp"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/card"
-            android:contentDescription="@string/item_image"
-            android:layout_gravity="center_horizontal" />
-    </FrameLayout>
-
-
-    <TextView
-        android:id="@+id/itemName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/item_namee"
-        android:textColor="@color/black"
-        android:fontFamily="@font/playfair"
-        android:layout_marginStart="16dp"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/itemPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/item_price"
-        android:layout_marginStart="16dp"
-        android:textColor="@color/black"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/itemDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/item_description"
-        android:textSize="14sp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"/>
-
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp">
+        android:orientation="vertical"
+        android:background="@color/white">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:id="@+id/back"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:backgroundTint="@color/toolbar"
+                android:layout_height="40dp"
+                android:background="?attr/colorPrimary"
+                android:title="@string/your_profile"
+                android:elevation="4dp"
+                android:gravity="center_vertical"
+                app:layout_scrollFlags="scroll|enterAlways"/>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/itemImage"
+                android:layout_width="wrap_content"
+                android:layout_height="400dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/card"
+                android:contentDescription="@string/item_image"
+                android:layout_gravity="center_horizontal" />
+        </FrameLayout>
 
         <TextView
-            android:layout_width="0dp"
+            android:id="@+id/itemName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/you_can_find_this_item_in"
-            android:textSize="16sp" />
+            android:text="@string/item_namee"
+            android:textColor="@color/black"
+            android:fontFamily="@font/playfair"
+            android:layout_marginStart="16dp"
+            android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/storeName"
-            android:layout_width="150dp"
+            android:id="@+id/itemPrice"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/store_name"
+            android:text="@string/item_price"
+            android:layout_marginStart="16dp"
             android:textColor="@color/black"
             android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/itemDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/item_description"
+            android:textSize="14sp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/you_can_find_this_item_in"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/storeName"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="@string/store_name"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
 </ScrollView>
