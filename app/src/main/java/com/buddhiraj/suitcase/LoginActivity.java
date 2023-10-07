@@ -56,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         TextView registerNowTextView = findViewById(R.id.registerNow);
 
         // Set a click listener for the "Register Now" TextView
