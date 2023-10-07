@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +17,7 @@ import java.util.Objects;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    EditText userNameTextView, userEmailTextView, userPasswordTextView, conformPasswordTextView;
+    com.google.android.material.textfield.TextInputLayout userNameTextInputLayout, userEmailTextInputLayout, userPasswordTextInputLayout, conformPasswordTextInputLayout;
     Button signUpButton;
     ProgressBar progressbar;
     FirebaseAuth mAuth;
@@ -26,7 +25,6 @@ public class RegistrationActivity extends AppCompatActivity {
     CheckBox termsAndCondition;
 
     private DatabaseReference databaseReference;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,21 +40,17 @@ public class RegistrationActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-
         mAuth = FirebaseAuth.getInstance();
-        userNameTextView = findViewById(R.id.userName);
-        userEmailTextView = findViewById(R.id.userEmail);
-        userPasswordTextView = findViewById(R.id.userPassword);
-        conformPasswordTextView = findViewById(R.id.conformPassword);
+        userNameTextInputLayout = findViewById(R.id.userName);
+        userEmailTextInputLayout = findViewById(R.id.userEmail);
+        userPasswordTextInputLayout = findViewById(R.id.userPassword);
+        conformPasswordTextInputLayout = findViewById(R.id.conformPassword);
         signUpButton = findViewById(R.id.signUpButton);
         termsAndCondition = findViewById(R.id.termsAndCondition);
         progressbar = findViewById(R.id.progressbar);
 
-
         signUpButton.setOnClickListener(v -> registerNewUser());
         termsAndCondition.setOnCheckedChangeListener((buttonView, isChecked) -> signUpButton.setEnabled(isChecked));
-
-
     }
 
     private boolean isEmailValid(CharSequence email) {
@@ -66,16 +60,15 @@ public class RegistrationActivity extends AppCompatActivity {
     private boolean isPasswordValid(String password) {
         return password.length() >= 6;
     }
+
     private void registerNewUser() {
-
-
         progressbar.setVisibility(View.VISIBLE);
         String email, password;
-        email = userEmailTextView.getText().toString();
-        password = userPasswordTextView.getText().toString();
+        email = userEmailTextInputLayout.getEditText().getText().toString();
+        password = userPasswordTextInputLayout.getEditText().getText().toString();
 
-        String confirmPassword = conformPasswordTextView.getText().toString();
-        String name = userNameTextView.getText().toString();
+        String confirmPassword = conformPasswordTextInputLayout.getEditText().getText().toString();
+        String name = userNameTextInputLayout.getEditText().getText().toString();
 
         if (TextUtils.isEmpty(name)) {
             Toast.makeText(getApplicationContext(),
@@ -93,7 +86,7 @@ public class RegistrationActivity extends AppCompatActivity {
             return;
         }
 
-        if (!isPasswordValid(password)) { // check is password consider 6 character
+        if (!isPasswordValid(password)) { // check if password has at least 6 characters
             Toast.makeText(getApplicationContext(),
                             "Password must be at least 6 characters.",
                             Toast.LENGTH_LONG)
@@ -117,7 +110,7 @@ public class RegistrationActivity extends AppCompatActivity {
         }
         if (TextUtils.isEmpty(password)) {
             Toast.makeText(getApplicationContext(),
-                            "Please enter password!!",
+                            "Please enter a password!!",
                             Toast.LENGTH_LONG)
                     .show();
             return;
@@ -134,28 +127,22 @@ public class RegistrationActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
-
-                        String name1 = userNameTextView.getText().toString();
+                        String name1 = userNameTextInputLayout.getEditText().getText().toString();
                         User user = new User(name1, email);
                         databaseReference.child("users").child(userId).setValue(user);
                         Toast.makeText(getApplicationContext(),
                                         "Registration successful!",
                                         Toast.LENGTH_LONG)
                                 .show();
-                        Intent intent
-                                = new Intent(RegistrationActivity.this,
-                                LoginActivity.class);
+                        Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
                         startActivity(intent);
                     } else {
                         Toast.makeText(
                                         getApplicationContext(),
-                                        "Registration failed!!"
-                                                + " Please try again later",
+                                        "Registration failed!!" + " Please try again later",
                                         Toast.LENGTH_LONG)
                                 .show();
-
                     }
-                }
-                );
+                });
     }
 }
