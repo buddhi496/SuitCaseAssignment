@@ -216,7 +216,6 @@ public class AddItemActivity extends AppCompatActivity implements SensorEventLis
     }
 
     private void saveItemToDatabase(String itemKey, String imageURL) {
-
         String authUid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
         EditText itemNameEditText = findViewById(R.id.itemNameEditText);
@@ -248,6 +247,9 @@ public class AddItemActivity extends AppCompatActivity implements SensorEventLis
         Items newItem = new Items(imageURL, itemName, String.valueOf(itemPrice), itemDetail, storeName);
         newItem.setUserId(authUid);
         newItem.setItemKey(itemKey);
+
+        // Set the category property in the newItem
+        newItem.setCategory(selectedCategory);
 
         // Push the item to the appropriate category node
         DatabaseReference categoryNodeRef = databaseRef.child(selectedCategory);

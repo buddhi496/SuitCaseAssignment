@@ -5,12 +5,10 @@
     import android.content.Context;
     import android.content.Intent;
     import android.net.Uri;
-    import android.provider.ContactsContract;
     import android.provider.MediaStore;
     import android.view.LayoutInflater;
     import android.view.View;
     import android.view.ViewGroup;
-    import android.widget.CheckBox;
     import android.widget.EditText;
     import android.widget.ImageView;
     import android.widget.ProgressBar;
@@ -26,7 +24,6 @@
     import com.google.firebase.database.Query;
     import com.google.firebase.database.ValueEventListener;
     import com.squareup.picasso.Picasso;
-
     import java.util.ArrayList;
     import java.util.List;
 
@@ -43,7 +40,7 @@
         }
 
         public void filterByName(String query) {
-            query = query.toLowerCase(); // Convert the query to lowercase for case-insensitive search
+            query = query.toLowerCase();
             ArrayList<Items> filteredItems = new ArrayList<>();
 
             for (Items item : documentItemList) {
@@ -96,14 +93,11 @@
             Picasso.get().load(documentItem.getImageUrl()).into(holder.itemImageView, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
-                    // Image loaded successfully, hide the ProgressBar
                     holder.progressBar.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onError(Exception e) {
-                    // Handle any errors that occur during image loading (optional)
-                    // You can choose to leave the ProgressBar visible or handle errors differently.
                     holder.progressBar.setVisibility(View.GONE);
                 }
             });
@@ -119,7 +113,6 @@
                     itemClickListener.onItemClick(position);
                 }
 
-                // Create an Intent to open the ItemDetailActivity
                 Intent intent = new Intent(context, ItemDetailActivity.class);
 
                 // Pass the necessary data as extras in the Intent
@@ -129,7 +122,6 @@
                 intent.putExtra("itemStoreName", documentItem.getStoreName());
                 intent.putExtra("imageUrl", documentItem.getImageUrl());
 
-                // Start the ItemDetailActivity
                 context.startActivity(intent);
             });
 
@@ -145,14 +137,12 @@
                 showDeleteConfirmationDialog(itemName, position, category1, category2, category3, category4, category5, category6);
             });
 
-            // Add click listener for the "shareItem" ImageView
             holder.shareImageView.setOnClickListener(view -> {
                 String itemName = documentItem.getName();
                 String itemDescription = documentItem.getDescription();
                 String itemPrice = documentItem.getPrice();
                 String storeName = documentItem.getStoreName();
 
-                // Implement your sharing logic here
                 shareItem(itemName, itemDescription, itemPrice, storeName);
             });
 
@@ -162,19 +152,14 @@
                 String itemPrice = documentItem.getPrice();
                 String storeName = documentItem.getStoreName();
 
-                // Implement your sharing logic here
                 messageItem(itemName, itemDescription, itemPrice, storeName);
             });
 
-            // Inside onBindViewHolder method
             holder.findInMapImageView.setOnClickListener(view -> {
                 String storeName = documentItem.getStoreName();
-                // Implement the logic to open a map with the store location based on the storeName.
                 openMapWithStoreLocation(storeName);
             });
 
-
-            // Check the status and set the appropriate checkbox image
             if (documentItem.isStatus()) {
                 holder.checkBox.setVisibility(View.GONE);
                 holder.purchased.setVisibility(View.VISIBLE);
@@ -183,12 +168,9 @@
                 holder.purchased.setVisibility(View.GONE);
             }
 
-            // Add a click listener to the checkbox to update its state and the database
             holder.checkBox.setOnClickListener(view -> {
-                // Invert the status of the item
                 documentItem.setStatus(!documentItem.isStatus());
 
-                // Update the item's status in the database
                 updateItemStatusInCategory(item, "Books and Magazines");
                 updateItemStatusInCategory(item, "Clothing");
                 updateItemStatusInCategory(item, "Health");
@@ -196,7 +178,6 @@
                 updateItemStatusInCategory(item, "Accessories");
                 updateItemStatusInCategory(item, "Electronic");
 
-                // Check the status and set the appropriate checkbox image
                 if (documentItem.isStatus()) {
                     holder.checkBox.setVisibility(View.GONE);
                     holder.purchased.setVisibility(View.VISIBLE);
@@ -208,9 +189,7 @@
 
 
             holder.purchased.setOnClickListener(view -> {
-                // Invert the status of the item
 
-                // Update the item's status in the database
                 updateItemStatus(item, "Books and Magazines");
                 updateItemStatus(item, "Clothing");
                 updateItemStatus(item, "Health");
@@ -220,31 +199,11 @@
 
             });
 
-//            // Set the initial checkbox state based on the item's status
-//            holder.checkbox.setChecked(documentItem.isStatus());
-//            // Add a click listener to the checkbox
-//            holder.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//                // Update the item's status in the local data
-//                documentItem.setStatus(isChecked);
-//
-//                updateItemStatusInCategory(item, "Books and Magazines");
-//                updateItemStatusInCategory(item, "Clothing");
-//                updateItemStatusInCategory(item, "Health");
-//                updateItemStatusInCategory(item, "Others");
-//                updateItemStatusInCategory(item, "Accessories");
-//                updateItemStatusInCategory(item, "Electronic");
-//
-//            });
-
-            // Inside onBindViewHolder method
             holder.editImageView.setOnClickListener(view -> {
-                // Create an AlertDialog.Builder
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-                // Inflate the custom layout (activity_edit.xml) for the dialog
                 View dialogView = LayoutInflater.from(context).inflate(R.layout.activity_edit, null);
 
-                // Find and initialize the UI elements within the dialogView if needed
                 EditText itemNameEditText = dialogView.findViewById(R.id.editTextItemName);
                 EditText descriptionEditText = dialogView.findViewById(R.id.editTextDescription);
                 EditText priceEditText = dialogView.findViewById(R.id.editTextPrice);
@@ -252,7 +211,6 @@
                 ImageView itemImageView = dialogView.findViewById(R.id.imageViewItem);
                 TextView pickImage = dialogView.findViewById(R.id.btnChooseImage);
 
-                // Populate the UI elements with data from the selected item
                 itemNameEditText.setText(documentItem.getName());
                 descriptionEditText.setText(documentItem.getDescription());
                 priceEditText.setText(documentItem.getPrice());
@@ -260,8 +218,6 @@
                 Picasso.get().load(documentItem.getImageUrl()).into(itemImageView);
 
                 pickImage.setOnClickListener(v -> {
-                    // Open an image picker or camera intent here
-                    // For example, you can use startActivityForResult to open the image picker
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");
 
@@ -269,18 +225,15 @@
                         ((AppCompatActivity) context).startActivityForResult(intent, PICK_IMAGE_REQUEST);
                     }
                 });
-                // Set the dialog's custom view
+
                 builder.setView(dialogView);
 
-                // Add positive and negative buttons (e.g., Save and Cancel)
                 builder.setPositiveButton("Save", (dialog, which) -> {
-                    // Retrieve updated data from the dialog's UI elements
                     String updatedItemName = itemNameEditText.getText().toString();
                     String updatedItemDescription = descriptionEditText.getText().toString();
                     String updatedItemPrice = priceEditText.getText().toString();
                     String updatedStoreName = storeNameEditText.getText().toString();
 
-                    // Update the item data in the database
                     updateClothingInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName);
                     updateAccessoriesInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName);
                     updateBAMInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName);
@@ -290,10 +243,8 @@
                 });
 
                 builder.setNegativeButton("Cancel", (dialog, which) -> {
-                    // Handle the cancel action if needed
                 });
 
-                // Create and show the AlertDialog
                 AlertDialog dialog = builder.create();
                 dialog.show();
             });
@@ -305,7 +256,7 @@
 
         private void updateAccessoriesInDatabase(Items item, String updatedName, String updatedDescription, String updatedPrice, String updatedStoreName) {
             DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
-            DatabaseReference categoryRef = databaseRef.child("Accessories"); // Replace with the appropriate category in your database
+            DatabaseReference categoryRef = databaseRef.child("Accessories");
 
             Query query = categoryRef.orderByChild("name").equalTo(item.getName());
 
@@ -314,13 +265,11 @@
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
-                            // Update the item's data in the database
                             itemSnapshot.getRef().child("name").setValue(updatedName);
                             itemSnapshot.getRef().child("description").setValue(updatedDescription);
                             itemSnapshot.getRef().child("price").setValue(updatedPrice);
                             itemSnapshot.getRef().child("storeName").setValue(updatedStoreName);
                         }
-                        // Notify the user that the item has been updated
                         Toast.makeText(context, "Item updated successfully", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -363,7 +312,7 @@
 
         private void updateHealthInDatabase(Items item, String updatedName, String updatedDescription, String updatedPrice, String updatedStoreName) {
             DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
-            DatabaseReference categoryRef = databaseRef.child("Health"); // Replace with the appropriate category in your database
+            DatabaseReference categoryRef = databaseRef.child("Health");
 
             Query query = categoryRef.orderByChild("name").equalTo(item.getName());
 
@@ -582,6 +531,9 @@
                             itemSnapshot.getRef().removeValue();
                         }
                         Toast.makeText(context, "Item removed", Toast.LENGTH_SHORT).show();}
+                    else {
+                        Toast.makeText(context, "Failed to remove item", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override
