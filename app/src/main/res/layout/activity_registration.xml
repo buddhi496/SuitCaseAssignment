@@ -12,7 +12,7 @@
     <ImageView
         android:id="@+id/signUpImage"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="250dp"
         android:layout_alignParentTop="true"
         android:background="@drawable/rounded_image_background"
         android:contentDescription="@string/login_image_description"
@@ -33,73 +33,90 @@
         android:textStyle="bold"
         android:fontFamily="@font/playfair"/>
 
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/userName"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/createAccount"
-        android:layout_marginLeft="15sp"
-        android:layout_marginTop="14dp"
-        android:layout_marginRight="15sp"
-        android:alpha="0.6"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="16dp"
+        android:hint="Enter Your Name"
         android:textColor="@android:color/black"
-        android:textColorHint="@android:color/black"
-        android:background="@drawable/edittext_border_background"
-        android:hint="Full Name"
-        android:inputType="textEmailAddress"
-        android:textSize="12sp"
-        android:padding="10sp" />
+        app:hintTextColor="@color/buttonBackground"
+        app:boxStrokeColor="@color/buttonBackground">
 
-    <EditText
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/userNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/userEmail"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/userName"
-        android:layout_marginLeft="15sp"
-        android:layout_marginTop="14dp"
-        android:layout_marginRight="15sp"
-        android:background="@drawable/edittext_border_background"
-        android:hint="Your Email"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="16dp"
+        android:hint="Enter Your Email"
         android:textColor="@android:color/black"
-        android:alpha="0.6"
-        android:textColorHint="@android:color/black"
-        android:inputType="textEmailAddress"
-        android:textSize="12sp"
-        android:padding="10sp" />
+        app:hintTextColor="@color/buttonBackground"
+        app:boxStrokeColor="@color/buttonBackground">
 
-    <EditText
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/userEmailInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/userPassword"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/userEmail"
-        android:layout_marginTop="14dp"
-        android:padding="10sp"
-        android:layout_marginRight="15sp"
-        android:layout_marginLeft="15sp"
-        android:hint="Password"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="16dp"
+        android:hint="Enter Your Password"
         android:textColor="@android:color/black"
-        android:inputType="textPassword"
-        android:alpha="0.6"
-        android:textColorHint="@android:color/black"
-        android:textSize="12sp"
-        android:background="@drawable/edittext_border_background" />
+        app:hintTextColor="@color/buttonBackground"
+        app:boxStrokeColor="@color/buttonBackground">
 
-    <EditText
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/userPasswordInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/conformPassword"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/userPassword"
-        android:layout_marginTop="14dp"
-        android:padding="10sp"
-        android:layout_marginRight="15sp"
-        android:layout_marginLeft="15sp"
-        android:hint="Retype Password"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="16dp"
+        android:hint="Enter Your Conform Email"
         android:textColor="@android:color/black"
-        android:alpha="0.6"
-        android:textColorHint="@android:color/black"
-        android:inputType="textPassword"
-        android:textSize="12sp"
-        android:background="@drawable/edittext_border_background" />
+        app:hintTextColor="@color/buttonBackground"
+        app:boxStrokeColor="@color/buttonBackground">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/conformPasswordInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
 
     <CheckBox

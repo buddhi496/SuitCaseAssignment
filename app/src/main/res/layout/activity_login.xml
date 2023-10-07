@@ -52,15 +52,18 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/signInText"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:layout_marginStart="16dp"
         android:hint="Enter Your Email"
+        android:drawableStart="@drawable/email"
         android:textColor="@android:color/black"
         app:hintTextColor="@color/buttonBackground"
         app:boxStrokeColor="@color/buttonBackground">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailInput"
+            android:drawableStart="@drawable/email"
+            android:drawablePadding="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -73,7 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/email"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:layout_marginStart="16dp"
         android:hint="Enter Your password"
         android:textColor="@android:color/black"
@@ -82,6 +85,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwoedInput"
+            android:drawableStart="@drawable/password"
+            android:drawablePadding="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -117,7 +122,7 @@
         android:layout_below="@id/forgetPasswordPart"
         android:layout_marginRight="15sp"
         android:layout_marginLeft="15sp"
-        android:layout_marginTop="14sp"
+        android:layout_marginTop="10sp"
         android:padding="15dp"
         android:textSize="18sp"
         android:text="Sign In"
