@@ -1,12 +1,15 @@
 package com.buddhiraj.suitcase;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +54,27 @@ public class RegistrationActivity extends AppCompatActivity {
 
         signUpButton.setOnClickListener(v -> registerNewUser());
         termsAndCondition.setOnCheckedChangeListener((buttonView, isChecked) -> signUpButton.setEnabled(isChecked));
+
+        LinearLayout termsLayout = findViewById(R.id.terms);
+        termsLayout.setOnClickListener(v -> {
+            // Show the terms and conditions dialog
+            showTermsAndConditionsDialog();
+        });
+    }
+
+    private void showTermsAndConditionsDialog() {
+        // Create a custom dialog
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.terms_and_conditions);
+
+        TextView closeButton = dialog.findViewById(R.id.close);
+        closeButton.setOnClickListener(v -> {
+            // Close the dialog when the close button is clicked
+            dialog.dismiss();
+        });
+
+        // Show the dialog
+        dialog.show();
     }
 
     private boolean isEmailValid(CharSequence email) {
@@ -64,11 +88,11 @@ public class RegistrationActivity extends AppCompatActivity {
     private void registerNewUser() {
         progressbar.setVisibility(View.VISIBLE);
         String email, password;
-        email = userEmailTextInputLayout.getEditText().getText().toString();
-        password = userPasswordTextInputLayout.getEditText().getText().toString();
+        email = Objects.requireNonNull(userEmailTextInputLayout.getEditText()).getText().toString();
+        password = Objects.requireNonNull(userPasswordTextInputLayout.getEditText()).getText().toString();
 
-        String confirmPassword = conformPasswordTextInputLayout.getEditText().getText().toString();
-        String name = userNameTextInputLayout.getEditText().getText().toString();
+        String confirmPassword = Objects.requireNonNull(conformPasswordTextInputLayout.getEditText()).getText().toString();
+        String name = Objects.requireNonNull(userNameTextInputLayout.getEditText()).getText().toString();
 
         if (TextUtils.isEmpty(name)) {
             Toast.makeText(getApplicationContext(),

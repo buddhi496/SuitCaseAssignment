@@ -48,6 +48,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/userNameInput"
+            android:drawableStart="@drawable/forname"
+            android:drawablePadding="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -69,6 +71,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/userEmailInput"
+            android:drawableStart="@drawable/email"
+            android:drawablePadding="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -90,6 +94,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/userPasswordInput"
+            android:drawableStart="@drawable/password"
+            android:drawablePadding="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -105,13 +111,15 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="10dp"
         android:layout_marginStart="16dp"
-        android:hint="Enter Your Conform Email"
+        android:hint="Enter Your Conform Password"
         android:textColor="@android:color/black"
         app:hintTextColor="@color/buttonBackground"
         app:boxStrokeColor="@color/buttonBackground">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/conformPasswordInput"
+            android:drawableStart="@drawable/password"
+            android:drawablePadding="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -119,26 +127,39 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
+<LinearLayout
+    android:id="@+id/terms"
+    android:layout_width="match_parent"
+    android:layout_below="@id/conformPassword"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
     <CheckBox
         android:id="@+id/termsAndCondition"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/conformPassword"
-        android:text="I accept the terms and services."
-        android:alpha="0.6"
         android:textColorHint="@android:color/black"
         android:gravity="center_vertical|center_horizontal"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textColor="@color/black"
         android:layout_marginRight="15dp"
         android:layout_marginLeft="15dp"
         android:checked="false"/>
 
+    <TextView
+        android:id="@+id/tacTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="I accept Terms and condition"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+</LinearLayout>
+
     <Button
         android:id="@+id/signUpButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/termsAndCondition"
+        android:layout_below="@id/terms"
         android:layout_marginRight="15sp"
         android:layout_marginLeft="15sp"
         android:layout_marginTop="1dp"
