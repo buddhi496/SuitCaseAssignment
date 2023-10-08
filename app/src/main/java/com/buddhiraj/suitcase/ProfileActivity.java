@@ -3,11 +3,11 @@ package com.buddhiraj.suitcase;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import java.util.Objects;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -18,7 +18,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Your Profile");
         // Handle back button click
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
@@ -29,31 +29,22 @@ public class ProfileActivity extends AppCompatActivity {
         TextView changePasswordText = findViewById(R.id.changePassword);
         TextView changeUsernameText = findViewById(R.id.changeUsername);
 
-        changeProfileImageText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle "Change Profile Image" click
-                // Implement the logic to change the profile image here
-                Toast.makeText(ProfileActivity.this, "Change Profile Image clicked", Toast.LENGTH_SHORT).show();
-            }
+        changeProfileImageText.setOnClickListener(v -> {
+            // Handle "Change Profile Image" click
+            // Implement the logic to change the profile image here
+            Toast.makeText(ProfileActivity.this, "Change Profile Image clicked", Toast.LENGTH_SHORT).show();
         });
 
-        changePasswordText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle "Change Password" click
-                // Implement the logic to change the password here
-                Toast.makeText(ProfileActivity.this, "Change Password clicked", Toast.LENGTH_SHORT).show();
-            }
+        changePasswordText.setOnClickListener(v -> {
+            // Handle "Change Password" click
+            // Implement the logic to change the password here
+            Toast.makeText(ProfileActivity.this, "Change Password clicked", Toast.LENGTH_SHORT).show();
         });
 
-        changeUsernameText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle "Change Username" click
-                // Implement the logic to change the username here
-                Toast.makeText(ProfileActivity.this, "Change Username clicked", Toast.LENGTH_SHORT).show();
-            }
+        changeUsernameText.setOnClickListener(v -> {
+            // Handle "Change Username" click
+            // Implement the logic to change the username here
+            Toast.makeText(ProfileActivity.this, "Change Username clicked", Toast.LENGTH_SHORT).show();
         });
     }
 

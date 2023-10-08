@@ -1,6 +1,7 @@
 package com.buddhiraj.suitcase;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -275,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             long categoryCount = dataSnapshot.getChildrenCount();
-                            String categoryCountText = categoryCount + " " + category + "s"; // Pluralize the category name
+                            String categoryCountText = categoryCount + " " + "items"; // Pluralize the category name
                             categoryTextView.setText(categoryCountText);
                         } else {
                             categoryTextView.setText("0 " + category + "s");
@@ -305,11 +307,32 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
     }
 
     private void logoutUser() {
-        FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Logout");
+        builder.setMessage("Are you sure you want to logout?");
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
+
 
     public void showPopupMenu(View view) {
         PopupMenu popupMenu = new PopupMenu(this, view);
