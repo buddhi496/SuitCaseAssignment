@@ -20,7 +20,7 @@
         android:layout_marginTop="0dp"
         android:fontFamily="@font/playfair"
         android:gravity="center"
-        android:text="List Items"
+        android:text="Purchase Items"
         android:textColor="@color/black"
         android:textSize="26sp"
         android:textStyle="bold" />
@@ -32,7 +32,7 @@
         android:layout_marginTop="15dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text=" Discover the power of organizing your travel essentials with ease. List Items is your perfect travel companion."
+        android:text="Keep track of everything you need for your next trip. List Items helps you create and manage your packing lists effortlessly."
         android:textColor="@color/black"
         android:textSize="18sp" />
 

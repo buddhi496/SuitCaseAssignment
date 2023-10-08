@@ -20,7 +20,7 @@
         android:fontFamily="@font/playfair"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="List Items"
+        android:text="Share Items"
         android:textColor="@color/black"
         android:textSize="26sp"
         android:textStyle="bold" />
@@ -32,7 +32,7 @@
         android:layout_marginTop="15dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text=" Discover the power of organizing your travel essentials with ease. List Items is your perfect travel companion."
+        android:text="Share your lists with travel companions. Collaborate and plan together for a seamless journey."
         android:textColor="@color/black"
         android:textSize="18sp" />
 
@@ -40,12 +40,11 @@
         android:id="@+id/nextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next"
+        android:text="Start Now"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/toolbar"
         android:textSize="16sp"
-        android:drawableEnd="@drawable/go_right"
         android:textColor="@color/black"/>
 
 </LinearLayout>
