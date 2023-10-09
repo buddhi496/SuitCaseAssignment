@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -43,7 +42,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in or not
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -103,7 +101,6 @@ public class LoginActivity extends AppCompatActivity {
         if(firebaseUser!= null){
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
-
     }
         private void loginUserAccount()
         {
@@ -129,33 +126,16 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            // signin existing user
-            mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(
-                            task -> {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(getApplicationContext(),
-                                                    "Login successful!!",
-                                                    Toast.LENGTH_LONG)
-                                            .show();
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(),"Login successful!!", Toast.LENGTH_LONG).show();
 
-
-                                    // if sign-in is successful
-                                    // intent to home activity
-                                    Intent intent
-                                            = new Intent(LoginActivity.this,
-                                            MainActivity.class);
-                                    startActivity(intent);
-                                } else {
-
-                                    // sign-in failed
-                                    Toast.makeText(getApplicationContext(),
-                                                    "Email or Password doesn't match!!",
-                                                    Toast.LENGTH_LONG)
-                                            .show();
-
-                                }
-                            });
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(),"Email or Password doesn't match!!", Toast.LENGTH_LONG).show();
+                }
+            });
         }
 
     private void showForgotPasswordDialog() {

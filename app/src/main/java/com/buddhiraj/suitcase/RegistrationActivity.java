@@ -19,14 +19,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Objects;
 
 public class RegistrationActivity extends AppCompatActivity {
-
     com.google.android.material.textfield.TextInputLayout userNameTextInputLayout, userEmailTextInputLayout, userPasswordTextInputLayout, conformPasswordTextInputLayout;
     Button signUpButton;
     ProgressBar progressbar;
     FirebaseAuth mAuth;
-
     CheckBox termsAndCondition;
-
     private DatabaseReference databaseReference;
 
     @Override
@@ -34,10 +31,7 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         TextView signInNowTextView = findViewById(R.id.signInNow);
-
-        // Initialize the DatabaseReference
         databaseReference = FirebaseDatabase.getInstance().getReference();
-
         signInNowTextView.setOnClickListener(view -> {
             Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -51,29 +45,23 @@ public class RegistrationActivity extends AppCompatActivity {
         signUpButton = findViewById(R.id.signUpButton);
         termsAndCondition = findViewById(R.id.termsAndCondition);
         progressbar = findViewById(R.id.progressbar);
-
         signUpButton.setOnClickListener(v -> registerNewUser());
         termsAndCondition.setOnCheckedChangeListener((buttonView, isChecked) -> signUpButton.setEnabled(isChecked));
 
         LinearLayout termsLayout = findViewById(R.id.terms);
         termsLayout.setOnClickListener(v -> {
-            // Show the terms and conditions dialog
             showTermsAndConditionsDialog();
         });
     }
 
     private void showTermsAndConditionsDialog() {
-        // Create a custom dialog
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.terms_and_conditions);
 
         TextView closeButton = dialog.findViewById(R.id.close);
         closeButton.setOnClickListener(v -> {
-            // Close the dialog when the close button is clicked
             dialog.dismiss();
         });
-
-        // Show the dialog
         dialog.show();
     }
 

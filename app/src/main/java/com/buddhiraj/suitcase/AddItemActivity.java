@@ -1,11 +1,16 @@
 package com.buddhiraj.suitcase;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -36,6 +41,8 @@ import java.util.UUID;
 
 public class AddItemActivity extends AppCompatActivity implements SensorEventListener {
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 2;
+    private static final int REQUEST_CAMERA_PERMISSION = 3;
     private Uri imageUri;
     private ImageView imageView;
     private DatabaseReference databaseRef;
@@ -43,17 +50,15 @@ public class AddItemActivity extends AppCompatActivity implements SensorEventLis
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private long lastShakeTime = 0;
-
-    private static final int SHAKE_THRESHOLD = 1000; // Adjust this threshold as needed
+    private static final int SHAKE_THRESHOLD = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_item_form);
+        setContentView(R.layout.activity_add_item);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Add your items");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Handle back button click
@@ -65,6 +70,10 @@ public class AddItemActivity extends AppCompatActivity implements SensorEventLis
         progressBar = findViewById(R.id.progressBar); // Initialize ProgressBar
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+        }
 
         // Find the Spinner in the add_item_form layout
         Spinner categorySpinner = findViewById(R.id.categorySpinner);
@@ -166,10 +175,29 @@ public class AddItemActivity extends AppCompatActivity implements SensorEventLis
     }
 
     private void openImageChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
+        // Create an array of options for the image selection dialog
+        CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddItemActivity.this);
+        builder.setTitle("Choose an image");
+        builder.setItems(options, (dialog, item) -> {
+            if (options[item].equals("Take Photo")) {
+                // Launch the camera to capture an image
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+            } else if (options[item].equals("Choose from Gallery")) {
+                // Launch the gallery to choose an image
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
+            } else if (options[item].equals("Cancel")) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 
     @Override
@@ -177,8 +205,8 @@ public class AddItemActivity extends AppCompatActivity implements SensorEventLis
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            // Handle gallery image selection
             imageUri = data.getData();
-
             try {
                 // Load the selected image into the ImageView
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
@@ -186,8 +214,14 @@ public class AddItemActivity extends AppCompatActivity implements SensorEventLis
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
+            // Handle camera capture result
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            imageView.setImageBitmap(imageBitmap);
         }
     }
+
 
     private void uploadImageToFirebaseStorage(String itemKey) {
         // Check if an image has been selected

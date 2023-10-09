@@ -20,6 +20,7 @@
             android:elevation="4dp"
             android:gravity="center_vertical"
             app:layout_scrollFlags="scroll|enterAlways"/>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <ImageView
@@ -29,6 +30,8 @@
         android:layout_marginTop="16dp"
         android:layout_below="@+id/back"
         android:src="@drawable/imageview"
+        android:layout_marginStart="16dp"
+        android:foregroundGravity="center"
         android:scaleType="centerCrop" />
 
     <TextView
@@ -49,14 +52,14 @@
     <EditText
         android:id="@+id/itemNameEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:hint="Item Name"
         android:layout_below="@+id/chooseImageButton"
         android:layout_marginTop="16dp"
         android:layout_marginHorizontal="16dp"
         android:background="@drawable/button_background"
         android:padding="12dp"
-        android:textColorHint="@color/black"
+        android:textColorHint="#777676"
         android:textColor="@android:color/black"
         android:textSize="12sp"
         />
@@ -65,14 +68,14 @@
     <EditText
         android:id="@+id/itemDetailEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:hint="Item Detail"
         android:layout_below="@+id/itemNameEditText"
         android:layout_marginTop="16dp"
         android:layout_marginHorizontal="16dp"
         android:background="@drawable/button_background"
         android:padding="12dp"
-        android:textColorHint="@color/black"
+        android:textColorHint="#777676"
         android:textColor="@android:color/black"
         android:textSize="12sp"/>
 
@@ -80,7 +83,7 @@
     <EditText
         android:id="@+id/itemPriceEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:hint="Item Price"
         android:inputType="numberDecimal"
         android:layout_below="@+id/itemDetailEditText"
@@ -88,7 +91,7 @@
         android:layout_marginHorizontal="16dp"
         android:background="@drawable/button_background"
         android:padding="12dp"
-        android:textColorHint="@color/black"
+        android:textColorHint="#777676"
         android:textColor="@android:color/black"
         android:textSize="12sp"/>
 
@@ -96,14 +99,14 @@
     <EditText
         android:id="@+id/storeNameEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:hint="Store Name"
         android:layout_below="@+id/itemPriceEditText"
         android:layout_marginTop="16dp"
         android:layout_marginHorizontal="16dp"
         android:background="@drawable/button_background"
         android:padding="12dp"
-        android:textColorHint="@color/black"
+        android:textColorHint="#777676"
         android:textColor="@android:color/black"
         android:textSize="12sp"/>
 
@@ -120,7 +123,7 @@
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_centerInParent="true"
         android:visibility="gone" />
 
@@ -128,7 +131,7 @@
     <Button
         android:id="@+id/addItemButton"
         android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_below="@+id/categorySpinner"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="21dp"
