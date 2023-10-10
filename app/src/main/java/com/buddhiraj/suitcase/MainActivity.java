@@ -389,7 +389,7 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         popupMenu.show();
     }
     public void showClothing(View view) {
-        Intent intent = new Intent(MainActivity.this, ClothingActivity.class);
+        Intent intent = new Intent(MainActivity.this, ClothItemsActivity.class);
         startActivity(intent);
     }
 

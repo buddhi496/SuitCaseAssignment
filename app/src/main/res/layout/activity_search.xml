@@ -26,7 +26,8 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_below="@+id/searchBar"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabBack"

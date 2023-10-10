@@ -25,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClothingActivity extends AppCompatActivity implements ItemAdapter.OnItemClickListener {
+public class ClothItemsActivity extends AppCompatActivity implements ItemAdapter.OnItemClickListener {
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Items> documentItemList;
     private ItemAdapter adapter;

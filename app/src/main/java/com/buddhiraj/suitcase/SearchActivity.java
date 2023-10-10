@@ -73,6 +73,9 @@ public class SearchActivity extends AppCompatActivity implements ItemAdapter.OnI
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
         SearchView searchBar = findViewById(R.id.searchBar);
+        searchBar.setIconified(false);
+        searchBar.requestFocus();
+
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -81,9 +84,21 @@ public class SearchActivity extends AppCompatActivity implements ItemAdapter.OnI
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                adapter.filterByName(newText);
+                if (newText.isEmpty()) {
+                    // Hide RecyclerView when there's no text
+                    recyclerView.setVisibility(View.GONE);
+
+                    // Restart the activity
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                } else {
+                    recyclerView.setVisibility(View.VISIBLE); // Show RecyclerView when there's text
+                    adapter.filterByName(newText);
+                }
                 return true;
             }
+
         });
     }
 
