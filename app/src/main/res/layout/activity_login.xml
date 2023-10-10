@@ -55,6 +55,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="16dp"
         android:hint="Enter Your Email"
+        android:textColorHint="#777676"
         android:drawableStart="@drawable/email"
         android:textColor="@android:color/black"
         app:hintTextColor="@color/buttonBackground"
@@ -79,6 +80,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="16dp"
         android:hint="Enter Your password"
+        android:textColorHint="#777676"
         android:textColor="@android:color/black"
         app:hintTextColor="@color/buttonBackground"
         app:boxStrokeColor="@color/buttonBackground">
