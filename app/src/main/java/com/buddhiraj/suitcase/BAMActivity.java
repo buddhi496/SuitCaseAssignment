@@ -7,10 +7,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView; // Import SearchView
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,8 +31,6 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
     private ItemAdapter adapter;
     private String currentUserID;
     private List<Items> booksItems;
-    private List<Items> clothingItems;
-    private List<Items> accessoriesItems;
     private String selectedSortingOption = "All Items"; // Default option
 
     @Override
@@ -62,12 +58,8 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
         }
 
         booksItems = new ArrayList<>();
-        clothingItems = new ArrayList<>();
-        accessoriesItems = new ArrayList<>();
 
         setupDatabaseListener("Books and Magazines", booksItems);
-        setupDatabaseListener("Clothing", clothingItems);
-        setupDatabaseListener("Accessories", accessoriesItems);
 
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this, adapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteCallback);
@@ -76,17 +68,6 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
         swipeRefreshLayout.setOnRefreshListener(() -> {
             new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 2000);
         });
-
-        SearchView searchBar = findViewById(R.id.searchBar);
-        searchBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Launch the SearchActivity when the search bar is clicked
-                Intent intent = new Intent(BAMActivity.this, SearchActivity.class);
-                startActivity(intent);
-            }
-        });
-
 
         Spinner sortSpinner = findViewById(R.id.sortSpinner);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
@@ -150,8 +131,6 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
 
                 documentItemList.clear();
                 documentItemList.addAll(booksItems);
-                documentItemList.addAll(clothingItems);
-                documentItemList.addAll(accessoriesItems);
 
                 updateRecyclerView();
                 swipeRefreshLayout.setRefreshing(false);
@@ -172,8 +151,6 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
         } else if ("All Items".equals(selectedSortingOption)) {
             documentItemList.clear();
             documentItemList.addAll(booksItems);
-            documentItemList.addAll(clothingItems);
-            documentItemList.addAll(accessoriesItems);
         }
 
         adapter.notifyDataSetChanged();
@@ -183,16 +160,6 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
         documentItemList.clear();
 
         for (Items item : booksItems) {
-            if (item.isStatus() == statusToDisplay) {
-                documentItemList.add(item);
-            }
-        }
-        for (Items item : clothingItems) {
-            if (item.isStatus() == statusToDisplay) {
-                documentItemList.add(item);
-            }
-        }
-        for (Items item : accessoriesItems) {
             if (item.isStatus() == statusToDisplay) {
                 documentItemList.add(item);
             }

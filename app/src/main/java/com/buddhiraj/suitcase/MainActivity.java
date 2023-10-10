@@ -3,6 +3,7 @@ package com.buddhiraj.suitcase;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -110,6 +111,16 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+        SearchView searchBar = findViewById(R.id.searchBar);
+        searchBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Launch the SearchActivity when the search bar is clicked
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -378,7 +389,7 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         popupMenu.show();
     }
     public void showClothing(View view) {
-        Intent intent = new Intent(MainActivity.this, ClothItemsActivity.class);
+        Intent intent = new Intent(MainActivity.this, ClothingActivity.class);
         startActivity(intent);
     }
 
