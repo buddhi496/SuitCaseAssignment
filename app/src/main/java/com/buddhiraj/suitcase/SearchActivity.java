@@ -2,20 +2,16 @@ package com.buddhiraj.suitcase;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView; // Import SearchView
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.google.android.material.appbar.MaterialToolbar;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,27 +23,20 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItemClickListener {
-    private SwipeRefreshLayout swipeRefreshLayout;
+public class SearchActivity extends AppCompatActivity implements ItemAdapter.OnItemClickListener {
     private List<Items> documentItemList;
     private ItemAdapter adapter;
     private String currentUserID;
     private List<Items> booksItems;
     private List<Items> clothingItems;
     private List<Items> accessoriesItems;
-    private String selectedSortingOption = "All Items"; // Default option
+    private String selectedSortingOption = "All Items";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_items);
+        setContentView(R.layout.activity_search);
 
-        MaterialToolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(view -> onBackPressed());
-
-        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
         documentItemList = new ArrayList<>();
@@ -55,6 +44,16 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+        FloatingActionButton fabBack = findViewById(R.id.fabBack);
+        fabBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SearchActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -73,39 +72,17 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 2000);
-        });
-
         SearchView searchBar = findViewById(R.id.searchBar);
-        searchBar.setOnClickListener(new View.OnClickListener() {
+        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onClick(View v) {
-                // Launch the SearchActivity when the search bar is clicked
-                Intent intent = new Intent(BAMActivity.this, SearchActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-        Spinner sortSpinner = findViewById(R.id.sortSpinner);
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.sorting_options,
-                android.R.layout.simple_spinner_item
-        );
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sortSpinner.setAdapter(spinnerAdapter);
-
-        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                selectedSortingOption = parentView.getItemAtPosition(position).toString();
-                updateRecyclerView();
+            public boolean onQueryTextSubmit(String query) {
+                return false;
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
+            public boolean onQueryTextChange(String newText) {
+                adapter.filterByName(newText);
+                return true;
             }
         });
     }
@@ -152,51 +129,12 @@ public class BAMActivity extends AppCompatActivity implements ItemAdapter.OnItem
                 documentItemList.addAll(booksItems);
                 documentItemList.addAll(clothingItems);
                 documentItemList.addAll(accessoriesItems);
-
-                updateRecyclerView();
-                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                swipeRefreshLayout.setRefreshing(false);
             }
         });
-    }
-
-    private void updateRecyclerView() {
-        if ("Unpurchased Items".equals(selectedSortingOption)) {
-            filterItemsByStatus(false);
-        } else if ("Purchased Items".equals(selectedSortingOption)) {
-            filterItemsByStatus(true);
-        } else if ("All Items".equals(selectedSortingOption)) {
-            documentItemList.clear();
-            documentItemList.addAll(booksItems);
-            documentItemList.addAll(clothingItems);
-            documentItemList.addAll(accessoriesItems);
-        }
-
-        adapter.notifyDataSetChanged();
-    }
-
-    private void filterItemsByStatus(boolean statusToDisplay) {
-        documentItemList.clear();
-
-        for (Items item : booksItems) {
-            if (item.isStatus() == statusToDisplay) {
-                documentItemList.add(item);
-            }
-        }
-        for (Items item : clothingItems) {
-            if (item.isStatus() == statusToDisplay) {
-                documentItemList.add(item);
-            }
-        }
-        for (Items item : accessoriesItems) {
-            if (item.isStatus() == statusToDisplay) {
-                documentItemList.add(item);
-            }
-        }
     }
 }
 
