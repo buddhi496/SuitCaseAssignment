@@ -146,7 +146,7 @@
                     android:id="@+id/messageItem"
                     android:layout_width="29dp"
                     android:layout_height="29dp"
-                    android:src="@drawable/message"
+                    android:src="@drawable/sendmessage"
                     android:layout_marginLeft="10dp" />
 
             </LinearLayout>

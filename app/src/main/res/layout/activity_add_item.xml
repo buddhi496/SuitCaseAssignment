@@ -23,39 +23,51 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="16dp"
+    <LinearLayout
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_below="@+id/back"
-        android:src="@drawable/imageview"
-        android:layout_marginStart="16dp"
-        android:foregroundGravity="center"
-        android:scaleType="centerCrop" />
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/imageview"
+            android:layout_marginStart="16dp" />
+
+        <TextView
+            android:id="@+id/chooseImageButton"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Choose Image"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:background="?android:attr/selectableItemBackground" />
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/chooseImageButton"
-        android:layout_below="@+id/imageView"
-        android:layout_height="wrap_content"
+        android:id="@+id/nameTextView"
         android:layout_width="wrap_content"
-        android:text="Choose Image"
+        android:layout_below="@+id/image"
+        android:text="Item Name"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:textColor="@color/black"
-        android:background="?android:attr/selectableItemBackground"
-        />
-
+        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"/>
 
     <EditText
         android:id="@+id/itemNameEditText"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:hint="Item Name"
-        android:layout_below="@+id/chooseImageButton"
-        android:layout_marginTop="16dp"
+        android:hint="Enter Item Name"
+        android:layout_below="@+id/nameTextView"
+        android:layout_marginTop="5dp"
         android:layout_marginHorizontal="16dp"
         android:background="@drawable/button_background"
         android:padding="12dp"
@@ -64,14 +76,22 @@
         android:textSize="12sp"
         />
 
-    <!-- Item Detail Field -->
+    <TextView
+        android:id="@+id/detailTextView"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/itemNameEditText"
+        android:text="Item Detail"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"/>
+
     <EditText
         android:id="@+id/itemDetailEditText"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:hint="Item Detail"
-        android:layout_below="@+id/itemNameEditText"
-        android:layout_marginTop="16dp"
+        android:hint="Enter Item Detail"
+        android:layout_below="@+id/detailTextView"
+        android:layout_marginTop="5dp"
         android:layout_marginHorizontal="16dp"
         android:background="@drawable/button_background"
         android:padding="12dp"
@@ -79,15 +99,23 @@
         android:textColor="@android:color/black"
         android:textSize="12sp"/>
 
-    <!-- Item Price Field -->
+    <TextView
+        android:id="@+id/priceTextView"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/itemDetailEditText"
+        android:text="Enter Item Price"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"/>
+
     <EditText
         android:id="@+id/itemPriceEditText"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:hint="Item Price"
         android:inputType="numberDecimal"
-        android:layout_below="@+id/itemDetailEditText"
-        android:layout_marginTop="16dp"
+        android:layout_below="@+id/priceTextView"
+        android:layout_marginTop="5dp"
         android:layout_marginHorizontal="16dp"
         android:background="@drawable/button_background"
         android:padding="12dp"
@@ -95,14 +123,22 @@
         android:textColor="@android:color/black"
         android:textSize="12sp"/>
 
-    <!-- Store Name Field -->
+    <TextView
+        android:id="@+id/storeTextView"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/itemPriceEditText"
+        android:text="Enter Store Name"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"/>
+
     <EditText
         android:id="@+id/storeNameEditText"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:hint="Store Name"
-        android:layout_below="@+id/itemPriceEditText"
-        android:layout_marginTop="16dp"
+        android:layout_below="@+id/storeTextView"
+        android:layout_marginTop="5dp"
         android:layout_marginHorizontal="16dp"
         android:background="@drawable/button_background"
         android:padding="12dp"
@@ -116,7 +152,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/storeNameEditText"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:layout_marginHorizontal="16dp"
         />
 
@@ -127,15 +163,23 @@
         android:layout_centerInParent="true"
         android:visibility="gone" />
 
-    <!-- Add Item Button -->
-    <Button
-        android:id="@+id/addItemButton"
-        android:layout_width="200dp"
-        android:layout_height="48dp"
+    <LinearLayout
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_below="@+id/categorySpinner"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="21dp"
-        android:backgroundTint="@color/buttonBackground"
-        android:gravity="center"
-        android:text="Add Item" />
+        android:orientation="vertical">
+
+            <Button
+                android:id="@+id/addItemButton"
+                android:layout_width="200dp"
+                android:layout_height="48dp"
+                android:layout_below="@+id/categorySpinner"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/buttonBackground"
+                android:gravity="center"
+                android:text="Add Item" />
+    </LinearLayout>
 </RelativeLayout>

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white"
-    android:padding="16dp">
+    android:fillViewport="true"
+    android:background="@color/white">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,30 +39,86 @@
         android:focusable="true"
         android:onClick="chooseImage" />
 
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="wrap_content"
+        android:text="Item Name"
+        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"/>
 
     <EditText
         android:id="@+id/editTextItemName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Item Name" />
+        android:layout_height="48dp"
+        android:hint="Enter Item Name"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_background"
+        android:padding="12dp"
+        android:textColorHint="#777676"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        />
+
+    <TextView
+        android:id="@+id/detailTextView"
+        android:layout_width="wrap_content"
+        android:text="Item Name"
+        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"/>
 
     <EditText
         android:id="@+id/editTextDescription"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Description" />
+        android:layout_height="48dp"
+        android:hint="Enter Item Detail"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_background"
+        android:padding="12dp"
+        android:textColorHint="#777676"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        />
+
+    <TextView
+        android:id="@+id/proceTextView"
+        android:layout_width="wrap_content"
+        android:text="Item Name"
+        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"/>
 
     <EditText
         android:id="@+id/editTextPrice"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Price" />
+        android:layout_height="48dp"
+        android:hint="Enter Item Price"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_background"
+        android:padding="12dp"
+        android:textColorHint="#777676"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        />
+
+    <TextView
+        android:id="@+id/storeTextView"
+        android:layout_width="wrap_content"
+        android:text="Store Name"
+        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"/>
 
     <EditText
         android:id="@+id/editTextStoreName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Store Name" />
+        android:layout_height="48dp"
+        android:hint="Enter Store Name"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_background"
+        android:padding="12dp"
+        android:textColorHint="#777676"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        />
 
 
 </LinearLayout>
+</ScrollView>

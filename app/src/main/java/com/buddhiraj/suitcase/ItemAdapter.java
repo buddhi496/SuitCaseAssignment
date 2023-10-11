@@ -251,9 +251,6 @@
 
         }
 
-
-
-
         private void updateAccessoriesInDatabase(Items item, String updatedName, String updatedDescription, String updatedPrice, String updatedStoreName) {
             DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
             DatabaseReference categoryRef = databaseRef.child("Accessories");
