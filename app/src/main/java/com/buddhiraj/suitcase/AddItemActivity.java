@@ -38,6 +38,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
@@ -248,8 +250,20 @@ public class AddItemActivity extends AppCompatActivity implements SensorEventLis
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             imageView.setImageBitmap(imageBitmap);
+
+            // Set the imageUri to the captured image's URI (optional, but recommended)
+            imageUri = getImageUriFromBitmap(this, imageBitmap);
         }
+
     }
+
+    private Uri getImageUriFromBitmap(Context context, Bitmap bitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
+        return Uri.parse(path);
+    }
+
 
     private void uploadImageToFirebaseStorage(String itemKey) {
         // Check if an image has been selected
