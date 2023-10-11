@@ -17,10 +17,13 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -59,7 +62,14 @@ public class AddItemActivity extends AppCompatActivity implements SensorEventLis
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Add Items");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.buttonBackground));
+        }
 
         // Handle back button click
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
@@ -149,12 +159,25 @@ public class AddItemActivity extends AppCompatActivity implements SensorEventLis
 
                 // You can adjust this threshold as needed
                 if (acceleration > 400) {
-                    // Shake detected, clear fields
-                    clearFields();
+                    // Shake detected, show a confirmation dialog
+                    showClearConfirmationDialog();
                     lastShakeTime = currentTime;
                 }
             }
         }
+    }
+
+    private void showClearConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Clear Fields");
+        builder.setMessage("Are you sure you want to clear all fields?");
+        builder.setPositiveButton("Yes", (dialog, which) -> {
+            clearFields(); // Clear the fields if the user confirms
+        });
+        builder.setNegativeButton("No", (dialog, which) -> {
+            // Do nothing if the user cancels
+        });
+        builder.show();
     }
 
     @Override
