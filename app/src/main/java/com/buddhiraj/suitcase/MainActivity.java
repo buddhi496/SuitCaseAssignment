@@ -12,6 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -19,6 +20,7 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.OpenableColumns;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -540,14 +542,8 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
             // Get the selected image URI
             Uri selectedImageUri = data.getData();
 
-            // Inflate the activity_edit.xml layout for the dialog
-            View dialogView = LayoutInflater.from(this).inflate(R.layout.activity_edit, null);
-
-            // Find the itemImageView within the inflated layout
-            ImageView itemImageView = dialogView.findViewById(R.id.imageViewItem);
-
-            // Load the selected image into the itemImageView using Picasso
-            Picasso.get().load(selectedImageUri).into(itemImageView);
+            adapter.setSelectedImageUri(selectedImageUri);
+            adapter.notifyDataSetChanged();
         }
     }
 
