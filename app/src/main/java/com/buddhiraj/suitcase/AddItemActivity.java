@@ -251,7 +251,6 @@ public class AddItemActivity extends AppCompatActivity implements SensorEventLis
         }
     }
 
-
     private void uploadImageToFirebaseStorage(String itemKey) {
         // Check if an image has been selected
         if (imageUri != null) {
@@ -306,35 +305,30 @@ public class AddItemActivity extends AppCompatActivity implements SensorEventLis
         String storeName = storeNameEditText.getText().toString();
         String selectedCategory = categorySpinner.getSelectedItem().toString();
 
-        // Create a DocumentItem object with the item's information
         Items newItem = new Items(imageURL, itemName, String.valueOf(itemPrice), itemDetail, storeName);
         newItem.setUserId(authUid);
         newItem.setItemKey(itemKey);
 
-        // Set the category property in the newItem
         newItem.setCategory(selectedCategory);
 
-        // Push the item to the appropriate category node
         DatabaseReference categoryNodeRef = databaseRef.child(selectedCategory);
         categoryNodeRef.child(itemKey).setValue(newItem);
         progressBar.setVisibility(View.GONE);
 
-        // Optionally, show a success message or navigate back to the main activity
         Toast.makeText(AddItemActivity.this, "Item added successfully!", Toast.LENGTH_SHORT).show();
-        finish(); // Finish the AddItemActivity and return to the main activity
+        finish();
     }
 
     private void clearFields() {
-        imageView.setImageResource(R.drawable.imageview); // Set the ImageView to display the default image
+        imageView.setImageResource(R.drawable.imageview);
 
-        // Show the default image
         imageView.setVisibility(View.VISIBLE);
         EditText itemNameEditText = findViewById(R.id.itemNameEditText);
         EditText itemDetailEditText = findViewById(R.id.itemDetailEditText);
         EditText itemPriceEditText = findViewById(R.id.itemPriceEditText);
         EditText storeNameEditText = findViewById(R.id.storeNameEditText);
 
-        itemNameEditText.setText(""); // Clear the text fields
+        itemNameEditText.setText("");
         itemDetailEditText.setText("");
         itemPriceEditText.setText("");
         storeNameEditText.setText("");

@@ -93,7 +93,7 @@ public class SearchActivity extends AppCompatActivity implements ItemAdapter.OnI
                     finish();
                     startActivity(intent);
                 } else {
-                    recyclerView.setVisibility(View.VISIBLE); // Show RecyclerView when there's text
+                    recyclerView.setVisibility(View.VISIBLE);
                     adapter.filterByName(newText);
                 }
                 return true;
