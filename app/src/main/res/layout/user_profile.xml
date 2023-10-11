@@ -71,24 +71,12 @@
         android:layout_marginTop="16dp" />
 
     <TextView
-        android:id="@+id/changePassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Change Password"
-        android:textColor="@color/buttonBackground"
-        android:layout_below="@id/changeProfileImage"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
-
-    <TextView
         android:id="@+id/changeUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Change Username"
         android:textColor="@color/buttonBackground"
-        android:layout_below="@id/changePassword"
+        android:layout_below="@id/changeProfileImage"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_centerHorizontal="true"

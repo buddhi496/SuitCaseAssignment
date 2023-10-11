@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -101,7 +104,6 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         TextView changeProfileImageText = findViewById(R.id.changeProfileImage);
-        TextView changePasswordText = findViewById(R.id.changePassword);
         TextView changeUsernameText = findViewById(R.id.changeUsername);
 
         // Initialize Firebase references
@@ -118,16 +120,46 @@ public class ProfileActivity extends AppCompatActivity {
             openGallery();
         });
 
-        changePasswordText.setOnClickListener(v -> {
-            // Handle "Change Password" click
-            // Implement the logic to change the password here
-            Toast.makeText(ProfileActivity.this, "Change Password clicked", Toast.LENGTH_SHORT).show();
-        });
-
         changeUsernameText.setOnClickListener(v -> {
-            // Handle "Change Username" click
-            // Implement the logic to change the username here
-            Toast.makeText(ProfileActivity.this, "Change Username clicked", Toast.LENGTH_SHORT).show();
+            // Inflate the set_username.xml layout for the dialog
+            View dialogView = getLayoutInflater().inflate(R.layout.set_user_name, null);
+
+            // Create an AlertDialog for the username change dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setView(dialogView)
+                    .setTitle("Change Username")
+                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            TextInputLayout usernameTextInputLayout = dialogView.findViewById(R.id.userName);
+                            String newUsername = usernameTextInputLayout.getEditText().getText().toString().trim();
+
+                            if (!TextUtils.isEmpty(newUsername)) {
+                                // Update the username in the Firebase Realtime Database
+                                String authUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                DatabaseReference userRef = databaseRef.child("users").child(authUid);
+
+                                if (newUsername.equals("")) {
+                                    userRef.child("username").removeValue(); // Remove username if new one is empty
+                                } else {
+                                    userRef.child("username").setValue(newUsername); // Set new username
+                                }
+
+                                Toast.makeText(ProfileActivity.this, "Username updated successfully! Restart app to see changes", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ProfileActivity.this, "Username cannot be empty. No changes were made.", Toast.LENGTH_SHORT).show();
+                            }
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+            builder.create().show();
         });
     }
 
