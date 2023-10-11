@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class OnBoardingActivity extends AppCompatActivity {
@@ -27,7 +29,6 @@ public class OnBoardingActivity extends AppCompatActivity {
             "Share your lists with travel companions. Collaborate and plan together for a seamless journey."};
     private int currentPage = 0;
     private SharedPreferences sharedPreferences;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +127,6 @@ public class OnBoardingActivity extends AppCompatActivity {
     }
 
     private void markOnboardingAsCompleted() {
-        // Mark onboarding as completed using SharedPreferences
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("isCompleted", true);
         editor.apply();
