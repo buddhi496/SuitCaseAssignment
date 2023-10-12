@@ -125,7 +125,7 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:contentDescription="@string/books_and_magazines"
-                        android:src="@drawable/card"
+                        android:src="@drawable/books"
                         android:layout_gravity="center_horizontal" />
 
                     <TextView

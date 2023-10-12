@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
     final Handler backButtonHandler = new Handler();
     final Handler handler = new Handler();
     GoogleSignInClient googleSignInClient;
-
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Items> documentItemList;
     private ItemAdapter adapter;
