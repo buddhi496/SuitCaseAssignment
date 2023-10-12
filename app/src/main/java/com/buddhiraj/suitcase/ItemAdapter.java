@@ -256,26 +256,23 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 String updatedItemDescription = descriptionEditText.getText().toString();
                 String updatedItemPrice = priceEditText.getText().toString();
                 String updatedStoreName = storeNameEditText.getText().toString();
-                // Check if a new image is selected (selectedImageUri is not null)
+
                 if (selectedImageUri != null) {
-                    // Create a reference to the Firebase Storage location where you want to store the image.
+                    // A new image is selected, update the image URL with the new image
                     StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("item_images/" + documentItem.getName() + ".jpg");
 
-                    // Upload the image to Firebase Storage
                     storageRef.putFile(selectedImageUri)
                             .addOnSuccessListener(taskSnapshot -> {
-                                // Image uploaded successfully, get the download URL
                                 storageRef.getDownloadUrl()
                                         .addOnSuccessListener(uri -> {
                                             String updatedImageUrl = uri.toString();
-
-                                            // Call the method to update the image URL in the database
                                             updateClothingInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName, updatedImageUrl);
                                             updateAccessoriesInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName, updatedImageUrl);
-                                            updateBAMInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName, updatedImageUrl);
+                                            updateOthersInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName, updatedImageUrl);
                                             updateHealthInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName, updatedImageUrl);
+                                            updateBAMInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName, updatedImageUrl);
                                             updateElectronicInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName, updatedImageUrl);
-                                            updateOthersInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName, updatedImageUrl);                                        })
+                                        })
                                         .addOnFailureListener(e -> {
                                             // Handle the failure to get the download URL
                                             Toast.makeText(context, "Failed to get image URL", Toast.LENGTH_SHORT).show();
@@ -286,10 +283,16 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                                 Toast.makeText(context, "Failed to upload image", Toast.LENGTH_SHORT).show();
                             });
                 } else {
-                    // No new image selected, proceed with updating other item details
+                    // No new image selected, proceed with updating other item details with the existing image URL
+                    updateClothingInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName, documentItem.getImageUrl());
                     updateAccessoriesInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName, documentItem.getImageUrl());
+                    updateElectronicInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName, documentItem.getImageUrl());
+                    updateOthersInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName, documentItem.getImageUrl());
+                    updateHealthInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName, documentItem.getImageUrl());
+                    updateBAMInDatabase(documentItem, updatedItemName, updatedItemDescription, updatedItemPrice, updatedStoreName, documentItem.getImageUrl());
                 }
             });
+
 
             builder.setNegativeButton("Cancel", (dialog, which) -> {
             });
@@ -315,7 +318,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                         itemSnapshot.getRef().child("description").setValue(updatedDescription);
                         itemSnapshot.getRef().child("price").setValue(updatedPrice);
                         itemSnapshot.getRef().child("storeName").setValue(updatedStoreName);
-                        itemSnapshot.getRef().child("imageUrl").setValue(updatedImageUrl); // Update the image URL
+                        itemSnapshot.getRef().child("imageUrl").setValue(updatedImageUrl);
                     }
                     Toast.makeText(context, "Item updated successfully", Toast.LENGTH_SHORT).show();
                 }
@@ -452,7 +455,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     }
     private void updateClothingInDatabase(Items item, String updatedName, String updatedDescription, String updatedPrice, String updatedStoreName, String updatedImageUrl) {
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference categoryRef = databaseRef.child("Clothing"); // Replace with the appropriate category in your database
+        DatabaseReference categoryRef = databaseRef.child("Clothing");
 
         Query query = categoryRef.orderByChild("name").equalTo(item.getName());
 
@@ -466,8 +469,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                         itemSnapshot.getRef().child("description").setValue(updatedDescription);
                         itemSnapshot.getRef().child("price").setValue(updatedPrice);
                         itemSnapshot.getRef().child("storeName").setValue(updatedStoreName);
-                        itemSnapshot.getRef().child("imageUrl").setValue(updatedImageUrl); // Update the image URL
 
+                        if (updatedImageUrl != null) {
+                            itemSnapshot.getRef().child("imageUrl").setValue(updatedImageUrl);
+                        }
                     }
                     // Notify the user that the item has been updated
                     Toast.makeText(context, "Item updated successfully", Toast.LENGTH_SHORT).show();
@@ -480,6 +485,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             }
         });
     }
+
 
 
     private void updateItemStatusInCategory(Items item, String categoryName) {
@@ -529,7 +535,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             }
         });
     }
-
 
     @SuppressLint("QueryPermissionsNeeded")
     private void openMapWithStoreLocation(String storeName) {

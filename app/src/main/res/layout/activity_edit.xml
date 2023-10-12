@@ -62,7 +62,7 @@
     <TextView
         android:id="@+id/detailTextView"
         android:layout_width="wrap_content"
-        android:text="Item Name"
+        android:text="Item Detail"
         android:layout_marginTop="16dp"
         android:layout_height="wrap_content"/>
 
@@ -82,7 +82,7 @@
     <TextView
         android:id="@+id/proceTextView"
         android:layout_width="wrap_content"
-        android:text="Item Name"
+        android:text="Item Price"
         android:layout_marginTop="16dp"
         android:layout_height="wrap_content"/>
 
